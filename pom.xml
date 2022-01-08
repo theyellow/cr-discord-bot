@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>crdiscordbot.maven</groupId>
-    <artifactId>springbot</artifactId>
-    <version>2022.01</version>
+    <groupId>io.github.theyellow</groupId>
+    <artifactId>crdiscordbot</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
 
     <!-- Tell Maven we want to use Java 11 -->
     <properties>
