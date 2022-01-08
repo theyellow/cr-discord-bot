@@ -1,4 +1,4 @@
-package crdiscordbot.maven.springbot;
+package crdiscordbot;
 
 import discord4j.common.JacksonResources;
 import discord4j.discordjson.json.ApplicationCommandData;

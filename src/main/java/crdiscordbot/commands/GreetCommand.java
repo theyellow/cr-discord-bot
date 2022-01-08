@@ -1,4 +1,4 @@
-package crdiscordbot.maven.springbot.commands;
+package crdiscordbot.commands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;

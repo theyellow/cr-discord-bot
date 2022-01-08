@@ -1,6 +1,6 @@
-package crdiscordbot.maven.springbot.listeners;
+package crdiscordbot.listeners;
 
-import crdiscordbot.maven.springbot.commands.SlashCommand;
+import crdiscordbot.commands.SlashCommand;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Flux;
