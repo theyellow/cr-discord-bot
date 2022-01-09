@@ -1,0 +1,11 @@
+{
+    "name": "showclans",
+    "description": "Gives information all clans",
+    "options": [
+        {
+            "name": "name",
+            "description": "Clan Name",
+            "type": 3
+        }
+    ]
+}

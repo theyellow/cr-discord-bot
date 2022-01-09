@@ -21,11 +21,11 @@ import java.util.Map;
 public class GlobalCommandRegistrar implements ApplicationRunner {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    private final RestClient client;
+    private final RestClient discordRestClient;
 
-    //Use the rest client provided by our Bean
-    public GlobalCommandRegistrar(RestClient client) {
-        this.client = client;
+    //Use the rest client provided by our Bean "discordRestClient"
+    public GlobalCommandRegistrar(RestClient discordRestClient) {
+        this.discordRestClient = discordRestClient;
     }
 
     //This method will run only once on each start up and is automatically called with Spring so blocking is okay.
@@ -36,8 +36,8 @@ public class GlobalCommandRegistrar implements ApplicationRunner {
 
         // Convenience variables for the sake of easier to read code below.
         PathMatchingResourcePatternResolver matcher = new PathMatchingResourcePatternResolver();
-        final ApplicationService applicationService = client.getApplicationService();
-        final long applicationId = client.getApplicationId().block();
+        final ApplicationService applicationService = discordRestClient.getApplicationService();
+        final long applicationId = discordRestClient.getApplicationId().block();
 
         //These are commands already registered with discord from previous runs of the bot.
         Map<String, ApplicationCommandData> discordCommands = applicationService
