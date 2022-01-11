@@ -1,20 +1,22 @@
 package crdiscordbot.commands;
 
-import crdiscordbot.ClassRoyalAPI;
+import crdiscordbot.ClashRoyalClanAPI;
 import crdiscordbot.model.Clan;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Resource;
 import java.util.Optional;
 
 @Component
 public class ClansCommand implements SlashCommand {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public String getName() {
@@ -22,7 +24,7 @@ public class ClansCommand implements SlashCommand {
     }
 
     @Autowired
-    private ClassRoyalAPI royalRestAPI;
+    private ClashRoyalClanAPI royalRestClanAPI;
 
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent event) {
@@ -44,7 +46,7 @@ public class ClansCommand implements SlashCommand {
         }
 
 
-        String result = "sample";
+        String result = "No result";
         if (clanTag.isEmpty()) {
             result = "No clan given, either set CLAN_ID system-variable for bot or use a parameter clanTag.";
         } else {
@@ -54,10 +56,14 @@ public class ClansCommand implements SlashCommand {
             } else {
                 clanTag = "%23" + clanTag;
             }*/
-            System.out.println("Clan tag: " + clanTag);
-            Clan clan = royalRestAPI.getClan(clanTag);
-
-            result = clan.getName() + " : " + clan.getDescription() + " : " + clan.getClanChestStatus() + " : " + clan.getClanScore();
+            logger.info("Searched for clan tag: " + clanTag);
+            Clan clan = royalRestClanAPI.getClan(clanTag);
+            if (null != clan) {
+                logger.info("Found it!");
+                result = clan.getName() + " : " + clan.getDescription() + " : " + clan.getClanChestStatus() + " : " + clan.getClanScore();
+            } else {
+                logger.warn("No clan found with tag {}", clanTag);
+            }
         }
 
         //Reply to the slash command, with the name the user supplied

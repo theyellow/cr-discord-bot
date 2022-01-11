@@ -4,6 +4,8 @@ import crdiscordbot.listeners.SlashCommandListener;
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.rest.RestClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -14,6 +16,9 @@ import reactor.core.publisher.Mono;
 
 @SpringBootApplication
 public class ClashRoyalDiscordBot {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     public static void main(String[] args) {
         //Start spring application
         ApplicationContext springContext = new SpringApplicationBuilder(ClashRoyalDiscordBot.class)
@@ -46,6 +51,7 @@ public class ClashRoyalDiscordBot {
             request.getHeaders().add("Authorization", "Bearer " + API_TOKEN);
             return execution.execute(request, body);
         })).build();
+        logger.info("REST-Engine for CR started...");
         return restTemplate;
     }
 

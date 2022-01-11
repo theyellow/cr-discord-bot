@@ -1,9 +1,7 @@
 package crdiscordbot.commands;
 
-import crdiscordbot.ClassRoyalAPI;
-import crdiscordbot.model.Clan;
+import crdiscordbot.ClashRoyalClanAPI;
 import crdiscordbot.model.ClanSearchResult;
-import crdiscordbot.model.SearchResultClan;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
@@ -23,7 +21,7 @@ public class ShowClansCommand implements SlashCommand {
     }
 
     @Autowired
-    private ClassRoyalAPI royalRestAPI;
+    private ClashRoyalClanAPI royalRestClanAPI;
 
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent event) {
@@ -57,15 +55,14 @@ public class ShowClansCommand implements SlashCommand {
              name = "%23" + name;
              }*/
             System.out.println("Clan name to search for: " + name);
-            ClanSearchResult clans = royalRestAPI.getAllClansForName(name);
-            StringBuilder resultBuilder = new StringBuilder();
+            ClanSearchResult clans = royalRestClanAPI.getAllClansForName(name);
             result = clans.getItems().stream().sorted((clan1, clan2)-> compareNullSafe(clan2.getClanScore(),clan1.getClanScore())).
                     map(clan -> clan.getName() + "(" + clan.getClanScore() + ")"+ " : " + clan.getTag() + " /\\  ").collect(Collectors.joining());
         }
 
         // String result = royalRestAPI.getAllClansForName();
         if (result.length() > 1999) {
-            result = result.substring(0,1900) + "...";
+            result = result.substring(0,1999) + "...";
         }
 
         //Reply to the slash command, with the name the user supplied
