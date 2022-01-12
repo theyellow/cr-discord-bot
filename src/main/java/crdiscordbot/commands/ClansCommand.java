@@ -50,12 +50,6 @@ public class ClansCommand implements SlashCommand {
         if (clanTag.isEmpty()) {
             result = "No clan given, either set CLAN_ID system-variable for bot or use a parameter clanTag.";
         } else {
-
-            /**if (clanTag.startsWith("#")) {
-                clanTag = "%23" + clanTag.substring(1);
-            } else {
-                clanTag = "%23" + clanTag;
-            }*/
             logger.info("Searched for clan tag: " + clanTag);
             Clan clan = royalRestClanAPI.getClan(clanTag);
             if (null != clan) {
