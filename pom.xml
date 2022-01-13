@@ -20,6 +20,8 @@
         <maven-plugin-version>1.0.0</maven-plugin-version>
         <junit-version>4.13.2</junit-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <sonar.organization>theyellow-github</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencies>
