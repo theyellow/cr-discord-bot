@@ -50,13 +50,18 @@ public class ClashRoyalAPI {
 
     private String createUrl(String command, String argument) {
         String url = ROYAL_API + command + "/" + argument;
+        argument = urlEncodeArgument(argument);
+        url = ROYAL_API + command + "/" + argument;
+        return url;
+    }
+
+    public String urlEncodeArgument(String argument) {
         try {
             argument = URLEncoder.encode(argument, "utf8").replaceAll("\\+", "%20");
         } catch (UnsupportedEncodingException e) {
             logger.warn("Should never happen ISO-8859-15 is not supported by your java");
         }
-        url = ROYAL_API + command + "/" + argument;
-        return url;
+        return argument;
     }
 
     private URI createUri(String url) {
@@ -66,6 +71,7 @@ public class ClashRoyalAPI {
         } catch (URISyntaxException e) {
             logger.warn("URL {} is not valid: {}", url, e.getMessage());
         }
+        logger.debug("Created URI toString(): {}", realUrl.toString());
         return realUrl;
     }
 

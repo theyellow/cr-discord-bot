@@ -1,0 +1,11 @@
+{
+    "name": "enemies",
+    "description": "Gives information for enemies of clan (if no clan is given, your own is used)",
+    "options": [
+        {
+            "name": "clanid",
+            "description": "Clan ID",
+            "type": 3
+        }
+    ]
+}
