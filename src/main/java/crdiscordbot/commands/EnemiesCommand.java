@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 @Component
 public class EnemiesCommand implements SlashCommand {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(EnemiesCommand.class);
 
     @Override
     public String getName() {
@@ -56,10 +56,10 @@ public class EnemiesCommand implements SlashCommand {
         if (clanTag.isEmpty()) {
             result = "No clan given, either set CLAN_ID system-variable for bot or use a parameter clanTag.";
         } else {
-            logger.info("Searched for currentRiverRace of clan: " + clanTag);
+            LOGGER.info("Searched for currentRiverRace of clan: " + clanTag);
             CurrentRiverRace currentRiverRace = royalRestClanAPI.getCurrentRiverRace(clanTag);
             if (null != currentRiverRace) {
-                logger.info("Found river-race, ends {}", currentRiverRace.getWarEndTime());
+                LOGGER.info("Found river-race, ends {}", currentRiverRace.getWarEndTime());
                 List<RiverClan> clans = currentRiverRace.getClans();
                 RiverClan currentRiverRaceClan = currentRiverRace.getClan();
                 String clanTagFromResult = currentRiverRaceClan.getTag();
@@ -89,7 +89,7 @@ public class EnemiesCommand implements SlashCommand {
                 otherClans = otherClans.substring(0, otherClans.length() - 2);
                 result = "#" + currentRiverRaceClan.getFame() + " " + currentRiverRaceClan.getName() + ", " + + currentRiverRaceClan.getPeriodPoints() +" (" + currentRiverRaceClan.getParticipants().size() + " participants) against " + otherClans;
             } else {
-                logger.warn("No currentRiverRace found with tag {}", clanTag);
+                LOGGER.warn("No currentRiverRace found with tag {}", clanTag);
             }
         }
 

@@ -19,7 +19,8 @@ import java.util.Map;
 
 @Component
 public class GlobalCommandRegistrar implements ApplicationRunner {
-    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalCommandRegistrar.class);
 
     private final RestClient discordRestClient;
 

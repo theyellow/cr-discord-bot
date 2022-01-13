@@ -8,13 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 @Component
 public class ClashRoyalClanAPI {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final static Logger LOGGER = LoggerFactory.getLogger(ClashRoyalClanAPI.class);
 
     @Autowired
     private ClashRoyalAPI clashRoyalAPI;

@@ -1,6 +1,5 @@
 package crdiscordbot;
 
-import crdiscordbot.model.Clan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,7 @@ import java.net.URLEncoder;
 @Component
 public class ClashRoyalAPI {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClashRoyalAPI.class);
 
     public static String ROYAL_API = "https://api.clashroyale.com/v1/";
 
@@ -59,7 +58,7 @@ public class ClashRoyalAPI {
         try {
             argument = URLEncoder.encode(argument, "utf8").replaceAll("\\+", "%20");
         } catch (UnsupportedEncodingException e) {
-            logger.warn("Should never happen ISO-8859-15 is not supported by your java");
+            LOGGER.warn("Should never happen ISO-8859-15 is not supported by your java");
         }
         return argument;
     }
@@ -69,9 +68,9 @@ public class ClashRoyalAPI {
         try {
             realUrl = new URI(url);
         } catch (URISyntaxException e) {
-            logger.warn("URL {} is not valid: {}", url, e.getMessage());
+            LOGGER.warn("URL {} is not valid: {}", url, e.getMessage());
         }
-        logger.debug("Created URI toString(): {}", realUrl.toString());
+        LOGGER.debug("Created URI toString(): {}", realUrl.toString());
         return realUrl;
     }
 

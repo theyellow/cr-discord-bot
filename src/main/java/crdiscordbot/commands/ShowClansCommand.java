@@ -5,6 +5,8 @@ import crdiscordbot.model.ClanSearchResult;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class ShowClansCommand implements SlashCommand {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShowClansCommand.class);
 
     @Override
     public String getName() {
@@ -54,7 +58,7 @@ public class ShowClansCommand implements SlashCommand {
              } else {
              name = "%23" + name;
              }*/
-            System.out.println("Clan name to search for: " + name);
+            LOGGER.info("Clan name to search for: {}", name);
             ClanSearchResult clans = royalRestClanAPI.getAllClansForName(name);
             result = clans.getItems().stream().sorted((clan1, clan2)-> compareNullSafe(clan2.getClanScore(),clan1.getClanScore())).
                     map(clan -> clan.getName() + "(" + clan.getClanScore() + ")"+ " : " + clan.getTag() + " /\\  ").collect(Collectors.joining());

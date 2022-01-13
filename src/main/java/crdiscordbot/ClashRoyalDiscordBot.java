@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 @SpringBootApplication
 public class ClashRoyalDiscordBot {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClashRoyalDiscordBot.class);
 
     public static void main(String[] args) {
         //Start spring application
@@ -51,7 +51,7 @@ public class ClashRoyalDiscordBot {
             request.getHeaders().add("Authorization", "Bearer " + API_TOKEN);
             return execution.execute(request, body);
         })).build();
-        logger.info("REST-Engine for CR started...");
+        LOGGER.info("REST-Engine for CR started...");
         return restTemplate;
     }
 

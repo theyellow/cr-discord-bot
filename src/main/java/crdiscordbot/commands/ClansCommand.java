@@ -16,7 +16,7 @@ import java.util.Optional;
 @Component
 public class ClansCommand implements SlashCommand {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClansCommand.class);
 
     @Override
     public String getName() {
@@ -50,13 +50,13 @@ public class ClansCommand implements SlashCommand {
         if (clanTag.isEmpty()) {
             result = "No clan given, either set CLAN_ID system-variable for bot or use a parameter clanTag.";
         } else {
-            logger.info("Searched for clan tag: " + clanTag);
+            LOGGER.info("Searched for clan tag: " + clanTag);
             Clan clan = royalRestClanAPI.getClan(clanTag);
             if (null != clan) {
-                logger.info("Found it!");
+                LOGGER.info("Found it!");
                 result = clan.getName() + " : " + clan.getDescription() + " : " + clan.getClanChestStatus() + " : " + clan.getClanScore();
             } else {
-                logger.warn("No clan found with tag {}", clanTag);
+                LOGGER.warn("No clan found with tag {}", clanTag);
             }
         }
 
