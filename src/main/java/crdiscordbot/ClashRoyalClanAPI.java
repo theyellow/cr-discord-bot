@@ -2,7 +2,7 @@ package crdiscordbot;
 
 import crdiscordbot.model.Clan;
 import crdiscordbot.model.ClanSearchResult;
-import crdiscordbot.model.CurrentRiverRace;
+import crdiscordbot.model.RiverRace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +21,15 @@ public class ClashRoyalClanAPI {
     }
 
     public ClanSearchResult getAllClansForName(String name) {
+        LOGGER.debug("getAllClansFor({})", name);
         return clashRoyalAPI.getForUrl(clashRoyalAPI.ROYAL_API + "clans?name=" + name + "&limit=50&minScore=15000",
                 ClanSearchResult.class);
     }
 
-    public CurrentRiverRace getCurrentRiverRace(String clanTag) {
+    public RiverRace getCurrentRiverRace(String clanTag) {
+        LOGGER.debug("getCurrentRiverRace({})", clanTag);
         return clashRoyalAPI.getForUrl(clashRoyalAPI.ROYAL_API + "clans/" + clashRoyalAPI.urlEncodeArgument(clanTag) + "/currentriverrace",
-                CurrentRiverRace.class);
+                RiverRace.class);
     }
 
 }

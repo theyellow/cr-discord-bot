@@ -1,10 +1,9 @@
 package crdiscordbot.commands;
 
 import crdiscordbot.ClashRoyalClanAPI;
-import crdiscordbot.model.Clan;
-import crdiscordbot.model.CurrentRiverRace;
-import crdiscordbot.model.RiverClan;
-import crdiscordbot.model.RiverParticipant;
+import crdiscordbot.model.RiverRace;
+import crdiscordbot.model.RiverRaceClan;
+import crdiscordbot.model.RiverRaceClanParticipant;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
@@ -17,7 +16,6 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 public class EnemiesCommand implements SlashCommand {
@@ -57,11 +55,11 @@ public class EnemiesCommand implements SlashCommand {
             result = "No clan given, either set CLAN_ID system-variable for bot or use a parameter clanTag.";
         } else {
             LOGGER.info("Searched for currentRiverRace of clan: " + clanTag);
-            CurrentRiverRace currentRiverRace = royalRestClanAPI.getCurrentRiverRace(clanTag);
+            RiverRace currentRiverRace = royalRestClanAPI.getCurrentRiverRace(clanTag);
             if (null != currentRiverRace) {
                 LOGGER.info("Found river-race, ends {}", currentRiverRace.getWarEndTime());
-                List<RiverClan> clans = currentRiverRace.getClans();
-                RiverClan currentRiverRaceClan = currentRiverRace.getClan();
+                List<RiverRaceClan> clans = currentRiverRace.getClans();
+                RiverRaceClan currentRiverRaceClan = currentRiverRace.getClan();
                 String clanTagFromResult = currentRiverRaceClan.getTag();
                 String otherClans = clans.stream().sorted((clan2, clan1) -> clan1.getClanScore().compareTo(clan2.getClanScore())).map(clan ->
                 {
@@ -72,7 +70,7 @@ public class EnemiesCommand implements SlashCommand {
                     String name = clan.getName();
                     Integer clanFame = clan.getFame();
                     Integer periodPoints = clan.getPeriodPoints();
-                    List<RiverParticipant> participants = clan.getParticipants();
+                    List<RiverRaceClanParticipant> participants = clan.getParticipants();
                     String participantsString = "";
                     if (null != participants) {
                         participantsString = participants.stream().map(participant -> participant.getName() + ",").collect(Collectors.joining());
