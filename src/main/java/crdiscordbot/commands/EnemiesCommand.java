@@ -49,51 +49,60 @@ public class EnemiesCommand implements SlashCommand {
             clanTag = System.getenv("CLAN_ID");
         }
 
-
         String result = "No result";
         if (clanTag.isEmpty()) {
             result = "No clan given, either set CLAN_ID system-variable for bot or use a parameter clanTag.";
         } else {
             LOGGER.info("Searched for currentRiverRace of clan: " + clanTag);
             RiverRace currentRiverRace = royalRestClanAPI.getCurrentRiverRace(clanTag);
-            if (null != currentRiverRace) {
-                LOGGER.info("Found river-race, ends {}", currentRiverRace.getWarEndTime());
-                List<RiverRaceClan> clans = currentRiverRace.getClans();
-                RiverRaceClan currentRiverRaceClan = currentRiverRace.getClan();
-                String clanTagFromResult = currentRiverRaceClan.getTag();
-                String otherClans = clans.stream().sorted((clan2, clan1) -> clan1.getClanScore().compareTo(clan2.getClanScore())).map(clan ->
-                {
-                    if (clanTagFromResult.equals(clan.getTag())) {
-                        return " ";
-                    }
-                    // output per enemy:
-                    String name = clan.getName();
-                    Integer clanFame = clan.getFame();
-                    Integer periodPoints = clan.getPeriodPoints();
-                    List<RiverRaceClanParticipant> participants = clan.getParticipants();
-                    String participantsString = "";
-                    if (null != participants) {
-                        participantsString = participants.stream().map(participant -> participant.getName() + ",").collect(Collectors.joining());
-                        // delete last ","
-                        participantsString = participantsString.substring(0,participantsString.length() - 1);
-                    }
-                    int nrOfParticipants = participants.size();
-                    //String enemies = name + " #" + clanFame + ", " + periodPoints + ", (" + participantsString + ");";
-                    String enemies = " #" + clanFame + " " + name + ", " + periodPoints + " (" + nrOfParticipants + " participants); ";
-                    return enemies;
-                }
-                ).collect(Collectors.joining());
-                // delete last ";"
-                otherClans = otherClans.substring(0, otherClans.length() - 2);
-                result = "#" + currentRiverRaceClan.getFame() + " " + currentRiverRaceClan.getName() + ", " + + currentRiverRaceClan.getPeriodPoints() +" (" + currentRiverRaceClan.getParticipants().size() + " participants) against " + otherClans;
-            } else {
-                LOGGER.warn("No currentRiverRace found with tag {}", clanTag);
-            }
+            result = getResult(clanTag, result, currentRiverRace);
         }
-
         //Reply to the slash command, with the name the user supplied
         return  event.reply()
             .withEphemeral(true)
             .withContent(result);
+    }
+
+    private String getResult(String clanTag, String result, RiverRace currentRiverRace) {
+        if (null != currentRiverRace) {
+            LOGGER.info("Found river-race, ends {}", currentRiverRace.getWarEndTime());
+            result = createAnswer(currentRiverRace);
+        } else {
+            LOGGER.warn("No currentRiverRace found with tag {}", clanTag);
+        }
+        return result;
+    }
+
+    private String createAnswer(RiverRace currentRiverRace) {
+        String result;
+        List<RiverRaceClan> clans = currentRiverRace.getClans();
+        RiverRaceClan currentRiverRaceClan = currentRiverRace.getClan();
+        String clanTagFromResult = currentRiverRaceClan.getTag();
+        String otherClans = clans.stream().
+                sorted((clan2, clan1) -> clan1.getClanScore().compareTo(clan2.getClanScore())).
+                filter(clan -> !clanTagFromResult.equals(clan.getTag())).
+                map(clan -> createEnemyString(clan)).
+                collect(Collectors.joining());
+        // delete last ";"
+        otherClans = otherClans.substring(0, otherClans.length() - 2);
+        result = "#" + currentRiverRaceClan.getFame() + " " + currentRiverRaceClan.getName() + ", " + + currentRiverRaceClan.getPeriodPoints() +" (" + currentRiverRaceClan.getParticipants().size() + " participants) against " + otherClans;
+        return result;
+    }
+
+    private String createEnemyString(RiverRaceClan clan) {
+        String name = clan.getName();
+        Integer clanFame = clan.getFame();
+        Integer periodPoints = clan.getPeriodPoints();
+        List<RiverRaceClanParticipant> participants = clan.getParticipants();
+        String participantsString = "";
+        if (null != participants) {
+            participantsString = participants.stream().map(participant -> participant.getName() + ",").collect(Collectors.joining());
+            // delete last ","
+            participantsString = participantsString.substring(0,participantsString.length() - 1);
+        }
+        int nrOfParticipants = participants.size();
+        //String enemies = name + " #" + clanFame + ", " + periodPoints + ", (" + participantsString + ");";
+        String enemies = " #" + clanFame + " " + name + ", " + periodPoints + " (" + nrOfParticipants + " participants); ";
+        return enemies;
     }
 }

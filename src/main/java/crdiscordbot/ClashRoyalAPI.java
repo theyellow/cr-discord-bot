@@ -56,7 +56,7 @@ public class ClashRoyalAPI {
 
     public String urlEncodeArgument(String argument) {
         try {
-            argument = URLEncoder.encode(argument, "utf8").replaceAll("\\+", "%20");
+            argument = URLEncoder.encode(argument, "utf8").replace("\\+", "%20");
         } catch (UnsupportedEncodingException e) {
             LOGGER.warn("Should never happen ISO-8859-15 is not supported by your java");
         }
