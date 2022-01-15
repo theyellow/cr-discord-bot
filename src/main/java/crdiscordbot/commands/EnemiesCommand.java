@@ -95,12 +95,13 @@ public class EnemiesCommand implements SlashCommand {
         Integer periodPoints = clan.getPeriodPoints();
         List<RiverRaceClanParticipant> participants = clan.getParticipants();
         String participantsString = "";
+        int nrOfParticipants = 0;
         if (null != participants) {
             participantsString = participants.stream().map(participant -> participant.getName() + ",").collect(Collectors.joining());
             // delete last ","
             participantsString = participantsString.substring(0,participantsString.length() - 1);
+            nrOfParticipants = participants.size();
         }
-        int nrOfParticipants = participants.size();
         //String enemies = name + " #" + clanFame + ", " + periodPoints + ", (" + participantsString + ");";
         String enemies = " #" + clanFame + " " + name + ", " + periodPoints + " (" + nrOfParticipants + " participants); ";
         return enemies;
