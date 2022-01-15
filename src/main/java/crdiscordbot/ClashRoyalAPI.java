@@ -36,7 +36,11 @@ public class ClashRoyalAPI {
     }
 
     public <T> T getForUrl(String url, Class<T> returnClass) {
-        return royalRestClient.getForObject(createUri(url), returnClass);
+        URI uri = createUri(url);
+        if (null == uri) {
+            return null;
+        }
+        return royalRestClient.getForObject(uri, returnClass);
     }
 
     public <T> T getForUrl(URI uri, Class<T> returnClass) {
@@ -48,9 +52,7 @@ public class ClashRoyalAPI {
     }
 
     private String createUrl(String command, String argument) {
-        String url = ROYAL_API + command + "/" + argument;
-        argument = urlEncodeArgument(argument);
-        url = ROYAL_API + command + "/" + argument;
+        String url = String.format("{}{}/{}", ROYAL_API, command, urlEncodeArgument(argument));
         return url;
     }
 
