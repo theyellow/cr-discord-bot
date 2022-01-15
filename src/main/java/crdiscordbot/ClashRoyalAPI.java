@@ -70,7 +70,9 @@ public class ClashRoyalAPI {
         } catch (URISyntaxException e) {
             LOGGER.warn("URL {} is not valid: {}", url, e.getMessage());
         }
-        LOGGER.debug("Created URI toString(): {}", realUrl.toString());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Created URI toString(): {}", realUrl);
+        }
         return realUrl;
     }
 

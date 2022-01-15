@@ -45,7 +45,10 @@ public class GlobalCommandRegistrar implements ApplicationRunner {
             .getGlobalApplicationCommands(applicationId)
             .collectMap(ApplicationCommandData::name)
             .block();
-
+        if (null == discordCommands) {
+            LOGGER.error("No discord commands found.");
+            return;
+        }
         //Get our commands json from resources as command data
         Map<String, ApplicationCommandRequest> commands = new HashMap<>();
         for (Resource resource : matcher.getResources("commands/*.json")) {
