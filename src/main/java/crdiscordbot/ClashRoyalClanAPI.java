@@ -22,13 +22,13 @@ public class ClashRoyalClanAPI {
 
     public ClanSearchResult getAllClansForName(String name) {
         LOGGER.debug("getAllClansFor({})", name);
-        return clashRoyalAPI.getForUrl(clashRoyalAPI.ROYAL_API + "clans?name=" + name + "&limit=50&minScore=15000",
+        return clashRoyalAPI.getForUrl(ClashRoyalAPI.ROYAL_API + "clans?name=" + name + "&limit=50&minScore=15000",
                 ClanSearchResult.class);
     }
 
     public RiverRace getCurrentRiverRace(String clanTag) {
         LOGGER.debug("getCurrentRiverRace({})", clanTag);
-        return clashRoyalAPI.getForUrl(clashRoyalAPI.ROYAL_API + "clans/" + clashRoyalAPI.urlEncodeArgument(clanTag) + "/currentriverrace",
+        return clashRoyalAPI.getForUrl(ClashRoyalAPI.ROYAL_API + "clans/" + clashRoyalAPI.urlEncodeArgument(clanTag) + "/currentriverrace",
                 RiverRace.class);
     }
 

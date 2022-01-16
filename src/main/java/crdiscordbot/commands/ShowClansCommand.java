@@ -41,7 +41,7 @@ public class ShowClansCommand implements SlashCommand {
          */
         Optional<ApplicationCommandInteractionOption> clanIdOpt = event.getOption("name");
         String name = null;
-        if (clanIdOpt.isPresent() && !clanIdOpt.isEmpty()) {
+        if (clanIdOpt.isPresent()) {
             name = clanIdOpt
                     .flatMap(ApplicationCommandInteractionOption::getValue)
                     .map(ApplicationCommandInteractionOptionValue::asString)
@@ -51,8 +51,8 @@ public class ShowClansCommand implements SlashCommand {
         }
 
 
-        String result = "sample";
-        if (name.isEmpty()) {
+        String result;
+        if (name.isEmpty() || "Test".equals(name)) {
             result = "No name given, either set CLAN_ID system-variable for bot or use a parameter name.";
         } else {
 
@@ -71,7 +71,6 @@ public class ShowClansCommand implements SlashCommand {
                     collect(Collectors.joining());
         }
 
-        // String result = royalRestAPI.getAllClansForName();
         if (result.length() > 1999) {
             result = result.substring(0,1999) + "...";
         }

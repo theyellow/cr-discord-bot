@@ -48,7 +48,7 @@ public class EnemiesCommand implements SlashCommand {
         if (clanTag.isEmpty()) {
             result = "No clan given, either set CLAN_ID system-variable for bot or use a parameter clanTag.";
         } else {
-            LOGGER.info("Searched for currentRiverRace of clan: " + clanTag);
+            LOGGER.info("Searched for currentRiverRace of clan: {}", clanTag);
             RiverRace currentRiverRace = royalRestClanAPI.getCurrentRiverRace(clanTag);
             result = getResult(clanTag, result, currentRiverRace);
         }

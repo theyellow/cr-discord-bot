@@ -61,8 +61,9 @@ public class GlobalCommandRegistrar implements ApplicationRunner {
             if (!discordCommands.containsKey(request.name())) {
                 //Not yet created with discord, lets do it now.
                 applicationService.createGlobalApplicationCommand(applicationId, request).block();
-
-                LOGGER.info("Created global command: " + request.name());
+                if (LOGGER.isInfoEnabled()) {
+                    LOGGER.info("Created global command: {}", request.name());
+                }
             }
         }
 
@@ -75,16 +76,18 @@ public class GlobalCommandRegistrar implements ApplicationRunner {
             if (command == null) {
                 //Removed command.json, delete global command
                 applicationService.deleteGlobalApplicationCommand(applicationId, discordCommandId).block();
-
-                LOGGER.info("Deleted global command: " + discordCommand.name());
+                if (LOGGER.isInfoEnabled()) {
+                    LOGGER.info("Deleted global command: {}", discordCommand.name());
+                }
                 continue; //Skip further processing on this command.
             }
 
             //Check if the command has been changed and needs to be updated.
             if (hasChanged(discordCommand, command)) {
                 applicationService.modifyGlobalApplicationCommand(applicationId, discordCommandId, command).block();
-
-                LOGGER.info("Updated global command: " + command.name());
+                if (LOGGER.isInfoEnabled()) {
+                    LOGGER.info("Updated global command: {}", command.name());
+                }
             }
         }
     }
