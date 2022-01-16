@@ -35,17 +35,14 @@ public class ClansCommand implements SlashCommand {
         In this case, there is no fear it will return empty/null as this is marked "required: true" in our json.
          */
         Optional<ApplicationCommandInteractionOption> clanIdOpt = event.getOption("clanid");
-        String clanTag = null;
-        if (clanIdOpt.isPresent() && !clanIdOpt.isEmpty()) {
+        String clanTag;
+        if (clanIdOpt.isPresent()) {
             clanTag = clanIdOpt
                     .flatMap(ApplicationCommandInteractionOption::getValue)
-                    .map(ApplicationCommandInteractionOptionValue::asString)
-                    .get(); //This is warning us that we didn't check if its present, we can ignore this on required options
+                    .map(ApplicationCommandInteractionOptionValue::asString).orElse(""); //This is warning us that we didn't check if its present, we can ignore this on required options
         } else {
             clanTag = System.getenv("CLAN_ID");
         }
-
-
         String result = "No result";
         if (clanTag.isEmpty()) {
             result = "No clan given, either set CLAN_ID system-variable for bot or use a parameter clanTag.";

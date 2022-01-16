@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,20 +33,14 @@ public class EnemiesCommand implements SlashCommand {
 
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent event) {
-        /*
-        Since slash command options are optional according to discord, we will wrap it into the following function
-        that gets the value of our option as a String without chaining several .get() on all the optional values
-
-        In this case, there is no fear it will return empty/null as this is marked "required: true" in our json.
-         */
         Optional<ApplicationCommandInteractionOption> clanIdOpt = event.getOption("clanid");
         String clanTag = null;
-        if (clanIdOpt.isPresent() && !clanIdOpt.isEmpty()) {
+        if (clanIdOpt.isPresent()) {
             clanTag = clanIdOpt
                     .flatMap(ApplicationCommandInteractionOption::getValue)
-                    .map(ApplicationCommandInteractionOptionValue::asString)
-                    .get(); //This is warning us that we didn't check if its present, we can ignore this on required options
+                    .map(ApplicationCommandInteractionOptionValue::asString).orElse(System.getenv("CLAN_ID"));
         } else {
+            LOGGER.info("ClanID not present, using env-variable");
             clanTag = System.getenv("CLAN_ID");
         }
 
@@ -85,7 +80,12 @@ public class EnemiesCommand implements SlashCommand {
                 collect(Collectors.joining());
         // delete last ";"
         otherClans = otherClans.substring(0, otherClans.length() - 2);
-        result = "#" + currentRiverRaceClan.getFame() + " " + currentRiverRaceClan.getName() + ", " + + currentRiverRaceClan.getPeriodPoints() +" (" + currentRiverRaceClan.getParticipants().size() + " participants) against " + otherClans;
+        result = MessageFormat.format("#{} {}, {} ({} participants) against {}",
+                currentRiverRaceClan.getFame(),
+                currentRiverRaceClan.getName(),
+                currentRiverRaceClan.getPeriodPoints(),
+                currentRiverRaceClan.getParticipants().size(),
+                otherClans);
         return result;
     }
 
@@ -94,16 +94,10 @@ public class EnemiesCommand implements SlashCommand {
         Integer clanFame = clan.getFame();
         Integer periodPoints = clan.getPeriodPoints();
         List<RiverRaceClanParticipant> participants = clan.getParticipants();
-        String participantsString = "";
         int nrOfParticipants = 0;
         if (null != participants) {
-            participantsString = participants.stream().map(participant -> participant.getName() + ",").collect(Collectors.joining());
-            // delete last ","
-            participantsString = participantsString.substring(0,participantsString.length() - 1);
             nrOfParticipants = participants.size();
         }
-        //String enemies = name + " #" + clanFame + ", " + periodPoints + ", (" + participantsString + ");";
-        String enemies = " #" + clanFame + " " + name + ", " + periodPoints + " (" + nrOfParticipants + " participants); ";
-        return enemies;
+        return MessageFormat.format(" #{} {}, {} ({} participants); ", clanFame, name, periodPoints, nrOfParticipants);
     }
 }

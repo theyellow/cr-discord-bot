@@ -11,20 +11,20 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.text.MessageFormat;
 
 @Component
 public class ClashRoyalAPI {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClashRoyalAPI.class);
 
-    public static String ROYAL_API = "https://api.clashroyale.com/v1/";
+    public static final String ROYAL_API = "https://api.clashroyale.com/v1/";
 
     @Autowired
     public RestTemplate royalRestClient;
 
     private HttpEntity<String> createEntityWithAuthorization(String requestJson) {
-        HttpEntity<String> entity = new HttpEntity<>(requestJson);
-        return entity;
+        return new HttpEntity<>(requestJson);
     }
 
     public String postForJson(String url, String requestJson) {
@@ -52,7 +52,7 @@ public class ClashRoyalAPI {
     }
 
     private String createUrl(String command, String argument) {
-        String url = String.format("{}{}/{}", ROYAL_API, command, urlEncodeArgument(argument));
+        String url = MessageFormat.format("{}{}/{}", ROYAL_API, command, urlEncodeArgument(argument));
         return url;
     }
 
