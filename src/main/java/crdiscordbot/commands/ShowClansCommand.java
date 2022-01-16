@@ -45,7 +45,7 @@ public class ShowClansCommand implements SlashCommand {
             name = clanIdOpt
                     .flatMap(ApplicationCommandInteractionOption::getValue)
                     .map(ApplicationCommandInteractionOptionValue::asString)
-                    .get(); //This is warning us that we didn't check if its present, we can ignore this on required options
+                    .orElse("Test"); //This is warning us that we didn't check if its present, we can ignore this on required options
         } else {
             name = "Test";
         }
