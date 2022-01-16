@@ -1,7 +1,9 @@
 package crdiscordbot.commands;
 
 import crdiscordbot.ClashRoyalClanAPI;
+import crdiscordbot.model.Clan;
 import crdiscordbot.model.ClanSearchResult;
+import crdiscordbot.model.ClanSearchResultClan;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+import java.text.MessageFormat;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -60,8 +63,12 @@ public class ShowClansCommand implements SlashCommand {
              }*/
             LOGGER.info("Clan name to search for: {}", name);
             ClanSearchResult clans = royalRestClanAPI.getAllClansForName(name);
-            result = clans.getItems().stream().sorted((clan1, clan2)-> compareNullSafe(clan2.getClanScore(),clan1.getClanScore())).
-                    map(clan -> clan.getName() + "(" + clan.getClanScore() + ")"+ " : " + clan.getTag() + " /\\  ").collect(Collectors.joining());
+            result = clans.getItems().
+                    stream().
+                    sorted((clan1, clan2)->
+                            compareNullSafe(clan2.getClanScore(),clan1.getClanScore())).
+                    map(clan -> createClanText(clan)).
+                    collect(Collectors.joining());
         }
 
         // String result = royalRestAPI.getAllClansForName();
@@ -73,6 +80,10 @@ public class ShowClansCommand implements SlashCommand {
         return  event.reply()
             .withEphemeral(true)
             .withContent(result);
+    }
+
+    private static String createClanText(ClanSearchResultClan clan) {
+        return MessageFormat.format("{0}({1}) : {2} /\\  ", clan.getName(), clan.getClanScore(), clan.getTag());
     }
 
     private static int compareNullSafe(Integer clanScore1, Integer clanScore2) {
