@@ -32,11 +32,7 @@ public class GlobalCommandRegistrar implements ApplicationRunner {
     //This method will run only once on each start up and is automatically called with Spring so blocking is okay.
     @Override
     public void run(ApplicationArguments args) throws IOException {
-        //Create an ObjectMapper that supported Discord4J classes
-        final JacksonResources d4jMapper = JacksonResources.create();
-
         // Convenience variables for the sake of easier to read code below.
-        PathMatchingResourcePatternResolver matcher = new PathMatchingResourcePatternResolver();
         final ApplicationService applicationService = discordRestClient.getApplicationService();
         final long applicationId = discordRestClient.getApplicationId().block();
 
@@ -49,25 +45,13 @@ public class GlobalCommandRegistrar implements ApplicationRunner {
             LOGGER.error("No discord commands found.");
             return;
         }
-        //Get our commands json from resources as command data
-        Map<String, ApplicationCommandRequest> commands = new HashMap<>();
-        for (Resource resource : matcher.getResources("commands/*.json")) {
-            ApplicationCommandRequest request = d4jMapper.getObjectMapper()
-                .readValue(resource.getInputStream(), ApplicationCommandRequest.class);
-
-            commands.put(request.name(), request);
-
-            //Check if this is a new command that has not already been registered.
-            if (!discordCommands.containsKey(request.name())) {
-                //Not yet created with discord, lets do it now.
-                applicationService.createGlobalApplicationCommand(applicationId, request).block();
-                if (LOGGER.isInfoEnabled()) {
-                    LOGGER.info("Created global command: {}", request.name());
-                }
-            }
-        }
+        Map<String, ApplicationCommandRequest> commands = getCommandsAndRegisterForApplication(applicationId, discordCommands);
 
         //Check if any  commands have been deleted or changed.
+        checkForDeletedOrChangedCommands(applicationService, applicationId, discordCommands, commands);
+    }
+
+    private void checkForDeletedOrChangedCommands(ApplicationService applicationService, long applicationId, Map<String, ApplicationCommandData> discordCommands, Map<String, ApplicationCommandRequest> commands) {
         for (ApplicationCommandData discordCommand : discordCommands.values()) {
             long discordCommandId = Long.parseLong(discordCommand.id());
 
@@ -90,6 +74,39 @@ public class GlobalCommandRegistrar implements ApplicationRunner {
                 }
             }
         }
+    }
+
+    /**
+     * Get our commands out of *.json-files. If there are new local commands, that aren't globally registered,
+     * the local ones get globally registered.
+     *
+     * @param discordCommands
+     * @return
+     * @throws IOException
+     */
+    private Map<String, ApplicationCommandRequest> getCommandsAndRegisterForApplication(long applicationId, Map<String, ApplicationCommandData> discordCommands) throws IOException {
+        final ApplicationService applicationService = discordRestClient.getApplicationService();
+        //Get our commands json from resources as command data
+        Map<String, ApplicationCommandRequest> commands = new HashMap<>();
+        PathMatchingResourcePatternResolver matcher = new PathMatchingResourcePatternResolver();
+        //Create an ObjectMapper that supported Discord4J classes
+        final JacksonResources d4jMapper = JacksonResources.create();
+        for (Resource resource : matcher.getResources("commands/*.json")) {
+            ApplicationCommandRequest request = d4jMapper.getObjectMapper()
+                .readValue(resource.getInputStream(), ApplicationCommandRequest.class);
+
+            commands.put(request.name(), request);
+
+            //Check if this is a new command that has not already been registered.
+            if (!discordCommands.containsKey(request.name())) {
+                //Not yet created with discord, lets do it now.
+                applicationService.createGlobalApplicationCommand(applicationId, request).block();
+                if (LOGGER.isInfoEnabled()) {
+                    LOGGER.info("Created global command: {}", request.name());
+                }
+            }
+        }
+        return commands;
     }
 
     private boolean hasChanged(ApplicationCommandData discordCommand, ApplicationCommandRequest command) {

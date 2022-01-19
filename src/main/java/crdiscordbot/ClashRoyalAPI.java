@@ -52,8 +52,7 @@ public class ClashRoyalAPI {
     }
 
     private String createUrl(String command, String argument) {
-        String url = MessageFormat.format("{}{}/{}", ROYAL_API, command, urlEncodeArgument(argument));
-        return url;
+        return MessageFormat.format("{}{}/{}", ROYAL_API, command, urlEncodeArgument(argument));
     }
 
     public String urlEncodeArgument(String argument) {

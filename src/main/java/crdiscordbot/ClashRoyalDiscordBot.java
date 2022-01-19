@@ -45,10 +45,10 @@ public class ClashRoyalDiscordBot {
 
     @Bean(name = "royalRestClient")
     public RestTemplate royalRestClient() {
-        String API_TOKEN = System.getenv("API_TOKEN");
+        String apiToken = System.getenv("API_TOKEN");
         RestTemplate restTemplate = new RestTemplateBuilder(rt-> rt.getInterceptors().add((request, body, execution) -> {
             request.getHeaders().clear();
-            request.getHeaders().add("Authorization", "Bearer " + API_TOKEN);
+            request.getHeaders().add("Authorization", "Bearer " + apiToken);
             return execution.execute(request, body);
         })).build();
         LOGGER.info("REST-Engine for CR started...");

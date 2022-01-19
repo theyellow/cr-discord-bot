@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ClashRoyalClanAPI {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(ClashRoyalClanAPI.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClashRoyalClanAPI.class);
 
     @Autowired
     private ClashRoyalAPI clashRoyalAPI;
