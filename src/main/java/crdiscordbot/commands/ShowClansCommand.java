@@ -39,7 +39,7 @@ public class ShowClansCommand implements SlashCommand {
         In this case, there is no fear it will return empty/null as this is marked "required: true" in our json.
          */
         Optional<ApplicationCommandInteractionOption> clanIdOpt = event.getOption("name");
-        String name = null;
+        String name;
         if (clanIdOpt.isPresent()) {
             name = clanIdOpt
                     .flatMap(ApplicationCommandInteractionOption::getValue)
@@ -54,12 +54,6 @@ public class ShowClansCommand implements SlashCommand {
         if (name.isEmpty() || "Test".equals(name)) {
             result = "No name given, either set CLAN_ID system-variable for bot or use a parameter name.";
         } else {
-
-            /**if (name.startsWith("#")) {
-             name = "%23" + name.substring(1);
-             } else {
-             name = "%23" + name;
-             }*/
             LOGGER.info("Clan name to search for: {}", name);
             ClanSearchResult clans = royalRestClanAPI.getAllClansForName(name);
             result = clans.getItems().

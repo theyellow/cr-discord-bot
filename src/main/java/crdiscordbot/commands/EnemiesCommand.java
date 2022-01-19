@@ -34,7 +34,7 @@ public class EnemiesCommand implements SlashCommand {
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent event) {
         Optional<ApplicationCommandInteractionOption> clanIdOpt = event.getOption("clanid");
-        String clanTag = null;
+        String clanTag;
         if (clanIdOpt.isPresent()) {
             clanTag = clanIdOpt
                     .flatMap(ApplicationCommandInteractionOption::getValue)

@@ -34,8 +34,11 @@ public class GlobalCommandRegistrar implements ApplicationRunner {
     public void run(ApplicationArguments args) throws IOException {
         // Convenience variables for the sake of easier to read code below.
         final ApplicationService applicationService = discordRestClient.getApplicationService();
-        final long applicationId = discordRestClient.getApplicationId().block();
-
+        final Long applicationId = discordRestClient.getApplicationId().block();
+        if (null == applicationId) {
+            LOGGER.error("No application id found.");
+            return;
+        }
         //These are commands already registered with discord from previous runs of the bot.
         Map<String, ApplicationCommandData> discordCommands = applicationService
             .getGlobalApplicationCommands(applicationId)
@@ -80,9 +83,9 @@ public class GlobalCommandRegistrar implements ApplicationRunner {
      * Get our commands out of *.json-files. If there are new local commands, that aren't globally registered,
      * the local ones get globally registered.
      *
-     * @param discordCommands
-     * @return
-     * @throws IOException
+     * @param applicationId applicationId of application from which to get commands
+     * @param discordCommands known local discord commands
+     * @return registered commands (including new ones)
      */
     private Map<String, ApplicationCommandRequest> getCommandsAndRegisterForApplication(long applicationId, Map<String, ApplicationCommandData> discordCommands) throws IOException {
         final ApplicationService applicationService = discordRestClient.getApplicationService();
