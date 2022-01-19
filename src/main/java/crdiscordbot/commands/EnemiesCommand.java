@@ -76,7 +76,7 @@ public class EnemiesCommand implements SlashCommand {
         String otherClans = clans.stream().
                 sorted((clan2, clan1) -> clan1.getClanScore().compareTo(clan2.getClanScore())).
                 filter(clan -> !clanTagFromResult.equals(clan.getTag())).
-                map(clan -> createEnemyString(clan)).
+                map(EnemiesCommand::createEnemyString).
                 collect(Collectors.joining());
         // delete last ";"
         otherClans = otherClans.substring(0, otherClans.length() - 2);
@@ -89,7 +89,7 @@ public class EnemiesCommand implements SlashCommand {
         return result;
     }
 
-    private String createEnemyString(RiverRaceClan clan) {
+    private static String createEnemyString(RiverRaceClan clan) {
         String name = clan.getName();
         Integer clanFame = clan.getFame();
         Integer periodPoints = clan.getPeriodPoints();

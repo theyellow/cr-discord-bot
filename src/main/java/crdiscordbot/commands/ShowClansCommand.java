@@ -1,7 +1,6 @@
 package crdiscordbot.commands;
 
 import crdiscordbot.ClashRoyalClanAPI;
-import crdiscordbot.model.Clan;
 import crdiscordbot.model.ClanSearchResult;
 import crdiscordbot.model.ClanSearchResultClan;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -67,7 +66,7 @@ public class ShowClansCommand implements SlashCommand {
                     stream().
                     sorted((clan1, clan2)->
                             compareNullSafe(clan2.getClanScore(),clan1.getClanScore())).
-                    map(clan -> createClanText(clan)).
+                    map(ShowClansCommand::createClanText).
                     collect(Collectors.joining());
         }
 
