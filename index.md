@@ -20,6 +20,15 @@ Credits to discord4j for the libraries and examples and clash-royal-discord-bot 
 
 Also credits to developer-teams of official [Clash Royale API](https://developer.clashroyale.com/#/documentation) and [Discord](https://discord.com/developers/).
 
+## Docker
+
+You can get a docker image with
+
+```
+docker pull ghcr.io/theyellow/cr-discord-bot:main
+```
+
+[cr-discord-bot - package](https://github.com/theyellow/cr-discord-bot/pkgs/container/cr-discord-bot/13658383?tag=main)
 
 ### Other bots
 There are also 
