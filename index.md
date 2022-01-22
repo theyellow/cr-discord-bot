@@ -32,8 +32,9 @@ docker pull ghcr.io/theyellow/cr-discord-bot:main
 
 ### Other bots
 There are also 
-- pogorobot
-- dramabot
+- [PoGoRobot](https://theyellow.github.io/pogorobot/)
+- [Dramabot](https://github.com/theyellow/dramabot)
+
 
 ### Markdown
 You can use the [editor on GitHub](https://github.com/theyellow/cr-discord-bot/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
