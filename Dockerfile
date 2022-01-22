@@ -1,4 +1,4 @@
-FROM digitalgenius:alpine-jdk
+FROM digitalgenius/alpine-jdk:latest
 VOLUME /tmp
 # timezone env with default
 ENV TZ Europe/Berlin
