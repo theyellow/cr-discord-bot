@@ -11,11 +11,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
 
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
 @Component
@@ -80,7 +82,7 @@ public class EnemiesCommand implements SlashCommand {
                 collect(Collectors.joining());
         // delete last ";"
         otherClans = otherClans.substring(0, otherClans.length() - 2);
-        result = MessageFormat.format("#{} {}, {} ({} participants) against {}",
+        result = MessageFormat.format("#{0} {1}, {2} ({3} participants) against {4}",
                 currentRiverRaceClan.getFame(),
                 currentRiverRaceClan.getName(),
                 currentRiverRaceClan.getPeriodPoints(),
@@ -91,13 +93,16 @@ public class EnemiesCommand implements SlashCommand {
 
     private static String createEnemyString(RiverRaceClan clan) {
         String name = clan.getName();
-        Integer clanFame = clan.getFame();
-        Integer periodPoints = clan.getPeriodPoints();
+        if (!StringUtils.hasLength(name)) {
+            name = "<noname>";
+        }
+        int clanFame = Optional.ofNullable(clan.getFame()).orElse(0);
+        int periodPoints = Optional.ofNullable(clan.getPeriodPoints()).orElse(0);
         List<RiverRaceClanParticipant> participants = clan.getParticipants();
         int nrOfParticipants = 0;
         if (null != participants) {
             nrOfParticipants = participants.size();
         }
-        return MessageFormat.format(" #{} {}, {} ({} participants); ", clanFame, name, periodPoints, nrOfParticipants);
+        return MessageFormat.format(" #{0} {1}, {2} ({3} participants); ", clanFame, name, periodPoints, nrOfParticipants);
     }
 }
