@@ -1,4 +1,4 @@
-FROM digitalgenius/alpine-jdk:latest
+FROM eclipse-temurin:17.0.1_12-jre-alpine
 VOLUME /tmp
 
 # timezone env with default
