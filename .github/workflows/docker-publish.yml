@@ -34,12 +34,24 @@ jobs:
       id-token: write
 
     steps:
-      - name: Checkout repository
+      - 
+        name: Checkout repository
         uses: actions/checkout@v2
-
+      - 
+        name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+         java-version: '11'
+         distribution: 'adopt'
+         cache: maven
+      - 
+        name: Build with Maven
+        run: mvn -B package --file pom.xml
+      
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
-      - name: Install cosign
+      - 
+        name: Install cosign
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@1e95c1de343b5b0c23352d6417ee3e48d5bcd422
         with:
