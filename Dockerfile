@@ -10,4 +10,4 @@ ENTRYPOINT ["java", \
 "-Xmx300m", \
 "-jar", \
 "/crbot.jar"]
-EXPOSE 8081
+EXPOSE 8080
