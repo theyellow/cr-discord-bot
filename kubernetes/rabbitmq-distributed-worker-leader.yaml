@@ -1,0 +1,70 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: cr-discord-bot
+  labels:
+    name: cr-discord-bot
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: cr-discord-rabbitmq-distributed-leader-deployment
+    namespace: cr-discord-bot
+    labels:
+        app: cr-discord-rabbitmq-distributed-leader-deployment
+spec:
+    replicas: 1
+    selector:
+      matchLabels:
+         app: cr-discord-rabbitmq-distributed-leader
+    template:
+      metadata:
+         name: cr-discord-rabbitmq-distributed-leader
+         namespace: cr-discord-bot
+         labels:
+            app: cr-discord-rabbitmq-distributed-leader
+            department: bots
+      spec:
+        containers:
+          - name: cr-discord-rabbitmq-distributed-leader-container
+            image: ghcr.io/theyellow/connect:master
+            imagePullPolicy: Always
+            envFrom:
+              - secretRef:
+                  name: cr-discord-bot-secrets
+            ports:
+              - containerPort: 8080
+            command: [ "java", "-Xmx300m", "-cp", "/cr-connect-bot.jar", "discord4j.connect.rabbitmq.shared.ExampleRabbitDistributedCacheLeader" ]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: cr-discord-rabbitmq-distributed-worker-deployment
+    namespace: cr-discord-bot
+    labels:
+        app: cr-discord-rabbitmq-distributed-worker-deployment
+spec:
+    replicas: 1
+    selector:
+      matchLabels:
+         app: cr-discord-rabbitmq-distributed-worker
+    template:
+      metadata:
+         name: cr-discord-rabbitmq-distributed-worker
+         namespace: cr-discord-bot
+         labels:
+           app: cr-discord-rabbitmq-distributed-worker
+           department: bots
+      spec:
+        containers:
+          - name: cr-discord-rabbitmq-distributed-worker-container
+            image: ghcr.io/theyellow/connect:master
+            imagePullPolicy: Always
+            envFrom:
+             - secretRef:
+                 name: cr-discord-bot-secrets
+            ports:
+              - containerPort: 8080
+            command: [ "java", "-Xmx300m", "-cp", "/cr-connect-bot.jar", "discord4j.connect.rabbitmq.shared.ExampleRabbitDistributedCacheWorker" ]
+---

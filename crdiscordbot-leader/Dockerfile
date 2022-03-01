@@ -5,9 +5,9 @@ VOLUME /tmp
 ENV TZ Europe/Berlin
 
 RUN apk -U --no-cache upgrade
-COPY target/crdiscordbot.jar crbot.jar
+COPY target/crdiscordbot-leader.jar leader.jar
 ENTRYPOINT ["java", \
 "-Xmx300m", \
 "-jar", \
-"/crbot.jar"]
+"/leader.jar"]
 EXPOSE 8080
