@@ -34,7 +34,7 @@ jobs:
         run: mvn -B package --file pom.xml
     -   
         name: Build the worker Docker image
-        run: docker build crdiscordbot-worker --file Dockerfile --tag crbot-worker:$(date +%s)
+        run: docker build crdiscordbot-worker --tag crbot-worker:$(date +%s)
     -   
         name: Build the leader Docker image
-        run: docker build crdiscordbot-leader --file Dockerfile --tag crbot-leader:$(date +%s)
+        run: docker build crdiscordbot-leader --tag crbot-leader:$(date +%s)
