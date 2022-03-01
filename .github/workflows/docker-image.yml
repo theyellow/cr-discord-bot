@@ -33,5 +33,8 @@ jobs:
         name: Build with Maven
         run: mvn -B package --file pom.xml
     -   
-        name: Build the Docker image
-        run: docker build . --file Dockerfile --tag crbot:$(date +%s)
+        name: Build the worker Docker image
+        run: docker build crdiscordbot-worker --file Dockerfile --tag crbot-worker:$(date +%s)
+    -   
+        name: Build the leader Docker image
+        run: docker build crdiscordbot-leader --file Dockerfile --tag crbot-leader:$(date +%s)
