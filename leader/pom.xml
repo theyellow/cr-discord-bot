@@ -20,32 +20,30 @@
         <dependency>
             <groupId>io.github.theyellow</groupId>
             <artifactId>crdiscordbot-common</artifactId>
-            <version>${crdiscordbot.version}</version>
         </dependency>
         <dependency>
             <groupId>com.discord4j</groupId>
             <artifactId>connect-common</artifactId>
-            <version>${discord4j.connect.version}</version>
         </dependency>
         <dependency>
             <groupId>com.discord4j</groupId>
             <artifactId>connect-rabbitmq</artifactId>
-            <version>${discord4j.connect.version}</version>
         </dependency>
         <dependency>
             <groupId>com.discord4j</groupId>
             <artifactId>stores-redis</artifactId>
-            <version>${discord4j.version}</version>
         </dependency>
         <dependency>
             <groupId>com.discord4j</groupId>
             <artifactId>connect-rsocket</artifactId>
-            <version>${discord4j.connect.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>io.lettuce</groupId>
             <artifactId>lettuce-core</artifactId>
-            <version>${redis.lettuce.version}</version>
         </dependency>
     </dependencies>
 
@@ -54,7 +52,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${maven-springboot-plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
