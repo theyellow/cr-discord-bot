@@ -19,7 +19,7 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME_WORKER: ${{ github.repository }}-worker
   IMAGE_NAME_LEADER: ${{ github.repository }}-leader
-  IMAGE_NAME_RSOCKET_MIDDLEWARE: ${{ github.repository }}-leader
+  IMAGE_NAME_RSOCKET_MIDDLEWARE: ${{ github.repository }}-rsocket-middleware
 
 
 jobs:
