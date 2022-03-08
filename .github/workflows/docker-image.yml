@@ -38,3 +38,6 @@ jobs:
     -   
         name: Build the leader Docker image
         run: docker build leader --tag crbot-leader:$(date +%s)
+    -   
+        name: Build the rsocket-middleware Docker image
+        run: docker build rsocket-middleware --tag crbot-rsocket-middleware:$(date +%s)
