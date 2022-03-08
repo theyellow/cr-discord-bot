@@ -127,8 +127,8 @@ jobs:
         with:
           context: leader
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta-leader.outputs.tags }}
+          labels: ${{ steps.meta-leader.outputs.labels }}
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
@@ -141,7 +141,7 @@ jobs:
           COSIGN_EXPERIMENTAL: "true"
         # This step uses the identity token to provision an ephemeral certificate
         # against the sigstore community Fulcio instance.
-        run: cosign sign ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LEADER }}@${{ steps.build-and-push.outputs.digest }}
+        run: cosign sign ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LEADER }}@${{ steps.build-and-push-leader.outputs.digest }}
 
     # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
@@ -159,8 +159,8 @@ jobs:
         with:
           context: rsocket-middleware
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta-rsocket-middleware.outputs.tags }}
+          labels: ${{ steps.meta-rsocket-middleware.outputs.labels }}
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
@@ -173,4 +173,4 @@ jobs:
           COSIGN_EXPERIMENTAL: "true"
         # This step uses the identity token to provision an ephemeral certificate
         # against the sigstore community Fulcio instance.
-        run: cosign sign ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_RSOCKET_MIDDLEWARE }}@${{ steps.build-and-push.outputs.digest }}
+        run: cosign sign ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_RSOCKET_MIDDLEWARE }}@${{ steps.build-and-push-rsocket-middleware.outputs.digest }}
