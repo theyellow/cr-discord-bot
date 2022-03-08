@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <modules>
+        <module>rsocket-middleware</module>
         <module>common</module>
         <module>leader</module>
         <module>worker</module>

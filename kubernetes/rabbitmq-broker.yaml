@@ -9,7 +9,7 @@ metadata:
 apiVersion: v1
 kind: Service
 metadata:
-    name: cr-discord-rabbitmq-broker-port-1
+    name: cr-discord-rabbitmq-broker-port
     namespace: cr-discord-bot
 spec:
     selector:
@@ -23,7 +23,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-    name: cr-discord-rabbitmq-broker-port-2
+    name: cr-discord-rabbitmq-broker-admin-port
     namespace: cr-discord-bot
 spec:
     selector:
