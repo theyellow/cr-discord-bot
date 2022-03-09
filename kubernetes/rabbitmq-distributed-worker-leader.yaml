@@ -28,14 +28,14 @@ spec:
       spec:
         containers:
           - name: cr-discord-rabbitmq-distributed-leader-container
-            image: ghcr.io/theyellow/connect:master
+            image: ghcr.io/theyellow/cr-discord-bot-leader:main
             imagePullPolicy: Always
             envFrom:
               - secretRef:
                   name: cr-discord-bot-secrets
             ports:
               - containerPort: 8080
-            command: [ "java", "-Xmx300m", "-cp", "/cr-connect-bot.jar", "discord4j.connect.rabbitmq.shared.ExampleRabbitDistributedCacheLeader" ]
+            command: [ "java", "-jar", "/crdiscordbot-leader.jar"]
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -59,12 +59,12 @@ spec:
       spec:
         containers:
           - name: cr-discord-rabbitmq-distributed-worker-container
-            image: ghcr.io/theyellow/connect:master
+            image: ghcr.io/theyellow/cr-discord-bot-worker:main
             imagePullPolicy: Always
             envFrom:
              - secretRef:
                  name: cr-discord-bot-secrets
             ports:
               - containerPort: 8080
-            command: [ "java", "-Xmx300m", "-cp", "/cr-connect-bot.jar", "discord4j.connect.rabbitmq.shared.ExampleRabbitDistributedCacheWorker" ]
+            command: [ "java", "-jar", "/crdiscordbot-worker.jar"]
 ---
