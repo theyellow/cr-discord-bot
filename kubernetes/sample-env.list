@@ -2,9 +2,8 @@ CLAN_ID=#ABC123D
 API_TOKEN=jdsfhdshfldsjflkdsjflksjflkdsjksjdglsjglkesnjglkesdnjgls...
 BOT_TOKEN=sdhfsjhfsdhfousdvskdlvjldskvjois......
 REDIS_CLIENT_URI=redis://cr-discord-bot-redis.cr-discord-bot:6379
-RSOCKET_ROUTER_HOST=cr-connect-rsocket-router.cr-discord-bot
-RSOCKET_SHARD_COORDINATOR_HOST=cr-connect-rsocket-shard-coordinator.cr-discord-bot
-RSOCKET_PAYLOAD_HOST=cr-connect-rsocket-payload-server.cr-connect-bot
-RABBITMQ_HOST=cr-connect-rabbitmq-broker-port.cr-connect-bot
+RSOCKET_ROUTER_HOST=cr-discord-rsocket-router.cr-discord-bot
+RSOCKET_SHARD_COORDINATOR_HOST=cr-discord-rsocket-shard-coordinator.cr-discord-bot
+RSOCKET_PAYLOAD_HOST=cr-discord-rsocket-payload-server.cr-discord-bot
+RABBITMQ_HOST=cr-discord-rabbitmq-broker-port.cr-discord-bot
 EXAMPLE_COMMANDS=true
-
