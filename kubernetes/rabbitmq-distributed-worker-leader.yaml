@@ -1,4 +1,10 @@
+# Leader-Worker deployment - the core of the bot
+#
+# For deployment use:
+# kubectl apply -f rabbitmq-distributed-worker-leader.yaml
+#
 ---
+# namespace "cr-discord-bot" for kubernetes components of cr-discord-bot
 kind: Namespace
 apiVersion: v1
 metadata:
@@ -6,6 +12,7 @@ metadata:
   labels:
     name: cr-discord-bot
 ---
+# There has to be one leader, this leader will handle the connection with discord and is leading the workers
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -37,6 +44,7 @@ spec:
               - containerPort: 8080
             command: [ "java", "-jar", "/crdiscordbot-leader.jar"]
 ---
+# Deployment of workers - There can be any number of workers ('1' for developing or small server-setups)
 apiVersion: apps/v1
 kind: Deployment
 metadata:

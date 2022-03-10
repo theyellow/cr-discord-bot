@@ -1,0 +1,7 @@
+# namespace "cr-discord-bot" for kubernetes components of cr-discord-bot
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: cr-discord-bot
+  labels:
+    name: cr-discord-bot

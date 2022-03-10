@@ -1,4 +1,14 @@
+# Deployment of RabbitMQ broker component based on rabbitmq:3.9-management docker-image
+#
+# port-mapping is:
+# for standard port: internal:5672 -> external:31672
+# for admin-port: internal:15672 -> external:31673
+#
+# For deployment use:
+# kubectl apply -f rabbitmq-broker.yaml
+#
 ---
+# namespace "cr-discord-bot" for kubernetes components of cr-discord-bot
 kind: Namespace
 apiVersion: v1
 metadata:
@@ -6,6 +16,7 @@ metadata:
   labels:
     name: cr-discord-bot
 ---
+# RabbitMQ service port internal:5672 -> external:31672
 apiVersion: v1
 kind: Service
 metadata:
@@ -20,6 +31,7 @@ spec:
         - port: 5672
           nodePort: 31672
 ---
+# RabbitMQ service admin-port internal:15672 -> external:31673
 apiVersion: v1
 kind: Service
 metadata:
@@ -34,6 +46,7 @@ spec:
         - port: 15672
           nodePort: 31673
 ---
+# Deployment of RabbitMQ-broker with one instance
 apiVersion: apps/v1
 kind: Deployment
 metadata:

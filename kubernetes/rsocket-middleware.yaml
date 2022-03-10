@@ -1,4 +1,15 @@
+# RSocket middleware components
+#
+# port-mapping is:
+# for router internal:33331 -> external:31321
+# for payload-server internal:33333 -> external:31323
+# for shard-coordinator internal:33332 -> external:31322
+#
+# For deployment use:
+# kubectl apply -f rsocket-middleware.yaml
+#
 ---
+# namespace "cr-discord-bot" for kubernetes components of cr-discord-bot
 kind: Namespace
 apiVersion: v1
 metadata:
@@ -6,6 +17,7 @@ metadata:
   labels:
     name: cr-discord-bot
 ---
+# service for rsocket-router
 apiVersion: v1
 kind: Service
 metadata:
@@ -20,6 +32,7 @@ spec:
         - port: 33331
           nodePort: 31321
 ---
+# service for rsocket-payload-server
 apiVersion: v1
 kind: Service
 metadata:
@@ -34,6 +47,7 @@ spec:
         - port: 33333
           nodePort: 31323
 ---
+# service for rsocket-shard-coordinator
 apiVersion: v1
 kind: Service
 metadata:
@@ -48,6 +62,7 @@ spec:
         - port: 33332
           nodePort: 31322
 ---
+# deployment of rsocket-middleware ( micronaut-application in ./rsocket-middleware/ )
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -76,6 +91,9 @@ spec:
                       - secretRef:
                             name: cr-discord-bot-secrets
                   ports:
-                      - containerPort: 8080
+                    - containerPort: 8080 # micronaut standard
+                    - containerPort: 31321 # router
+                    - containerPort: 31322 # shard-coordinator
+                    - containerPort: 31323 # payload-server
                   command: [ "java", "-jar", "/rsocket-middleware.jar"]
 ---
