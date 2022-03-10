@@ -22,7 +22,7 @@ spec:
     department: bots
   ports:
     - protocol: TCP
-      port: 28081
+      port: 28091
       targetPort: 8080
 ---
 # There has to be one leader, this leader will handle the connection with discord and is leading the workers

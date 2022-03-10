@@ -1,9 +1,9 @@
 # RSocket middleware components (deployment with one pod)
 #
 # port-mapping is:
-# for router internal:33331 -> external:31321
-# for payload-server internal:33333 -> external:31323
-# for shard-coordinator internal:33332 -> external:31322
+# for router internal:33331 -> external:30321
+# for payload-server internal:33333 -> external:30323
+# for shard-coordinator internal:33332 -> external:30322
 #
 # For deployment use:
 # kubectl apply -f rsocket-middleware.yaml
@@ -17,7 +17,7 @@ metadata:
   labels:
     name: cr-discord-bot
 ---
-# service for rsocket-router (external port 31321)
+# service for rsocket-router (external port 30321)
 apiVersion: v1
 kind: Service
 metadata:
@@ -30,9 +30,9 @@ spec:
     type: NodePort
     ports:
         - port: 33331
-          nodePort: 31321
+          nodePort: 30321
 ---
-# service for rsocket-payload-server  (external port 31323)
+# service for rsocket-payload-server  (external port 30323)
 apiVersion: v1
 kind: Service
 metadata:
@@ -45,9 +45,9 @@ spec:
     type: NodePort
     ports:
         - port: 33333
-          nodePort: 31323
+          nodePort: 30323
 ---
-# service for rsocket-shard-coordinator (external port 31322)
+# service for rsocket-shard-coordinator (external port 30322)
 apiVersion: v1
 kind: Service
 metadata:
@@ -60,7 +60,7 @@ spec:
     type: NodePort
     ports:
         - port: 33332
-          nodePort: 31322
+          nodePort: 30322
 ---
 # deployment of rsocket-middleware ( micronaut-application in ./rsocket-middleware/ )
 apiVersion: apps/v1
