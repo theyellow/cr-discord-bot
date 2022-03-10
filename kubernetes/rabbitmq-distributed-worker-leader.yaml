@@ -12,6 +12,19 @@ metadata:
   labels:
     name: cr-discord-bot
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cr-discord-bot-service
+spec:
+  selector:
+    app: cr-discord-rabbitmq-distributed-leader
+    department: bots
+  ports:
+    - protocol: TCP
+      port: 28081
+      targetPort: 8080
+---
 # There has to be one leader, this leader will handle the connection with discord and is leading the workers
 apiVersion: apps/v1
 kind: Deployment
