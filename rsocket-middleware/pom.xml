@@ -27,11 +27,6 @@
 
 
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>io.github.theyellow</groupId>-->
-<!--            <artifactId>crdiscordbot-common</artifactId>-->
-<!--            <version>0.0.1-SNAPSHOT</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>io.micronaut</groupId>
             <artifactId>micronaut-inject</artifactId>
@@ -97,30 +92,26 @@
             <artifactId>logback-classic</artifactId>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>com.discord4j</groupId>
             <artifactId>connect-rsocket</artifactId>
             <version>0.6.8</version>
         </dependency>
-
         <dependency>
             <groupId>com.discord4j</groupId>
             <artifactId>discord4j-rest</artifactId>
             <version>3.2.1</version>
-            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core</artifactId>
+            <version>3.4.12</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.5.2</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>io.micronaut.build</groupId>
                 <artifactId>micronaut-maven-plugin</artifactId>
