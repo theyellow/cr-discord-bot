@@ -5,7 +5,7 @@ VOLUME /tmp
 ENV TZ Europe/Berlin
 
 RUN apk -U --no-cache upgrade
-COPY target/rsocket-middleware.jar rsocket-middleware.jar
+COPY target/rsocket-middleware-0.0.1-RC1.jar rsocket-middleware.jar
 ENTRYPOINT ["java", \
 "-jar", \
 "/rsocket-middleware.jar"]

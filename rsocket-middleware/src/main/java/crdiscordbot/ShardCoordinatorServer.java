@@ -17,34 +17,52 @@
 
 package crdiscordbot;
 
-import crdiscordbot.connect.Constants;
+import crdiscordbot.Constants;
 import discord4j.connect.rsocket.shard.RSocketShardCoordinatorServer;
+import io.micronaut.context.annotation.Context;
+import io.micronaut.discovery.event.ServiceReadyEvent;
+import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Post;
+import io.micronaut.runtime.event.annotation.EventListener;
+import io.micronaut.scheduling.annotation.Async;
 import jakarta.inject.Singleton;
 import reactor.util.Logger;
 import reactor.util.Loggers;
 
-import javax.annotation.PostConstruct;
 import java.net.InetSocketAddress;
+import java.util.concurrent.Semaphore;
 
 @Singleton
+//@Controller("/shardcoordinator")
 public class ShardCoordinatorServer {
 
     private static final Logger log = Loggers.getLogger(ShardCoordinatorServer.class);
-    private static final RSocketShardCoordinatorServer SHARD_COORDINATOR_SERVER = new RSocketShardCoordinatorServer(new InetSocketAddress(Constants.SHARD_COORDINATOR_SERVER_PORT));
+    private static RSocketShardCoordinatorServer coordinatorServer;
+    private final Semaphore mutex = new Semaphore(1);
 
-    @PostConstruct
-    public void startShardCoordinator(String[] args) {
-        SHARD_COORDINATOR_SERVER
-                .start()
-                .doOnNext(cc -> log.info("Started shard coordinator server at {}", cc.address()))
-                .blockOptional()
-                .orElseThrow(RuntimeException::new)
-                .onClose()
-                .block();
+    @EventListener
+    @Async
+    public void startShardCoordinator(ServiceReadyEvent event) throws InterruptedException {
+        mutex.acquire();
+        if (coordinatorServer == null) {
+            coordinatorServer = new RSocketShardCoordinatorServer(new InetSocketAddress(Constants.SHARD_COORDINATOR_SERVER_PORT));
+            mutex.release();
+            coordinatorServer
+                    .start()
+                    .doOnNext(cc -> log.info("Started shard coordinator server at {}", cc.address()))
+                    .blockOptional()
+                    .orElseThrow(RuntimeException::new)
+                    .onClose()
+                    .block();
+        } else {
+            mutex.release();
+            log.info("shardcoordinator is existing, so no start will be done");
+        }
     }
 
     public boolean isExisting() {
-        return null != SHARD_COORDINATOR_SERVER;
+        return null != coordinatorServer;
     }
 
 }

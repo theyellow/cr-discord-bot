@@ -27,7 +27,10 @@ public class CrDiscordRSocketMiddleware {
     private static final Logger log = Loggers.getLogger(CrDiscordRSocketMiddleware.class);
 
     public static void main(String[] args) {
-        Micronaut.run(CrDiscordRSocketMiddleware.class, args);
-     }
+        Micronaut.build(args)
+                .eagerInitSingletons(true)
+                .mainClass(CrDiscordRSocketMiddleware.class)
+                .start();
+    }
 
 }
