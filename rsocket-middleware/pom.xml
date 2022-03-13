@@ -77,11 +77,11 @@
             <artifactId>micronaut-runtime</artifactId>
             <scope>compile</scope>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>io.micronaut.kubernetes</groupId>
             <artifactId>micronaut-kubernetes-client</artifactId>
             <scope>compile</scope>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
