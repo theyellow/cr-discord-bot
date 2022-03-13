@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.github.theyellow</groupId>
+    <artifactId>connect</artifactId>
+    <packaging>pom</packaging>
+    <version>0.7.0-SNAPSHOT</version>
+    <modules>
+        <module>common</module>
+        <module>rsocket</module>
+        <module>rabbitmq</module>
+    </modules>
+
+    <properties>
+        <discord4j-core.version>3.2.1</discord4j-core.version>
+        <stores-redis.version>3.2.1</stores-redis.version>
+        <rsocket-version>1.0.5</rsocket-version>
+        <rabbitmq-version>1.4.5.RELEASE</rabbitmq-version>
+        <reactor-version>3.4.14</reactor-version>
+        <amqp-version>5.13.1</amqp-version>
+        <jsr305.version>3.0.2</jsr305.version>
+        <junit.version>4.13</junit.version>
+        <logback.version>1.2.10</logback.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.discord4j</groupId>
+                <artifactId>discord4j-core</artifactId>
+                <version>${discord4j-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.rabbitmq</groupId>
+                <artifactId>amqp-client</artifactId>
+                <version>${amqp-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.projectreactor.rabbitmq</groupId>
+                <artifactId>reactor-rabbitmq</artifactId>
+                <version>${rabbitmq-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.projectreactor</groupId>
+                <artifactId>reactor-core</artifactId>
+                <version>${reactor-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.rsocket</groupId>
+                <artifactId>rsocket-core</artifactId>
+                <version>${rsocket-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.rsocket</groupId>
+                <artifactId>rsocket-transport-netty</artifactId>
+                <version>${rsocket-version}</version>
+            </dependency>
+        </dependencies>
+
+    </dependencyManagement>
+</project>

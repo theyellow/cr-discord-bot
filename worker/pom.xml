@@ -67,11 +67,11 @@
             <artifactId>crdiscordbot-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.discord4j</groupId>
+            <groupId>io.github.theyellow</groupId>
             <artifactId>connect-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.discord4j</groupId>
+            <groupId>io.github.theyellow</groupId>
             <artifactId>connect-rabbitmq</artifactId>
         </dependency>
         <dependency>
@@ -79,7 +79,7 @@
             <artifactId>stores-redis</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.discord4j</groupId>
+            <groupId>io.github.theyellow</groupId>
             <artifactId>connect-rsocket</artifactId>
         </dependency>
         <dependency>

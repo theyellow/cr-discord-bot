@@ -1,0 +1,3 @@
+dependencies {
+    implementation "com.discord4j:discord4j-core:$discord4j_core_version"
+}

@@ -29,6 +29,9 @@ jobs:
          java-version: '11'
          distribution: 'adopt'
          cache: maven
+    -
+        name: Build and install discord4j-connect with Maven
+        run: mvn -B package install --file connect/pom.xml
     - 
         name: Build with Maven
         run: mvn -B package --file pom.xml

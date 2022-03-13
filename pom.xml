@@ -23,7 +23,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <discord4j.connect.version>0.6.8</discord4j.connect.version>
+        <discord4j.connect.version>0.7.0-SNAPSHOT</discord4j.connect.version>
         <discord4j.version>3.2.1</discord4j.version>
         <redis.lettuce.version>6.0.6.RELEASE</redis.lettuce.version>
         <gson-fire-version>1.8.5</gson-fire-version>
@@ -50,17 +50,17 @@
             </dependency>
             <!-- https://mvnrepository.com/artifact/com.discord4j/connect-common -->
             <dependency>
-                <groupId>com.discord4j</groupId>
+                <groupId>io.github.theyellow</groupId>
                 <artifactId>connect-common</artifactId>
                 <version>${discord4j.connect.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.discord4j</groupId>
+                <groupId>io.github.theyellow</groupId>
                 <artifactId>connect-rsocket</artifactId>
                 <version>${discord4j.connect.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.discord4j</groupId>
+                <groupId>io.github.theyellow</groupId>
                 <artifactId>connect-rabbitmq</artifactId>
                 <version>${discord4j.connect.version}</version>
             </dependency>
