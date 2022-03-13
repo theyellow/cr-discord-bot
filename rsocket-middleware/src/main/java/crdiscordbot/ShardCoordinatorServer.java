@@ -17,15 +17,11 @@
 
 package crdiscordbot;
 
-import crdiscordbot.Constants;
 import discord4j.connect.rsocket.shard.RSocketShardCoordinatorServer;
-import io.micronaut.context.annotation.Context;
 import io.micronaut.discovery.event.ServiceReadyEvent;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.Post;
 import io.micronaut.runtime.event.annotation.EventListener;
 import io.micronaut.scheduling.annotation.Async;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import reactor.util.Logger;
 import reactor.util.Loggers;
@@ -41,9 +37,15 @@ public class ShardCoordinatorServer {
     private static RSocketShardCoordinatorServer coordinatorServer;
     private final Semaphore mutex = new Semaphore(1);
 
+    @Inject
+    private PayloadServer payloadServer;
+
     @EventListener
     @Async
     public void startShardCoordinator(ServiceReadyEvent event) throws InterruptedException {
+        while(!payloadServer.isExisting()) {
+            Thread.sleep(2000);
+        }
         mutex.acquire();
         if (coordinatorServer == null) {
             coordinatorServer = new RSocketShardCoordinatorServer(new InetSocketAddress(Constants.SHARD_COORDINATOR_SERVER_PORT));

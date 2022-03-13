@@ -25,6 +25,7 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.runtime.event.annotation.EventListener;
 import io.micronaut.scheduling.annotation.Async;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import reactor.util.Logger;
 import reactor.util.Loggers;
@@ -40,9 +41,15 @@ public class PayloadServer {
     private static RSocketPayloadServer payloadServer;
     private final Semaphore mutex = new Semaphore(1);
 
+    @Inject
+    private RouterServer routerServer;
+
     @EventListener
     @Async
     public void startPayloadServer(ServiceReadyEvent readyEvent) throws InterruptedException {
+        while(!routerServer.isExisting()) {
+            Thread.sleep(2000);
+        }
         mutex.acquire();
         if (payloadServer == null) {
             payloadServer = new RSocketPayloadServer(new InetSocketAddress(Constants.PAYLOAD_SERVER_PORT));
