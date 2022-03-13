@@ -17,12 +17,8 @@
 
 package crdiscordbot;
 
-import crdiscordbot.Constants;
 import discord4j.connect.rsocket.gateway.RSocketPayloadServer;
 import io.micronaut.discovery.event.ServiceReadyEvent;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.Post;
 import io.micronaut.runtime.event.annotation.EventListener;
 import io.micronaut.scheduling.annotation.Async;
 import jakarta.inject.Inject;
@@ -42,12 +38,12 @@ public class PayloadServer {
     private final Semaphore mutex = new Semaphore(1);
 
     @Inject
-    private RouterServer routerServer;
+    private ShardCoordinatorServer lastServer;
 
     @EventListener
     @Async
     public void startPayloadServer(ServiceReadyEvent readyEvent) throws InterruptedException {
-        while(!routerServer.isExisting()) {
+        while(!lastServer.isExisting()) {
             Thread.sleep(2000);
         }
         mutex.acquire();

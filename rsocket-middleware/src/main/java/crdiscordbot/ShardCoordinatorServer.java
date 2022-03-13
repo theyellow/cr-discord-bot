@@ -38,12 +38,12 @@ public class ShardCoordinatorServer {
     private final Semaphore mutex = new Semaphore(1);
 
     @Inject
-    private PayloadServer payloadServer;
+    private RouterServer lastServer;
 
     @EventListener
     @Async
     public void startShardCoordinator(ServiceReadyEvent event) throws InterruptedException {
-        while(!payloadServer.isExisting()) {
+        while(!lastServer.isExisting()) {
             Thread.sleep(2000);
         }
         mutex.acquire();
