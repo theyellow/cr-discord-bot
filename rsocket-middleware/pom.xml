@@ -67,11 +67,11 @@
             <artifactId>micronaut-jackson-databind</artifactId>
             <scope>compile</scope>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>io.micronaut</groupId>
             <artifactId>micronaut-management</artifactId>
             <scope>compile</scope>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>io.micronaut</groupId>
             <artifactId>micronaut-runtime</artifactId>
