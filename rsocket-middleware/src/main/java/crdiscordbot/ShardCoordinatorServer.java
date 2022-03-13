@@ -21,8 +21,10 @@ import discord4j.connect.rsocket.shard.RSocketShardCoordinatorServer;
 import io.micronaut.discovery.event.ServiceReadyEvent;
 import io.micronaut.runtime.event.annotation.EventListener;
 import io.micronaut.scheduling.annotation.Async;
+import io.rsocket.transport.netty.server.CloseableChannel;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import reactor.core.publisher.Mono;
 import reactor.util.Logger;
 import reactor.util.Loggers;
 
@@ -50,8 +52,11 @@ public class ShardCoordinatorServer {
         if (coordinatorServer == null) {
             coordinatorServer = new RSocketShardCoordinatorServer(new InetSocketAddress(Constants.SHARD_COORDINATOR_SERVER_PORT));
             mutex.release();
-            coordinatorServer
-                    .start()
+            log.info("Created shard coordinator");
+            Mono<CloseableChannel> channelMono = coordinatorServer
+                    .start();
+            log.info("Starting shard coordinator channel...");
+            channelMono
                     .doOnNext(cc -> log.info("Started shard coordinator server at {}", cc.address()))
                     .blockOptional()
                     .orElseThrow(RuntimeException::new)
@@ -59,7 +64,7 @@ public class ShardCoordinatorServer {
                     .block();
         } else {
             mutex.release();
-            log.info("shardcoordinator is existing, so no start will be done");
+            log.info("Shard coordinator is existing, so no start will be done");
         }
     }
 
