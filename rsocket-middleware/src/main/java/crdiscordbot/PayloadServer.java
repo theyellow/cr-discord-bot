@@ -38,7 +38,7 @@ public class PayloadServer {
     private final Semaphore mutex = new Semaphore(1);
 
     @Inject
-    private ShardCoordinatorServer lastServer;
+    private RouterServer lastServer;
 
     @EventListener
     @Async
