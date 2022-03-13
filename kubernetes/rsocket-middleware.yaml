@@ -59,7 +59,7 @@ spec:
         department: bots
     type: NodePort
     ports:
-        - port: 33332
+        - port: 33330
           nodePort: 30322
 ---
 # deployment of rsocket-middleware ( micronaut-application in ./rsocket-middleware/ )
@@ -93,7 +93,7 @@ spec:
                   ports:
                     - containerPort: 8080 # micronaut standard
                     - containerPort: 33331 # router
-                    - containerPort: 33332 # shard-coordinator
+                    - containerPort: 33330 # shard-coordinator
                     - containerPort: 33333 # payload-server
                   command: [ "java", "-jar", "/rsocket-middleware.jar"]
 ---

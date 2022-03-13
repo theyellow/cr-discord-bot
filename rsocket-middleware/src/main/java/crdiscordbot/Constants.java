@@ -40,7 +40,7 @@ public final class Constants {
     public static String SHARD_COORDINATOR_SERVER_HOST = (null == RSOCKET_SHARD_COORDINATOR_HOST || RSOCKET_SHARD_COORDINATOR_HOST.isEmpty()) ? LOCALHOST : RSOCKET_SHARD_COORDINATOR_HOST;
     public static String PAYLOAD_SERVER_HOST = (null == RSOCKET_PAYLOAD_HOST || RSOCKET_PAYLOAD_HOST.isEmpty()) ? LOCALHOST : RSOCKET_PAYLOAD_HOST;
     public static int GLOBAL_ROUTER_SERVER_PORT = 33331;
-    public static int SHARD_COORDINATOR_SERVER_PORT = 33332;
+    public static int SHARD_COORDINATOR_SERVER_PORT = 33330;
     public static int PAYLOAD_SERVER_PORT = 33333;
 
     // redis variables
