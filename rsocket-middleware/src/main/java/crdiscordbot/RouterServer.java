@@ -1,13 +1,9 @@
 package crdiscordbot;
 
-import crdiscordbot.Constants;
 import discord4j.connect.rsocket.global.RSocketGlobalRouterServer;
 import discord4j.rest.request.BucketGlobalRateLimiter;
 import discord4j.rest.request.RequestQueueFactory;
 import io.micronaut.discovery.event.ServiceReadyEvent;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.Post;
 import io.micronaut.runtime.event.annotation.EventListener;
 import io.micronaut.scheduling.annotation.Async;
 import io.rsocket.transport.netty.server.CloseableChannel;
@@ -36,7 +32,7 @@ public class RouterServer {
 
     @EventListener
     @Async
-    public void startRouterServer(ServiceReadyEvent event) throws InterruptedException {
+    public void startServer(ServiceReadyEvent event) throws InterruptedException {
         mutex.acquire();
         if (routerServer == null) {
             routerServer = new RSocketGlobalRouterServer(new InetSocketAddress(Constants.GLOBAL_ROUTER_SERVER_PORT),
