@@ -40,19 +40,24 @@ public class ShardCoordinatorServer {
     private final Semaphore mutex = new Semaphore(1);
 
     @Inject
+    private StateClient stateClient;
+
+    @Inject
     private PayloadServer lastServer;
 
     @EventListener
     @Async
     public void startShardCoordinator(ServiceReadyEvent event) throws InterruptedException {
         while(!lastServer.isExisting()) {
-            Thread.sleep(2000);
+            Thread.sleep(200);
         }
+        log.info("Try to start shard coordinator");
         mutex.acquire();
         if (coordinatorServer == null) {
+            log.info("Create shard coordinator...");
             coordinatorServer = new RSocketShardCoordinatorServer(new InetSocketAddress(Constants.SHARD_COORDINATOR_SERVER_PORT));
             mutex.release();
-            log.info("Created shard coordinator");
+            log.info("Created shard coordinator!");
             Mono<CloseableChannel> channelMono = coordinatorServer
                     .start();
             log.info("Starting shard coordinator channel...");

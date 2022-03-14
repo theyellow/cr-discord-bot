@@ -17,20 +17,35 @@ metadata:
   labels:
     name: cr-discord-bot
 ---
+# service for micronaut (external port 29121)
+apiVersion: v1
+kind: Service
+metadata:
+  name: state
+  namespace: cr-discord-bot
+spec:
+  selector:
+    app: cr-discord-rsocket-middleware
+    department: bots
+  type: NodePort
+  ports:
+    - port: 8080
+      nodePort: 29121
+---
 # service for rsocket-router (external port 30321)
 apiVersion: v1
 kind: Service
 metadata:
-    name: cr-discord-rsocket-router
-    namespace: cr-discord-bot
+  name: cr-discord-rsocket-router
+  namespace: cr-discord-bot
 spec:
-    selector:
-        app: cr-discord-rsocket-middleware
-        department: bots
-    type: NodePort
-    ports:
-        - port: 33331
-          nodePort: 30321
+  selector:
+    app: cr-discord-rsocket-middleware
+    department: bots
+  type: NodePort
+  ports:
+    - port: 33331
+      nodePort: 30321
 ---
 # service for rsocket-payload-server  (external port 30323)
 apiVersion: v1
@@ -59,7 +74,7 @@ spec:
         department: bots
     type: NodePort
     ports:
-        - port: 33330
+        - port: 33332
           nodePort: 30322
 ---
 # deployment of rsocket-middleware ( micronaut-application in ./rsocket-middleware/ )
@@ -93,7 +108,7 @@ spec:
                   ports:
                     - containerPort: 8080 # micronaut standard
                     - containerPort: 33331 # router
-                    - containerPort: 33330 # shard-coordinator
+                    - containerPort: 33332 # shard-coordinator
                     - containerPort: 33333 # payload-server
                   command: [ "java", "-jar", "/rsocket-middleware.jar"]
 ---

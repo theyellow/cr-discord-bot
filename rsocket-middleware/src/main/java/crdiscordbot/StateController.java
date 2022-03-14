@@ -7,6 +7,9 @@ import io.micronaut.runtime.server.EmbeddedServer;
 import jakarta.inject.Inject;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller("/state")
 public class StateController {
 
@@ -22,18 +25,14 @@ public class StateController {
     @Inject
     private ShardCoordinatorServer shardCoordinatorServer;
 
-    @Get(produces = MediaType.TEXT_PLAIN)
-    public Mono<String> index() {
-        StringBuilder result = new StringBuilder();
-        result.append(server != null && server.isRunning() ? "netty is running"  : "netty is NOT running");
-        result.append(", ");
-        result.append(payloadServer.isExisting() ? "payload-server exists" : "NO payload-server available");
-        result.append(", ");
-        result.append(routerServer.isExisting() ? "router-server exists" : "NO router-server available");
-        result.append(", ");
-        result.append(shardCoordinatorServer.isExisting() ? "shardCoordinator-server exists" : "NO shardCoordinator-server available");
-        return Mono.just(result.toString());
+    @Get
+    public StateResult findAll() {
+        List<StateResult.ServiceResult> services = new ArrayList<>();
+        services.add(new StateResult.ServiceResult("netty", server != null && server.isRunning() ? "is running" : "is NOT running"));
+        services.add(new StateResult.ServiceResult("payload-server", payloadServer.isExisting() ? "exists" : "is NOT available"));
+        services.add(new StateResult.ServiceResult("router-server", shardCoordinatorServer.isExisting() ? "exists" : "is NOT available"));
+        StateResult result = new StateResult(services);
+        return result;
     }
-
 
 }

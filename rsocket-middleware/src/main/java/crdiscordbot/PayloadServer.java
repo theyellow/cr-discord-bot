@@ -44,7 +44,7 @@ public class PayloadServer {
     @Async
     public void startPayloadServer(ServiceReadyEvent readyEvent) throws InterruptedException {
         while(!lastServer.isExisting()) {
-            Thread.sleep(2000);
+            Thread.sleep(200);
         }
         mutex.acquire();
         if (payloadServer == null) {
