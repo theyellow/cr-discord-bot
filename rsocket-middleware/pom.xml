@@ -16,10 +16,10 @@
 
     <properties>
         <packaging>jar</packaging>
-        <jdk.version>11</jdk.version>
-        <release.version>11</release.version>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+<!--        <jdk.version>1.8</jdk.version>-->
+        <release.version>8</release.version>
+<!--        <maven.compiler.source>11</maven.compiler.source>-->
+<!--        <maven.compiler.target>8</maven.compiler.target>-->
         <micronaut.version>3.3.4</micronaut.version>
         <exec.mainClass>crdiscordbot.CrDiscordRSocketMiddleware</exec.mainClass>
         <micronaut.runtime>netty</micronaut.runtime>
@@ -67,29 +67,9 @@
             <artifactId>micronaut-jackson-databind</artifactId>
             <scope>compile</scope>
         </dependency>
-        <!--<dependency>
-            <groupId>io.micronaut</groupId>
-            <artifactId>micronaut-management</artifactId>
-            <scope>compile</scope>
-        </dependency>-->
         <dependency>
             <groupId>io.micronaut</groupId>
             <artifactId>micronaut-runtime</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.micronaut.kubernetes</groupId>
-            <artifactId>micronaut-kubernetes-discovery-client</artifactId>
-            <scope>compile</scope>
-        </dependency>
-<!--        <dependency>
-            <groupId>io.micronaut.kubernetes</groupId>
-            <artifactId>micronaut-kubernetes-client</artifactId>
-            <scope>compile</scope>
-        </dependency>-->
-        <dependency>
-            <groupId>jakarta.annotation</groupId>
-            <artifactId>jakarta.annotation-api</artifactId>
             <scope>compile</scope>
         </dependency>
         <dependency>

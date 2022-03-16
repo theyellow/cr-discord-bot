@@ -30,7 +30,7 @@ spec:
   type: NodePort
   ports:
     - port: 8080
-      nodePort: 29121
+      nodePort: 30121
 ---
 # service for rsocket-router (external port 30321)
 apiVersion: v1
