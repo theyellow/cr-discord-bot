@@ -29,6 +29,8 @@ import reactor.util.Logger;
 import reactor.util.Loggers;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
 @Singleton
@@ -36,27 +38,17 @@ import java.util.concurrent.Semaphore;
 public class ShardCoordinatorServer {
 
     private static final Logger log = Loggers.getLogger(ShardCoordinatorServer.class);
-    private static RSocketShardCoordinatorServer coordinatorServer;
-    private final Semaphore mutex = new Semaphore(1);
+    private boolean coordinatorServerStarted;
+    private final ExecutorService pool = Executors.newFixedThreadPool(1);
 
     @Inject
     private StateClient stateClient;
 
-    @Inject
-    private PayloadServer lastServer;
-
-    @EventListener
-    @Async
-    public void startShardCoordinator(ServiceReadyEvent event) throws InterruptedException {
-        while(!lastServer.isExisting()) {
-            Thread.sleep(200);
-        }
-        log.info("Try to start shard coordinator");
-        mutex.acquire();
-        if (coordinatorServer == null) {
+    public void startShardCoordinator() {
+        pool.execute(() -> {
+            final Logger log = Loggers.getLogger(ShardCoordinatorServer.class);
             log.info("Create shard coordinator...");
-            coordinatorServer = new RSocketShardCoordinatorServer(new InetSocketAddress(Constants.SHARD_COORDINATOR_SERVER_PORT));
-            mutex.release();
+            RSocketShardCoordinatorServer coordinatorServer = new RSocketShardCoordinatorServer(new InetSocketAddress(Constants.SHARD_COORDINATOR_SERVER_PORT));
             log.info("Created shard coordinator!");
             Mono<CloseableChannel> channelMono = coordinatorServer
                     .start();
@@ -67,14 +59,14 @@ public class ShardCoordinatorServer {
                     .orElseThrow(RuntimeException::new)
                     .onClose()
                     .block();
-        } else {
-            mutex.release();
-            log.info("Shard coordinator is existing, so no start will be done");
-        }
+            log.info("Channel of shard coordinator unblocked");
+        });
+        coordinatorServerStarted = true;
     }
 
+
     public boolean isExisting() {
-        return null != coordinatorServer;
+        return coordinatorServerStarted;
     }
 
 }

@@ -18,38 +18,25 @@
 package crdiscordbot;
 
 import discord4j.connect.rsocket.gateway.RSocketPayloadServer;
-import io.micronaut.discovery.event.ServiceReadyEvent;
-import io.micronaut.runtime.event.annotation.EventListener;
-import io.micronaut.scheduling.annotation.Async;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import reactor.util.Logger;
 import reactor.util.Loggers;
 
 import java.net.InetSocketAddress;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Singleton
-//@Controller("/payloadserver")
 public class PayloadServer {
 
     private static final Logger log = Loggers.getLogger(PayloadServer.class);
-    private static RSocketPayloadServer payloadServer;
-    private final Semaphore mutex = new Semaphore(1);
+    private boolean payloadServerStarted;
+    private final ExecutorService pool = Executors.newFixedThreadPool(1);
 
-    @Inject
-    private RouterServer lastServer;
-
-    @EventListener
-    @Async
-    public void startPayloadServer(ServiceReadyEvent readyEvent) throws InterruptedException {
-        while(!lastServer.isExisting()) {
-            Thread.sleep(200);
-        }
-        mutex.acquire();
-        if (payloadServer == null) {
-            payloadServer = new RSocketPayloadServer(new InetSocketAddress(Constants.PAYLOAD_SERVER_PORT));
-            mutex.release();
+    public void startPayloadServer() {
+        pool.execute(() -> {
+            final Logger log = Loggers.getLogger(PayloadServer.class);
+            RSocketPayloadServer payloadServer = new RSocketPayloadServer(new InetSocketAddress(Constants.PAYLOAD_SERVER_PORT));
             payloadServer
                     .start()
                     .doOnNext(cc -> log.info("Started payload server at {}", cc.address()))
@@ -57,14 +44,12 @@ public class PayloadServer {
                     .orElseThrow(RuntimeException::new)
                     .onClose()
                     .block();
-        } else {
-            mutex.release();
-            log.info("payloadserver is existing, so no start will be done");
-        }
+        });
+        payloadServerStarted = true;
     }
 
     public boolean isExisting() {
-        return null != payloadServer;
+        return payloadServerStarted;
     }
 
 }
