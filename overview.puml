@@ -1,0 +1,36 @@
+@startuml
+
+database Redis #f0f404
+
+package "RabbitMQ-Middleware" #aaaaaa{
+    queue "MQ-Queues" as MQ #d0d0d0
+    [RabbitMQBroker] -> MQ
+}
+
+package "RSocket-Middleware" #aaaaaa {
+'    [RSocketRouter] --- [RabbitMQBroker]
+    TCP <- [RSocketRouter]
+    [RabbitMQBroker] -- [RSocketRouter]
+    [PayloadServer] - [RSocketRouter]
+    [RSocketShardCoordinator] -- [RSocketRouter]
+}
+[leader] #20d030
+[leader] - TCP
+[leader] = MQ #7070d0
+[leader] -- [Redis] #000000
+
+package "Discord" {
+    [Discord] - [leader]
+}
+[Discord] #ffffff
+
+[worker 1] #20d0a0
+[worker n] #20d0a0
+
+MQ == [worker 1] #7070d0
+MQ == [worker n] #7070d0
+[worker 1] -- TCP
+[worker n] -- TCP
+[worker 1] -- [Redis] #000000
+[worker n] -- [Redis] #000000
+@enduml
