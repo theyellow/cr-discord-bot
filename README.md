@@ -20,7 +20,7 @@ For having some fun this bot plays with Clash Royal API and is inspired by [clas
 
 Overview of architecture: 
 
-![](http://www.plantuml.com/plantuml/proxy?idx=0&src=https://raw.githubusercontent.com/theyellow/cr-discord-bot/main/overview.puml)
+![](http://www.plantuml.com/plantuml/proxy?idx=0&src=https://raw.githubusercontent.com/theyellow/cr-discord-bot/main/overview.puml?)
 
 To get it working you need to use
 
