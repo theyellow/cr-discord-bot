@@ -2,35 +2,39 @@
 
 database Redis #f0f404
 
-package "RabbitMQ-Middleware" #aaaaaa{
-    queue "MQ-Queues" as MQ #d0d0d0
-    [RabbitMQBroker] -> MQ
+package "RabbitMQ-Broker" #aaaaaa {
+    queue "outbound-queue" as MQ_out #d0d0d0
+
+    queue "inbound-queue" as MQ_in #d0d0d0
+'    [RabbitMQBroker] -> MQ_in
 }
 
-package "RSocket-Middleware" #aaaaaa {
+package "RSocket-Middleware" as rsocket_middleware #aaaaaa {
 '    [RSocketRouter] --- [RabbitMQBroker]
-    TCP <- [RSocketRouter]
-    [RabbitMQBroker] -- [RSocketRouter]
+'    [RabbitMQBroker] -- [RSocketRouter]
     [PayloadServer] - [RSocketRouter]
     [RSocketShardCoordinator] -- [RSocketRouter]
 }
 [leader] #20d030
-[leader] - TCP
-[leader] = MQ #7070d0
-[leader] -- [Redis] #000000
+[leader] <=> rsocket_middleware
+[leader] ==> MQ_in #7070d0
+[leader] <== MQ_out #7070d0
+[leader] -right-> [Redis] #000000 :write
 
-package "Discord" {
-    [Discord] - [leader]
-}
 [Discord] #ffffff
+package "Discord" {
+    [Discord] -down- [leader]
+}
 
 [worker 1] #20d0a0
 [worker n] #20d0a0
 
-MQ == [worker 1] #7070d0
-MQ == [worker n] #7070d0
-[worker 1] -- TCP
-[worker n] -- TCP
-[worker 1] -- [Redis] #000000
-[worker n] -- [Redis] #000000
+MQ_in ==> [worker 1] #7070d0
+MQ_in ==> [worker n] #7070d0
+MQ_out <== [worker 1] #7070d0
+MQ_out <== [worker n] #7070d0
+[worker 1] <=up=> rsocket_middleware
+[worker n] <=up=> rsocket_middleware
+[worker 1] <- [Redis] #000000 : read
+[worker n] <- [Redis] #000000 : read
 @enduml

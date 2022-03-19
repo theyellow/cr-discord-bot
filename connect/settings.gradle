@@ -2,6 +2,5 @@ rootProject.name = 'connect'
 
 include 'common'
 include 'rsocket'
-include 'examples'
 include 'rabbitmq'
 
