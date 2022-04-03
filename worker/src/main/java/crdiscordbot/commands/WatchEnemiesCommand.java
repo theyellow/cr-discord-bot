@@ -228,6 +228,10 @@ public class WatchEnemiesCommand implements SlashCommand {
     }
 
     public static <T, U> T getFieldWithDefault (List<U> incomingList, Function<U, T> extractionFunc, BiFunction<T, T, T> reducerFunc, T defaultValue) {
-        return incomingList.stream().map(extractionFunc).reduce(reducerFunc::apply).orElse(defaultValue);
+        if (null == incomingList) {
+            return defaultValue;
+        } else {
+            return incomingList.stream().map(extractionFunc).reduce(reducerFunc::apply).orElse(defaultValue);
+        }
     }
 }
