@@ -33,12 +33,14 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Mono;
 
 import java.net.InetSocketAddress;
 
 @SpringBootApplication
+@EnableAsync
 public class ClashRoyalDiscordBot {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClashRoyalDiscordBot.class);
@@ -128,8 +130,7 @@ public class ClashRoyalDiscordBot {
 
     @Bean(name = "discordRestClient")
     public RestClient discordRestClient() {
-        RestClient restClient = RestClient.create(System.getenv("BOT_TOKEN"));
-        return restClient;
+        return RestClient.create(System.getenv("BOT_TOKEN"));
     }
 
     @Bean(name = "royalRestClient")

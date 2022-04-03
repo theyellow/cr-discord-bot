@@ -49,7 +49,7 @@ public class ClashRoyalDiscordLeader {
             .build()
             .run(args);
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Starting leader, spring context initialized with {} beans", String.valueOf(springContext.getBeanDefinitionNames().length));
+            LOGGER.info("Starting leader, spring context initialized with {} beans", springContext.getBeanDefinitionNames().length);
         }
         leaderBuilder();
         if (LOGGER.isInfoEnabled()) {
@@ -145,8 +145,7 @@ public class ClashRoyalDiscordLeader {
 
     @Bean(name = "discordRestClient")
     public RestClient discordRestClient() {
-        RestClient restClient = RestClient.create(System.getenv("BOT_TOKEN"));
-        return restClient;
+        return RestClient.create(System.getenv("BOT_TOKEN"));
     }
 
     @Bean(name = "royalRestClient")

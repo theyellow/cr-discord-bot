@@ -31,13 +31,11 @@ public final class Constants {
     public static int RABBITMQ_PORT;
     static {
         try {
-            RABBITMQ_PORT = (null == RABBITMQ_PORT_INTERNAL || RABBITMQ_PORT_INTERNAL.isEmpty()) ? -1 : Integer.valueOf(RABBITMQ_PORT_INTERNAL);
+            RABBITMQ_PORT = (null == RABBITMQ_PORT_INTERNAL || RABBITMQ_PORT_INTERNAL.isEmpty()) ? -1 : Integer.parseInt(RABBITMQ_PORT_INTERNAL);
         } catch (NumberFormatException e) {
             RABBITMQ_PORT = -1;
         }
     }
-
-    ;
 
     // rsocket variables
     private static String LOCALHOST;

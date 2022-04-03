@@ -6,9 +6,13 @@ import crdiscordbot.model.RiverRace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+import java.util.concurrent.CompletableFuture;
+
+@Service
 public class ClashRoyalClanAPI {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClashRoyalClanAPI.class);
@@ -30,6 +34,12 @@ public class ClashRoyalClanAPI {
         LOGGER.debug("getCurrentRiverRace({})", clanTag);
         return clashRoyalAPI.getForUrl(ClashRoyalAPI.ROYAL_API + "clans/" + clashRoyalAPI.urlEncodeArgument(clanTag) + "/currentriverrace",
                 RiverRace.class);
+    }
+
+    @Async
+    public CompletableFuture<Boolean> startAsyncEnemiesWatch() {
+
+        return CompletableFuture.completedFuture(true);
     }
 
 }
