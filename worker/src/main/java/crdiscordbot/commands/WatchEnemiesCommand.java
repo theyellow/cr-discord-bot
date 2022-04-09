@@ -93,10 +93,6 @@ public class WatchEnemiesCommand implements SlashCommand {
         // end of war
         String warEndTime = currentRiverRace.getWarEndTime();
 
-        // current state of river race
-        CurrentRiverRace.StateEnum riverRaceState = currentRiverRace.getState();
-
-
         // participants of own clan
         List<RiverRaceParticipant> participants = currentRiverRace.getClan().getParticipants();
         // battles played by own clan
@@ -132,10 +128,6 @@ public class WatchEnemiesCommand implements SlashCommand {
 
         // end of war
         String warEndTime = currentRiverRace.getWarEndTime();
-
-        // current state of river race
-        CurrentRiverRace.StateEnum riverRaceState = currentRiverRace.getState();
-
 
         // participants of own clan
         List<RiverRaceParticipant> participants = currentRiverRace.getClan().getParticipants();
