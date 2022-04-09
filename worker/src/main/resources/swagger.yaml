@@ -99,8 +99,8 @@ definitions:
       state:
         type: string
         enum:
-          - clan_not_found
-          - access_denied
+          - clanNotFound
+          - accessDenied
           - matchmaking
           - matched
           - full
@@ -120,9 +120,9 @@ definitions:
       periodType:
         type: string
         enum:
-          - TRAINING
-          - WAR_DAY
-          - COLOSSEUM
+          - training
+          - warDay
+          - colosseum
       periodLogs:
         $ref: '#/definitions/PeriodLogList'
   PeriodLogList:
@@ -276,8 +276,8 @@ definitions:
       type:
         type: string
         enum:
-          - SINGLE_CHALLENGE
-          - CHAIN_CHALLENGE
+          - singleChallenge
+          - chainChallenge
       startTime:
         type: string
       endTime:
@@ -391,7 +391,7 @@ definitions:
       role:
         type: string
         enum:
-          - not_member
+          - notMember
           - member
           - leader
           - admin
@@ -546,12 +546,12 @@ definitions:
       state:
         type: string
         enum:
-          - PENDING
-          - CANCELLED
-          - TIMED_OUT
-          - IN_PROGRESS
-          - COMPLETE
-          - FAILED
+          - pending
+          - cancelled
+          - timedOut
+          - inProgress
+          - complete
+          - failed
       startTime:
         type: string
       battle:
@@ -1015,11 +1015,11 @@ definitions:
       role:
         type: string
         enum:
-          - NOT_MEMBER
-          - MEMBER
-          - LEADER
-          - ADMIN
-          - COLEADER
+          - notMember
+          - member
+          - leader
+          - admin
+          - coleader
       wins:
         type: integer
       losses:
