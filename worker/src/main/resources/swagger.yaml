@@ -99,12 +99,12 @@ definitions:
       state:
         type: string
         enum:
-          - CLAN_NOT_FOUND
-          - ACCESS_DENIED
-          - MATCHMAKING
-          - MATCHED
-          - FULL
-          - ENDED
+          - clan_not_found
+          - access_denied
+          - matchmaking
+          - matched
+          - full
+          - ended
       clan:
         $ref: '#/definitions/RiverRaceClan'
       clans:
@@ -391,11 +391,11 @@ definitions:
       role:
         type: string
         enum:
-          - NOT_MEMBER
-          - MEMBER
-          - LEADER
-          - ADMIN
-          - COLEADER
+          - not_member
+          - member
+          - leader
+          - admin
+          - coleader
       expLevel:
         type: integer
       trophies:
@@ -502,10 +502,10 @@ definitions:
       clanChestStatus:
         type: string
         enum:
-          - INACTIVE
-          - ACTIVE
-          - COMPLETED
-          - UNKNOWN
+          - inactive
+          - active
+          - completed
+          - unknown
       clanChestLevel:
         type: integer
       badgeId:
@@ -527,9 +527,9 @@ definitions:
       type:
         type: string
         enum:
-          - OPEN
-          - INVITE_ONLY
-          - CLOSED
+          - open
+          - invite_only
+          - closed
       members:
         type: integer
       description:
