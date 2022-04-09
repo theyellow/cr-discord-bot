@@ -1,5 +1,7 @@
 package crdiscordbot;
 
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import crdiscordbot.connect.Constants;
 import crdiscordbot.connect.LogoutHttpServer;
 import crdiscordbot.listeners.SlashCommandListener;
@@ -72,106 +74,6 @@ public class ClashRoyalDiscordBot {
         SlashCommandListener slashCommandListener = new SlashCommandListener(springContext);
         createWorker(slashCommandListener);
 
-    }
-
-
-    class RaceStateToEnumConverter implements HttpMessageConverter<CurrentRiverRace.StateEnum> {
-
-        public boolean canRead(Class<?> aClass, MediaType mediaType) {
-            return aClass== CurrentRiverRace.StateEnum.class;
-        }
-
-        public boolean canWrite(Class<?> aClass, MediaType mediaType) {
-            return false;
-        }
-
-        public List<MediaType> getSupportedMediaTypes() {
-            return new LinkedList<MediaType>();
-        }
-
-        public CurrentRiverRace.StateEnum read(Class<? extends CurrentRiverRace.StateEnum> aClass,
-                                   HttpInputMessage httpInputMessage)
-                throws IOException, HttpMessageNotReadableException {
-
-            ByteArrayOutputStream result = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            for (int length; (length = httpInputMessage.getBody().read(buffer)) != -1; ) {
-                result.write(buffer, 0, length);
-            }
-            String string = result.toString("UTF-8");
-            return CurrentRiverRace.StateEnum.valueOf(string);
-        }
-
-        public void write(CurrentRiverRace.StateEnum value, MediaType mediaType,
-                          HttpOutputMessage httpOutputMessage)
-                throws IOException, HttpMessageNotWritableException {
-        }
-    }
-
-    class ClanwarStateToEnumConverter implements HttpMessageConverter<CurrentClanWar.StateEnum> {
-
-        public boolean canRead(Class<?> aClass, MediaType mediaType) {
-            return aClass== CurrentClanWar.StateEnum.class;
-        }
-
-        public boolean canWrite(Class<?> aClass, MediaType mediaType) {
-            return false;
-        }
-
-        public List<MediaType> getSupportedMediaTypes() {
-            return new LinkedList<MediaType>();
-        }
-
-        public CurrentClanWar.StateEnum read(Class<? extends CurrentClanWar.StateEnum> aClass,
-                                               HttpInputMessage httpInputMessage)
-                throws IOException, HttpMessageNotReadableException {
-
-            ByteArrayOutputStream result = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            for (int length; (length = httpInputMessage.getBody().read(buffer)) != -1; ) {
-                result.write(buffer, 0, length);
-            }
-            String string = result.toString("UTF-8");
-            return CurrentClanWar.StateEnum.valueOf(string);
-        }
-
-        public void write(CurrentClanWar.StateEnum value, MediaType mediaType,
-                          HttpOutputMessage httpOutputMessage)
-                throws IOException, HttpMessageNotWritableException {
-        }
-    }
-
-    class MatchStateToEnumConverter implements HttpMessageConverter<Match.StateEnum> {
-
-        public boolean canRead(Class<?> aClass, MediaType mediaType) {
-            return aClass== Match.StateEnum.class;
-        }
-
-        public boolean canWrite(Class<?> aClass, MediaType mediaType) {
-            return false;
-        }
-
-        public List<MediaType> getSupportedMediaTypes() {
-            return new LinkedList<MediaType>();
-        }
-
-        public Match.StateEnum read(Class<? extends Match.StateEnum> aClass,
-                                             HttpInputMessage httpInputMessage)
-                throws IOException, HttpMessageNotReadableException {
-
-            ByteArrayOutputStream result = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            for (int length; (length = httpInputMessage.getBody().read(buffer)) != -1; ) {
-                result.write(buffer, 0, length);
-            }
-            String string = result.toString("UTF-8");
-            return Match.StateEnum.valueOf(string);
-        }
-
-        public void write(Match.StateEnum value, MediaType mediaType,
-                          HttpOutputMessage httpOutputMessage)
-                throws IOException, HttpMessageNotWritableException {
-        }
     }
 
     private static void createWorker(SlashCommandListener slashCommandListener) {
@@ -253,18 +155,16 @@ public class ClashRoyalDiscordBot {
     }
 
     @Bean(name = "royalRestClient")
-    public RestTemplate royalRestClient() {
+    public RestTemplate royalRestClient(ObjectMapper objectMapper) {
+        objectMapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
         String apiToken = System.getenv("API_TOKEN");
-        RestTemplate restTemplate = new RestTemplateBuilder(rt-> {
+        RestTemplate restTemplate = new RestTemplateBuilder(rt->
             rt.getInterceptors().add((request, body, execution) -> {
                 request.getHeaders().clear();
                 request.getHeaders().add("Authorization", "Bearer " + apiToken);
                 return execution.execute(request, body);
-            });
-            rt.getMessageConverters().add(new ClanwarStateToEnumConverter());
-            rt.getMessageConverters().add(new RaceStateToEnumConverter());
-            rt.getMessageConverters().add(new MatchStateToEnumConverter());
-        }).build();
+            })
+        ).build();
         LOGGER.info("REST-Engine for CR started...");
         return restTemplate;
     }
