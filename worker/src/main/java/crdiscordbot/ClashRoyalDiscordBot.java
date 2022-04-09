@@ -40,6 +40,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import reactor.core.publisher.Mono;
@@ -62,29 +63,25 @@ public class ClashRoyalDiscordBot {
 
     }
 
-    @Configuration
-    static class MyConfig extends WebMvcConfigurerAdapter {
-        @Override
-        public void addFormatters(FormatterRegistry registry) {
-            registry.addConverter(new RaceStateToEnumConverter());
-            registry.addConverter(new ClanwarStateToEnumConverter());
-            registry.addConverter(new MatchStateToEnumConverter());
-        }
-    }
 
-    private static class RaceStateToEnumConverter implements Converter<String, CurrentRiverRace.StateEnum> {
+    @Component
+    public class RaceStateToEnumConverter implements Converter<String, CurrentRiverRace.StateEnum> {
         @Override
         public CurrentRiverRace.StateEnum convert(String from) {
             return CurrentRiverRace.StateEnum.valueOf(from.toUpperCase());
         }
     }
-    private static class ClanwarStateToEnumConverter implements Converter<String, CurrentClanWar.StateEnum> {
+
+    @Component
+    public class ClanwarStateToEnumConverter implements Converter<String, CurrentClanWar.StateEnum> {
         @Override
         public CurrentClanWar.StateEnum convert(String from) {
             return CurrentClanWar.StateEnum.valueOf(from.toUpperCase());
         }
     }
-    private static class MatchStateToEnumConverter implements Converter<String, Match.StateEnum> {
+
+    @Component
+    public class MatchStateToEnumConverter implements Converter<String, Match.StateEnum> {
         @Override
         public Match.StateEnum convert(String from) {
             return Match.StateEnum.valueOf(from.toUpperCase());
