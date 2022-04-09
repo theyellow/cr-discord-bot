@@ -111,7 +111,7 @@ public class WatchEnemiesCommand implements SlashCommand {
         resultBuilder
                 .append("So far there are ")
                 .append(wins)
-                .append("battles won by ")
+                .append(" battles won by ")
                 .append(currentClan.getName()).append(", ")
                 .append(battlesPlayed)
                 .append(" battles were played and ")
@@ -150,11 +150,9 @@ public class WatchEnemiesCommand implements SlashCommand {
         Integer numberOfBattles = getWarParticipantsIntField(participants, WarParticipant::getNumberOfBattles);
 
 
-        sb.append("Battle ends at ");
-        sb.append(warEndTime);
-        sb.append(", so far there are ");
+        sb.append("So far there are ");
         sb.append(wins);
-        sb.append("battles won by our clan, ");
+        sb.append(" battles won by our clan, ");
         sb.append(battlesPlayed);
         sb.append(" battles were played and ");
         sb.append(numberOfBattles - battlesPlayed);

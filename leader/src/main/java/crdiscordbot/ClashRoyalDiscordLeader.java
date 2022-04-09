@@ -25,8 +25,10 @@ import discord4j.core.shard.ShardingStrategy;
 import discord4j.gateway.intent.Intent;
 import discord4j.gateway.intent.IntentSet;
 import discord4j.rest.RestClient;
+import discord4j.store.api.service.StoreService;
 import discord4j.store.redis.RedisStoreService;
 import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -107,6 +109,22 @@ public class ClashRoyalDiscordLeader {
         RabbitMQSinkMapper sink = RabbitMQSinkMapper.createBinarySinkToDirect("payload");
         RabbitMQSourceMapper source = RabbitMQSourceMapper.createBinarySource();
 
+        StoreService redisStore = null;
+        while (redisStore == null) {
+            try {
+                redisStore = RedisStoreService.builder()
+                        .redisClient(redisClient)
+                        .useSharedConnection(false)
+                        .build();
+            } catch (RedisConnectionException connectionException) {
+                LOGGER.warn("Connection to redis failed, try again in 10 s");
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    LOGGER.warn("sleeping got interrupted-exception");
+                }
+            }
+        }
         GatewayDiscordClient client = DiscordClient.builder(System.getenv("BOT_TOKEN"))
                 .setJacksonResources(jackson)
                 .setGlobalRateLimiter(RSocketGlobalRateLimiter.createWithServerAddress(globalRouterServerAddress))
@@ -125,10 +143,7 @@ public class ClashRoyalDiscordLeader {
                 .setEnabledIntents(IntentSet.all())
                 .setDispatchEventMapper(DispatchEventMapper.discardEvents())
                 // Define the entity cache
-                .setStore(Store.fromLayout(LegacyStoreLayout.of(RedisStoreService.builder()
-                        .redisClient(redisClient)
-                        .useSharedConnection(false)
-                        .build())))
+                .setStore(Store.fromLayout(LegacyStoreLayout.of(redisStore)))
                 // Turn this gateway into a RabbitMQ-based one
                 .setExtraOptions(o -> new ConnectGatewayOptions(o,
                         RabbitMQPayloadSink.create(sink, rabbitMQ),
