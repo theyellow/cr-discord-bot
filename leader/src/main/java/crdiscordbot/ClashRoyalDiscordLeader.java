@@ -122,6 +122,7 @@ public class ClashRoyalDiscordLeader {
                     Thread.sleep(10000);
                 } catch (InterruptedException e) {
                     LOGGER.warn("sleeping got interrupted-exception");
+                    Thread.currentThread().interrupt();
                 }
             }
         }
