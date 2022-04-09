@@ -104,14 +104,14 @@ public class WatchEnemiesCommand implements SlashCommand {
         Integer decksUsedToday = getFieldWithDefault(participants, RiverRaceParticipant::getDecksUsedToday, StandardUtils::addStatic, 0);
 
         resultBuilder
-                .append("So far there are altogether")
+                .append("So far there are altogether ")
                 .append(decksUsed)
                 .append(" decks used by ")
                 .append(currentClan.getName()).append(", ")
                 .append(boatAttacks)
                 .append(" boat-attacks were played and ")
                 .append(decksUsedToday)
-                .append(" decks were used today. \n\n");
+                .append(" decks were used today. \n");
 
         return resultBuilder.toString();
     }
@@ -141,7 +141,7 @@ public class WatchEnemiesCommand implements SlashCommand {
         Integer decksUsedToday = getFieldWithDefault(participants, RiverRaceParticipant::getDecksUsedToday, StandardUtils::addStatic, 0);
 
         sb
-                .append("So far there are altogether")
+                .append("So far there are altogether ")
                 .append(decksUsed)
                 .append(" decks used by ")
                 .append(currentClan.getName()).append(", ")
