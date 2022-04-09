@@ -15,6 +15,7 @@ import reactor.core.publisher.Mono;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -54,7 +55,7 @@ public class WatchEnemiesCommand implements SlashCommand {
             result = "No clan given, either set CLAN_ID system-variable for bot or use a parameter clanTag.";
         } else {
             LOGGER.info("Searched for clan tag: {}", clanTag);
-            RiverRace currentRiverRace = royalRestClanAPI.getCurrentRiverRace(clanTag);
+            CurrentRiverRace currentRiverRace = royalRestClanAPI.getCurrentRiverRace(clanTag);
             result = createAnswer(event.getInteraction(), currentRiverRace);
 
             List<RiverRaceClan> otherClans = currentRiverRace.getClans();
@@ -80,7 +81,7 @@ public class WatchEnemiesCommand implements SlashCommand {
             .withContent(result);
     }
 
-    private static String getInformationForRiverRace(RiverRace currentRiverRace) {
+    private static String getInformationForRiverRace(CurrentRiverRace currentRiverRace) {
         StringBuilder resultBuilder = new StringBuilder();
 
         RiverRaceClan currentClan = currentRiverRace.getClan();
@@ -93,35 +94,34 @@ public class WatchEnemiesCommand implements SlashCommand {
         String warEndTime = currentRiverRace.getWarEndTime();
 
         // current state of river race
-        String riverRaceState = currentRiverRace.getState();
+        CurrentRiverRace.StateEnum riverRaceState = currentRiverRace.getState();
 
 
         // participants of own clan
-        List<WarParticipant> participants = currentRiverRace.getParticipants();
-
+        List<RiverRaceParticipant> participants = currentRiverRace.getClan().getParticipants();
         // battles played by own clan
-        Integer battlesPlayed = getWarParticipantsIntField(participants, WarParticipant::getBattlesPlayed);
+        Integer boatAttacks = getFieldWithDefault(participants, RiverRaceParticipant::getBoatAttacks, StandardUtils::addStatic, 0);
 
         // battles won by own clan
-        Integer wins = getWarParticipantsIntField(participants, WarParticipant::getWins);
+        Integer decksUsed = getFieldWithDefault(participants, RiverRaceParticipant::getDecksUsed, StandardUtils::addStatic, 0);
 
         // all battles of own clan
-        Integer numberOfBattles = getWarParticipantsIntField(participants, WarParticipant::getNumberOfBattles);
+        Integer decksUsedToday = getFieldWithDefault(participants, RiverRaceParticipant::getDecksUsedToday, StandardUtils::addStatic, 0);
 
         resultBuilder
-                .append("So far there are ")
-                .append(wins)
-                .append(" battles won by ")
+                .append("So far there are altogether")
+                .append(decksUsed)
+                .append(" decks used by ")
                 .append(currentClan.getName()).append(", ")
-                .append(battlesPlayed)
-                .append(" battles were played and ")
-                .append(numberOfBattles - battlesPlayed)
-                .append(" were not played yet. \n\n");
+                .append(boatAttacks)
+                .append(" boat-attacks were played and ")
+                .append(decksUsedToday)
+                .append(" decks were used today. \n\n");
 
         return resultBuilder.toString();
     }
 
-    private static String createAnswer(Interaction interaction, RiverRace currentRiverRace) {
+    private static String createAnswer(Interaction interaction, CurrentRiverRace currentRiverRace) {
         StringBuilder sb = new StringBuilder();
 
         RiverRaceClan currentClan = currentRiverRace.getClan();
@@ -134,33 +134,39 @@ public class WatchEnemiesCommand implements SlashCommand {
         String warEndTime = currentRiverRace.getWarEndTime();
 
         // current state of river race
-        String riverRaceState = currentRiverRace.getState();
+        CurrentRiverRace.StateEnum riverRaceState = currentRiverRace.getState();
 
 
         // participants of own clan
-        List<WarParticipant> participants = currentRiverRace.getParticipants();
+        List<RiverRaceParticipant> participants = currentRiverRace.getClan().getParticipants();
 
         // battles played by own clan
-        Integer battlesPlayed = getWarParticipantsIntField(participants, WarParticipant::getBattlesPlayed);
+        Integer boatAttacks = getFieldWithDefault(participants, RiverRaceParticipant::getBoatAttacks, StandardUtils::addStatic, 0);
 
         // battles won by own clan
-        Integer wins = getWarParticipantsIntField(participants, WarParticipant::getWins);
+        Integer decksUsed = getFieldWithDefault(participants, RiverRaceParticipant::getDecksUsed, StandardUtils::addStatic, 0);
 
         // all battles of own clan
-        Integer numberOfBattles = getWarParticipantsIntField(participants, WarParticipant::getNumberOfBattles);
+        Integer decksUsedToday = getFieldWithDefault(participants, RiverRaceParticipant::getDecksUsedToday, StandardUtils::addStatic, 0);
 
-
-        sb.append("So far there are ");
-        sb.append(wins);
-        sb.append(" battles won by our clan, ");
-        sb.append(battlesPlayed);
-        sb.append(" battles were played and ");
-        sb.append(numberOfBattles - battlesPlayed);
-        sb.append(" were not played yet. \n\n");
+        sb
+                .append("So far there are altogether")
+                .append(decksUsed)
+                .append(" decks used by ")
+                .append(currentClan.getName()).append(", ")
+                .append(boatAttacks)
+                .append(" boat-attacks were played and ")
+                .append(decksUsedToday)
+                .append(" decks were used today. \n\n");
 
 
         // create clan distinction between own clan and other clans
-        List<RiverRaceClan> otherClans = currentRiverRace.getClans();
+        List<RiverRaceClan> allClans = Collections.unmodifiableList(currentRiverRace.getClans());
+        List<RiverRaceClan> ownClan = new ArrayList<>(allClans);
+        ownClan.removeIf(clan -> !clan.getTag().equals(currentClan.getTag()));
+
+
+        List<RiverRaceClan> otherClans = new ArrayList<>(allClans);
         otherClans.removeIf(clan -> clan.getTag().equals(currentClan.getTag()));
         // Sort by (river-race) fame
         otherClans.sort((c,d) -> {
@@ -170,14 +176,16 @@ public class WatchEnemiesCommand implements SlashCommand {
             return Integer.compare(c.getFame(),d.getFame());
         });
 
+
+
         // List of other teams participants
-        List<List<RiverRaceClanParticipant>> otherParticipants = otherClans.stream().map(RiverRaceClan::getParticipants).collect(Collectors.toList());
+        List<List<RiverRaceParticipant>> otherParticipants = otherClans.stream().map(RiverRaceClan::getParticipants).collect(Collectors.toList());
 
         // List of fame by other teams
-        List<Integer> fame = getOtherWarParticipantsIntField(otherParticipants, RiverRaceClanParticipant::getFame);
+        List<Integer> fame = getOtherWarParticipantsIntField(otherParticipants, RiverRaceParticipant::getFame);
 
         // List of boat attacks played by other teams
-        List<Integer> boatAttacks = getOtherWarParticipantsIntField(otherParticipants, RiverRaceClanParticipant::getBoatAttacks);
+        List<Integer> boatAttacks2 = getOtherWarParticipantsIntField(otherParticipants, RiverRaceParticipant::getBoatAttacks);
 
         // Get more information about other teams
         //otherClans.stream().map(x -> x.getTag()).map(x -> getInformationAboutClan(x)).collect(Collectors.toList());
@@ -194,7 +202,7 @@ public class WatchEnemiesCommand implements SlashCommand {
                     .append(" : ")
                     .append(fame.get(i))
                     .append(" points and ")
-                    .append(boatAttacks.get(i))
+                    .append(boatAttacks2.get(i))
                     .append(" attacks (")
                     .append(otherParticipants.get(i).size())
                     .append(" participants so far) \n");
@@ -204,7 +212,7 @@ public class WatchEnemiesCommand implements SlashCommand {
         return sb.toString();
     }
 
-    private static List<Integer> getOtherWarParticipantsIntField(List<List<RiverRaceClanParticipant>> clans, Function<RiverRaceClanParticipant, Integer> extractionFunc) {
+    private static List<Integer> getOtherWarParticipantsIntField(List<List<RiverRaceParticipant>> clans, Function<RiverRaceParticipant, Integer> extractionFunc) {
         return clans
                 .stream().map(
                         participants ->
@@ -212,18 +220,15 @@ public class WatchEnemiesCommand implements SlashCommand {
                 .collect(Collectors.toList());
     }
 
-    private static int getWarParticipantsIntField(List<WarParticipant> participants, Function<WarParticipant, Integer> extractionFunc) {
-        return getWarParticipantsFieldWithDefault(participants, extractionFunc, StandardUtils::addStatic,0);
+    private static int getWarParticipantsIntField(List<RiverRaceParticipant> participants, Function<RiverRaceParticipant, Integer> extractionFunc) {
+        return getFieldWithDefault(participants, extractionFunc, StandardUtils::addStatic,0);
     }
 
 
-    private static <T> T getWarParticipantsField(List<WarParticipant> participants, Function<WarParticipant, T> extractionFunc, BiFunction<T, T, T> reducerFunc) {
-        return getWarParticipantsFieldWithDefault(participants, extractionFunc, reducerFunc,null);
+    private static <T> T getWarParticipantsField(List<RiverRaceParticipant> participants, Function<RiverRaceParticipant, T> extractionFunc, BiFunction<T, T, T> reducerFunc) {
+        return getFieldWithDefault(participants, extractionFunc, reducerFunc,null);
     }
 
-    private static <T> T getWarParticipantsFieldWithDefault (List<WarParticipant> participants, Function<WarParticipant, T> extractionFunc, BiFunction<T, T, T> reducerFunc, T defaultValue) {
-        return getFieldWithDefault(participants, extractionFunc, reducerFunc, defaultValue);
-    }
 
     public static <T, U> T getFieldWithDefault (List<U> incomingList, Function<U, T> extractionFunc, BiFunction<T, T, T> reducerFunc, T defaultValue) {
         if (null == incomingList) {

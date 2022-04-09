@@ -1,9 +1,9 @@
 package crdiscordbot.commands;
 
 import crdiscordbot.ClashRoyalClanAPI;
-import crdiscordbot.model.RiverRace;
+import crdiscordbot.model.CurrentRiverRace;
 import crdiscordbot.model.RiverRaceClan;
-import crdiscordbot.model.RiverRaceClanParticipant;
+import crdiscordbot.model.RiverRaceParticipant;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
@@ -50,7 +50,7 @@ public class EnemiesCommand implements SlashCommand {
             result = "No clan given, either set CLAN_ID system-variable for bot or use a parameter clanTag.";
         } else {
             LOGGER.info("Searched for currentRiverRace of clan: {}", clanTag);
-            RiverRace currentRiverRace = royalRestClanAPI.getCurrentRiverRace(clanTag);
+            CurrentRiverRace currentRiverRace = royalRestClanAPI.getCurrentRiverRace(clanTag);
             result = getResult(clanTag, result, currentRiverRace);
         }
         //Reply to the slash command, with the name the user supplied
@@ -59,7 +59,7 @@ public class EnemiesCommand implements SlashCommand {
             .withContent(result);
     }
 
-    private String getResult(String clanTag, String result, RiverRace currentRiverRace) {
+    private String getResult(String clanTag, String result, CurrentRiverRace currentRiverRace) {
         if (null != currentRiverRace) {
             LOGGER.info("Found river-race, ends {}", currentRiverRace.getWarEndTime());
             result = createAnswer(currentRiverRace);
@@ -69,7 +69,7 @@ public class EnemiesCommand implements SlashCommand {
         return result;
     }
 
-    private String createAnswer(RiverRace currentRiverRace) {
+    private String createAnswer(CurrentRiverRace currentRiverRace) {
         String result;
         List<RiverRaceClan> clans = currentRiverRace.getClans();
         RiverRaceClan currentRiverRaceClan = currentRiverRace.getClan();
@@ -97,7 +97,7 @@ public class EnemiesCommand implements SlashCommand {
         }
         int clanFame = Optional.ofNullable(clan.getFame()).orElse(0);
         int periodPoints = Optional.ofNullable(clan.getPeriodPoints()).orElse(0);
-        List<RiverRaceClanParticipant> participants = clan.getParticipants();
+        List<RiverRaceParticipant> participants = clan.getParticipants();
         int nrOfParticipants = 0;
         if (null != participants) {
             nrOfParticipants = participants.size();

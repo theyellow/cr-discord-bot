@@ -113,6 +113,7 @@
                             <generatorName>spring</generatorName>
                             <apiPackage>crdiscordbot.api</apiPackage>
                             <modelPackage>crdiscordbot.model</modelPackage>
+                            <skipValidateSpec>true</skipValidateSpec>
                             <supportingFilesToGenerate>
                                 <!-- ApiUtil.java -->
                             </supportingFilesToGenerate>

@@ -1,8 +1,7 @@
 package crdiscordbot.commands;
 
 import crdiscordbot.ClashRoyalClanAPI;
-import crdiscordbot.model.ClanSearchResult;
-import crdiscordbot.model.ClanSearchResultClan;
+import crdiscordbot.model.Clan;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -55,8 +55,8 @@ public class ShowClansCommand implements SlashCommand {
             result = "No name given, either set CLAN_ID system-variable for bot or use a parameter name.";
         } else {
             LOGGER.info("Clan name to search for: {}", name);
-            ClanSearchResult clans = royalRestClanAPI.getAllClansForName(name);
-            result = clans.getItems().
+             List<Clan> clans = royalRestClanAPI.getAllClansForName(name);
+            result = clans.
                     stream().
                     sorted((clan1, clan2)->
                             compareNullSafe(clan2.getClanScore(),clan1.getClanScore())).
@@ -74,7 +74,7 @@ public class ShowClansCommand implements SlashCommand {
             .withContent(result);
     }
 
-    private static String createClanText(ClanSearchResultClan clan) {
+    private static String createClanText(Clan clan) {
         return MessageFormat.format("{0}({1}) : {2} /\\  ", clan.getName(), clan.getClanScore(), clan.getTag());
     }
 
