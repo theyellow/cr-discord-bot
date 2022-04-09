@@ -57,7 +57,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit-version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -89,7 +88,6 @@
         <dependency>
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-core</artifactId>
-            <version>3.4.12</version>
         </dependency>
     </dependencies>
 
@@ -107,20 +105,17 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>
-                                ${project.basedir}/src/main/resources/swagger.yaml
-                            </inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/swagger.yaml</inputSpec>
                             <generatorName>spring</generatorName>
-                            <apiPackage>crdiscordbot.api</apiPackage>
+                            <generateApis>false</generateApis>
+                            <!--apiPackage>crdiscordbot.api</apiPackage-->
                             <modelPackage>crdiscordbot.model</modelPackage>
                             <skipValidateSpec>true</skipValidateSpec>
-                            <supportingFilesToGenerate>
-                                <!-- ApiUtil.java -->
-                            </supportingFilesToGenerate>
                             <configOptions>
                                 <sourceFolder>src/main/java/</sourceFolder>
                                 <delegatePattern>true</delegatePattern>
                                 <interfaceOnly>true</interfaceOnly>
+                                <serializableModel>true</serializableModel>
                             </configOptions>
                         </configuration>
                     </execution>
