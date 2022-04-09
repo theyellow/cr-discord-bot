@@ -3,6 +3,9 @@ package crdiscordbot;
 import crdiscordbot.connect.Constants;
 import crdiscordbot.connect.LogoutHttpServer;
 import crdiscordbot.listeners.SlashCommandListener;
+import crdiscordbot.model.CurrentClanWar;
+import crdiscordbot.model.CurrentRiverRace;
+import crdiscordbot.model.Match;
 import discord4j.common.JacksonResources;
 import discord4j.common.store.Store;
 import discord4j.common.store.legacy.LegacyStoreLayout;
@@ -33,8 +36,12 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import reactor.core.publisher.Mono;
 
 import java.net.InetSocketAddress;
@@ -53,6 +60,35 @@ public class ClashRoyalDiscordBot {
         SlashCommandListener slashCommandListener = new SlashCommandListener(springContext);
         createWorker(slashCommandListener);
 
+    }
+
+    @Configuration
+    static class MyConfig extends WebMvcConfigurerAdapter {
+        @Override
+        public void addFormatters(FormatterRegistry registry) {
+            registry.addConverter(new RaceStateToEnumConverter());
+            registry.addConverter(new ClanwarStateToEnumConverter());
+            registry.addConverter(new MatchStateToEnumConverter());
+        }
+    }
+
+    private static class RaceStateToEnumConverter implements Converter<String, CurrentRiverRace.StateEnum> {
+        @Override
+        public CurrentRiverRace.StateEnum convert(String from) {
+            return CurrentRiverRace.StateEnum.valueOf(from.toUpperCase());
+        }
+    }
+    private static class ClanwarStateToEnumConverter implements Converter<String, CurrentClanWar.StateEnum> {
+        @Override
+        public CurrentClanWar.StateEnum convert(String from) {
+            return CurrentClanWar.StateEnum.valueOf(from.toUpperCase());
+        }
+    }
+    private static class MatchStateToEnumConverter implements Converter<String, Match.StateEnum> {
+        @Override
+        public Match.StateEnum convert(String from) {
+            return Match.StateEnum.valueOf(from.toUpperCase());
+        }
     }
 
     private static void createWorker(SlashCommandListener slashCommandListener) {
