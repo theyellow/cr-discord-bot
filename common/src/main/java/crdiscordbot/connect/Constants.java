@@ -58,8 +58,8 @@ public final class Constants {
     public static int PAYLOAD_SERVER_PORT = 33333;
 
     // redis variables
-    private static final String CLIENT_URI = System.getenv("REDIS_CLIENT_URI");
-    public static String REDIS_CLIENT_URI = (null == CLIENT_URI || CLIENT_URI.isEmpty()) ? "redis://localhost:6379" : CLIENT_URI;
+    public static final String REDIS_CLIENT_HOST = System.getenv("REDIS_CLIENT_HOST") == null || System.getenv("REDIS_CLIENT_HOST").isEmpty() ? "localhost" : System.getenv("REDIS_CLIENT_HOST") ;
+    public static final int REDIS_CLIENT_PORT = System.getenv("REDIS_CLIENT_PORT") == null || System.getenv("REDIS_CLIENT_PORT").isEmpty() ? 6379 : Integer.parseInt(System.getenv("REDIS_CLIENT_PORT"));
 
     private Constants() {
     }

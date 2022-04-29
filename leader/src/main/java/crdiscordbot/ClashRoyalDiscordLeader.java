@@ -29,6 +29,7 @@ import discord4j.store.api.service.StoreService;
 import discord4j.store.redis.RedisStoreService;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisConnectionException;
+import io.lettuce.core.RedisURI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -46,6 +47,7 @@ public class ClashRoyalDiscordLeader {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClashRoyalDiscordLeader.class);
 
     public static void main(String[] args) {
+        System.setProperty("java.net.preferIPv6Addresses","false");
         //Start spring application
         ApplicationContext springContext = new SpringApplicationBuilder(ClashRoyalDiscordLeader.class)
             .build()
@@ -79,7 +81,8 @@ public class ClashRoyalDiscordLeader {
         /*
          * Define the redis server that will be used as entity cache.
          */
-        RedisClient redisClient = RedisClient.create(Constants.REDIS_CLIENT_URI);
+        RedisURI redisURI = RedisURI.builder().withHost(Constants.REDIS_CLIENT_HOST).withPort(Constants.REDIS_CLIENT_PORT).build();
+        RedisClient redisClient = RedisClient.create(redisURI);
 
         /*
          * Create a default factory for working with Jackson, this can be reused across the application.
