@@ -47,7 +47,6 @@ public class ClashRoyalDiscordLeader {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClashRoyalDiscordLeader.class);
 
     public static void main(String[] args) {
-        System.setProperty("java.net.preferIPv6Addresses","false");
         //Start spring application
         ApplicationContext springContext = new SpringApplicationBuilder(ClashRoyalDiscordLeader.class)
             .build()
@@ -81,7 +80,7 @@ public class ClashRoyalDiscordLeader {
         /*
          * Define the redis server that will be used as entity cache.
          */
-        RedisURI redisURI = RedisURI.builder().withHost(Constants.REDIS_CLIENT_HOST).withPort(Constants.REDIS_CLIENT_PORT).build();
+        RedisURI redisURI = RedisURI.builder().withHost(Constants.REDIS_CLIENT_HOST).withPort(Constants.REDIS_CLIENT_PORT).withSsl(true).build();
         RedisClient redisClient = RedisClient.create(redisURI);
 
         /*

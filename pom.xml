@@ -25,19 +25,23 @@
 
         <discord4j.connect.version>0.7.0-SNAPSHOT</discord4j.connect.version>
         <discord4j.version>3.2.1</discord4j.version>
-        <redis.lettuce.version>6.0.6.RELEASE</redis.lettuce.version>
+        <redis.lettuce.version>6.0.9.RELEASE</redis.lettuce.version>
         <reactor-core.version>3.4.14</reactor-core.version>
         <gson-fire-version>1.8.5</gson-fire-version>
         <okhttp-version>2.7.5</okhttp-version>
         <gson-version>2.8.9</gson-version>
+        <springboot-starter-web-version>2.6.6</springboot-starter-web-version>
+        <slf4j-version>1.7.32</slf4j-version>
+        <logback-version>1.2.10</logback-version>
         <threetenbp-version>1.5.1</threetenbp-version>
         <swagger-core-version>2.0.0-rc2</swagger-core-version>
+        <swagger-annotations-version>2.1.13</swagger-annotations-version>
         <openapi-codegen.version>5.4.0</openapi-codegen.version>
         <junit-version>4.13.2</junit-version>
-
+        <javax-validation-api-version>2.0.1.Final</javax-validation-api-version>
         <maven-plugin-version>1.0.0</maven-plugin-version>
         <maven-springboot-plugin.version>2.5.2</maven-springboot-plugin.version>
-
+        <openapi-jackson-databind-version>0.2.2</openapi-jackson-databind-version>
         <sonar.organization>theyellow-github</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
@@ -78,17 +82,17 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.2.10</version>
+                <version>${logback-version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.32</version>
+                <version>${slf4j-version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
-                <version>2.6.6</version>
+                <version>${springboot-starter-web-version}</version>
             </dependency>
             <dependency>
                 <groupId>io.swagger</groupId>
@@ -98,17 +102,17 @@
             <dependency>
                 <groupId>io.swagger.core.v3</groupId>
                 <artifactId>swagger-annotations</artifactId>
-                <version>2.1.13</version>
+                <version>${swagger-annotations-version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.validation</groupId>
                 <artifactId>validation-api</artifactId>
-                <version>2.0.1.Final</version>
+                <version>${javax-validation-api-version}</version>
             </dependency>
             <dependency>
                 <groupId>org.openapitools</groupId>
                 <artifactId>jackson-databind-nullable</artifactId>
-                <version>0.2.2</version>
+                <version>${openapi-jackson-databind-version}</version>
             </dependency>
             <dependency>
                 <groupId>com.squareup.okhttp</groupId>
