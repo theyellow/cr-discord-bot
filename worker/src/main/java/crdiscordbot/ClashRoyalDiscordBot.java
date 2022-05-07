@@ -60,6 +60,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -117,7 +118,7 @@ public class ClashRoyalDiscordBot {
             for (int length; (length = inputMessage.getBody().read(buffer)) != -1; ) {
                 result.write(buffer, 0, length);
             }
-            String string = result.toString("UTF-8");
+            String string = result.toString(StandardCharsets.UTF_8);
             return CurrentRiverRace.StateEnum.valueOf(string);
         }
 
@@ -175,7 +176,7 @@ public class ClashRoyalDiscordBot {
             for (int length; (length = inputMessage.getBody().read(buffer)) != -1; ) {
                 result.write(buffer, 0, length);
             }
-            String string = result.toString("UTF-8");
+            String string = result.toString(StandardCharsets.UTF_8);
             return CurrentClanWar.StateEnum.valueOf(string);
         }
 
@@ -233,7 +234,7 @@ public class ClashRoyalDiscordBot {
             for (int length; (length = inputMessage.getBody().read(buffer)) != -1; ) {
                 result.write(buffer, 0, length);
             }
-            String string = result.toString("UTF-8");
+            String string = result.toString(StandardCharsets.UTF_8);
             return Match.StateEnum.valueOf(string);
         }
 

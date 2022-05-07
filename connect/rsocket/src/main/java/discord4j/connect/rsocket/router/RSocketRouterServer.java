@@ -19,9 +19,8 @@ package discord4j.connect.rsocket.router;
 
 import discord4j.rest.request.GlobalRateLimiter;
 import discord4j.rest.request.RequestQueueFactory;
-import io.rsocket.AbstractRSocket;
-import io.rsocket.Payload;
 import io.rsocket.RSocket;
+import io.rsocket.Payload;
 import io.rsocket.core.RSocketServer;
 import io.rsocket.transport.netty.server.CloseableChannel;
 import io.rsocket.transport.netty.server.TcpServerTransport;
@@ -71,7 +70,7 @@ public class RSocketRouterServer {
     }
 
     private RSocket leaderAcceptor() {
-        return new AbstractRSocket() {
+        return new RSocket() {
 
             @Override
             public Flux<Payload> requestChannel(Publisher<Payload> payloads) {
