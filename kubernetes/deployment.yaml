@@ -1,73 +1,86 @@
 ---
+# Namespace "cr-discord-bot" for kubernetes components of cr-discord-bot
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: crbot
+  name: cr-discord-bot
   labels:
-    name: crbot
+    name: cr-discord-bot
 ---
-apiVersion: apps/v1
-kind: Deployment
+# Redis deployment
+#
+# port-mapping is internal:6379 -> external:30379
+#
+# For single deployment use:
+# kubectl apply -f redis.yaml
+#
+# namespace "cr-discord-bot" for kubernetes components of cr-discord-bot
+apiVersion: v1
+kind: Namespace
 metadata:
-  name: crbot-deployment
-  namespace: crbot
+  name: cr-discord-bot
   labels:
-    app: crbot-deployment
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: crbot
-  template:
-    metadata:
-      name: crbot
-      namespace: crbot
-      labels:
-        app: crbot
-        department: bots
-    spec:
-      containers:
-        - name: crbotcontainer
-          image: ghcr.io/theyellow/cr-discord-bot:main
-          imagePullPolicy: Always
-          envFrom:
-            - secretRef:
-                name: crbot-secrets
-          ports:
-            - containerPort: 8080
-          command: [ "java", "-Xmx300m", "-jar", "/crbot.jar" ]
+    name: cr-discord-bot
 ---
+# service for Redis
+# port internal: 6379
+# port external: 30379
 apiVersion: v1
 kind: Service
 metadata:
-  name: crbot-service
-  namespace: crbot
+  name: cr-discord-bot-redis
+  namespace: cr-discord-bot
 spec:
   selector:
-    app: crbot
+    app: cr-discord-redis
     department: bots
   type: NodePort
   ports:
     - port: 6379
-      nodePort: 32379
+      nodePort: 30379
 ---
+# configuration for Redis
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: crbot-redis-config
+  name: cr-discord-bot-redis-config
+  namespace: cr-discord-bot
 data:
   redis-config: |
     maxmemory 2mb
     maxmemory-policy allkeys-lru
+    bind 0.0.0.0
+    appendonly yes
+    protected-mode no
+    pidfile /data/redis-6379.pid
 ---
+# Pod including Redis 5.0.4
 apiVersion: v1
 kind: Pod
 metadata:
-  name: redis
+  name: redis-discord
+  namespace: cr-discord-bot
+  labels:
+    app: cr-discord-redis
+    department: bots
 spec:
+  initContainers:
+    - name: system-init
+      image: busybox:1.32
+      imagePullPolicy: IfNotPresent
+      command:
+        - "sh"
+        - "-c"
+        - "echo never > /sys/kernel/mm/transparent_hugepage/enabled"
+      securityContext:
+        privileged: true
+        runAsUser: 0
+      volumeMounts:
+        - name: sys
+          mountPath: /sys
   containers:
-    - name: redis
-      image: redis:5.0.4
+    - name: redis-discord
+      image: redis:5.0.8
       command:
         - redis-server
         - "/redis-master/redis.conf"
@@ -78,9 +91,25 @@ spec:
         - containerPort: 6379
       resources:
         limits:
-          cpu: "0.1"
+          cpu: "0.2"
+      livenessProbe:
+        tcpSocket:
+          port: 6379
+        initialDelaySeconds: 300
+        timeoutSeconds: 1
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 3
+      readinessProbe:
+        tcpSocket:
+          port: 6379
+        initialDelaySeconds: 5
+        timeoutSeconds: 1
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 3
       volumeMounts:
-        - mountPath: /redis-master-data
+        - mountPath: /data
           name: data
         - mountPath: /redis-master
           name: config
@@ -89,8 +118,276 @@ spec:
       emptyDir: {}
     - name: config
       configMap:
-        name: crbot-redis-config
+        name: cr-discord-bot-redis-config
         items:
           - key: redis-config
             path: redis.conf
+    - name: sys
+      hostPath:
+        path: /sys
+---
+# Deployment of RabbitMQ broker component based on rabbitmq:3.9-management docker-image
+#
+# port-mapping is:
+# for standard port: internal:5672 -> external:30672
+# for admin-port: internal:15672 -> external:30673
+#
+# For single deployment use:
+# kubectl apply -f rabbitmq-broker.yaml
+#
+# namespace "cr-discord-bot" for kubernetes components of cr-discord-bot
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: cr-discord-bot
+  labels:
+    name: cr-discord-bot
+---
+# RabbitMQ service port internal:5672 -> external:30672
+apiVersion: v1
+kind: Service
+metadata:
+  name: cr-discord-rabbitmq-broker-port
+  namespace: cr-discord-bot
+spec:
+  selector:
+    app: cr-discord-rabbitmq-broker
+    department: bots
+  type: NodePort
+  ports:
+    - port: 5672
+      nodePort: 30672
+---
+# RabbitMQ service admin-port internal:15672 -> external:30673
+apiVersion: v1
+kind: Service
+metadata:
+  name: cr-discord-rabbitmq-broker-admin-port
+  namespace: cr-discord-bot
+spec:
+  selector:
+    app: cr-discord-rabbitmq-broker
+    department: bots
+  type: NodePort
+  ports:
+    - port: 15672
+      nodePort: 30673
+---
+# Deployment of RabbitMQ-broker with one instance
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cr-discord-rabbitmq-broker-deployment
+  namespace: cr-discord-bot
+  labels:
+    app: cr-discord-rabbitmq-broker-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cr-discord-rabbitmq-broker
+  template:
+    metadata:
+      name: cr-discord-rabbitmq-broker
+      namespace: cr-discord-bot
+      labels:
+        app: cr-discord-rabbitmq-broker
+        department: bots
+    spec:
+      containers:
+        - name: cr-discord-rsocket-global-router-container
+          image: rabbitmq:3.9-management
+          envFrom:
+            - secretRef:
+                name: cr-discord-bot-secrets
+          ports:
+            - containerPort: 5672
+            - containerPort: 15672
+---
+# RSocket middleware components (deployment with one pod)
+#
+# port-mapping is:
+# for router internal:33331 -> external:30321
+# for payload-server internal:33333 -> external:30323
+# for shard-coordinator internal:33332 -> external:30322
+#
+# For single deployment use:
+# kubectl apply -f rsocket-middleware.yaml
+#
+# service for micronaut (external port 29121)
+apiVersion: v1
+kind: Service
+metadata:
+  name: state
+  namespace: cr-discord-bot
+spec:
+  selector:
+    app: cr-discord-rsocket-middleware
+    department: bots
+  type: NodePort
+  ports:
+    - port: 8080
+      nodePort: 30121
+---
+# service for rsocket-router (external port 30321)
+apiVersion: v1
+kind: Service
+metadata:
+  name: cr-discord-rsocket-router
+  namespace: cr-discord-bot
+spec:
+  selector:
+    app: cr-discord-rsocket-middleware
+    department: bots
+  type: NodePort
+  ports:
+    - port: 33331
+      nodePort: 30321
+---
+# service for rsocket-payload-server  (external port 30323)
+apiVersion: v1
+kind: Service
+metadata:
+  name: cr-discord-rsocket-payload-server
+  namespace: cr-discord-bot
+spec:
+  selector:
+    app: cr-discord-rsocket-middleware
+    department: bots
+  type: NodePort
+  ports:
+    - port: 33333
+      nodePort: 30323
+---
+# service for rsocket-shard-coordinator (external port 30322)
+apiVersion: v1
+kind: Service
+metadata:
+  name: cr-discord-rsocket-shard-coordinator
+  namespace: cr-discord-bot
+spec:
+  selector:
+    app: cr-discord-rsocket-middleware
+    department: bots
+  type: NodePort
+  ports:
+    - port: 33332
+      nodePort: 30322
+---
+# deployment of rsocket-middleware ( micronaut-application in ./rsocket-middleware/ )
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cr-discord-rsocket-middleware-deployment
+  namespace: cr-discord-bot
+  labels:
+    app: cr-discord-rsocket-middleware-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cr-discord-rsocket-middleware
+  template:
+    metadata:
+      name: cr-discord-rsocket-middleware
+      namespace: cr-discord-bot
+      labels:
+        app: cr-discord-rsocket-middleware
+        department: bots
+    spec:
+      containers:
+        - name: cr-discord-bot-rsocket-middleware-container
+          image:  ghcr.io/theyellow/cr-discord-bot-rsocket-middleware:main
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: cr-discord-bot-secrets
+          ports:
+            - containerPort: 8080 # micronaut standard
+            - containerPort: 33331 # router
+            - containerPort: 33332 # shard-coordinator
+            - containerPort: 33333 # payload-server
+          command: [ "java", "-jar", "/rsocket-middleware.jar"]
+---
+# Leader-Worker deployment - the core of the bot
+#
+# For single deployment use:
+# kubectl apply -f rabbitmq-distributed-worker-leader.yaml
+#
+apiVersion: v1
+kind: Service
+metadata:
+  name: cr-discord-bot-service
+spec:
+  selector:
+    app: cr-discord-rabbitmq-distributed-leader
+    department: bots
+  ports:
+    - protocol: TCP
+      port: 28091
+      targetPort: 8080
+---
+# There has to be one leader, this leader will handle the connection with discord and is leading the workers
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cr-discord-rabbitmq-distributed-leader-deployment
+  namespace: cr-discord-bot
+  labels:
+    app: cr-discord-rabbitmq-distributed-leader-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cr-discord-rabbitmq-distributed-leader
+  template:
+    metadata:
+      name: cr-discord-rabbitmq-distributed-leader
+      namespace: cr-discord-bot
+      labels:
+        app: cr-discord-rabbitmq-distributed-leader
+        department: bots
+    spec:
+      containers:
+        - name: cr-discord-rabbitmq-distributed-leader-container
+          image: ghcr.io/theyellow/cr-discord-bot-leader:main
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: cr-discord-bot-secrets
+          ports:
+            - containerPort: 8080
+          command: [ "java", "-jar", "/crdiscordbot-leader.jar"]
+---
+# Deployment of workers - There can be any number of workers ('1' for developing or small server-setups)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cr-discord-rabbitmq-distributed-worker-deployment
+  namespace: cr-discord-bot
+  labels:
+    app: cr-discord-rabbitmq-distributed-worker-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cr-discord-rabbitmq-distributed-worker
+  template:
+    metadata:
+      name: cr-discord-rabbitmq-distributed-worker
+      namespace: cr-discord-bot
+      labels:
+        app: cr-discord-rabbitmq-distributed-worker
+        department: bots
+    spec:
+      containers:
+        - name: cr-discord-rabbitmq-distributed-worker-container
+          image: ghcr.io/theyellow/cr-discord-bot-worker:main
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: cr-discord-bot-secrets
+          ports:
+            - containerPort: 8080
+          command: [ "java", "-jar", "/crdiscordbot-worker.jar"]
 ---

@@ -7,8 +7,8 @@
 #
 ---
 # namespace "cr-discord-bot" for kubernetes components of cr-discord-bot
-kind: Namespace
 apiVersion: v1
+kind: Namespace
 metadata:
   name: cr-discord-bot
   labels:
@@ -17,7 +17,6 @@ metadata:
 # service for Redis
 # port internal: 6379
 # port external: 30379
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -42,6 +41,10 @@ data:
   redis-config: |
     maxmemory 2mb
     maxmemory-policy allkeys-lru
+    bind 0.0.0.0
+    appendonly yes
+    protected-mode no
+    pidfile /data/redis-6379.pid
 ---
 # Pod including Redis 5.0.4
 apiVersion: v1
@@ -53,9 +56,23 @@ metadata:
       app: cr-discord-redis
       department: bots
 spec:
+  initContainers:
+    - name: system-init
+      image: busybox:1.32
+      imagePullPolicy: IfNotPresent
+      command:
+        - "sh"
+        - "-c"
+        - "echo never > /sys/kernel/mm/transparent_hugepage/enabled"
+      securityContext:
+        privileged: true
+        runAsUser: 0
+      volumeMounts:
+        - name: sys
+          mountPath: /sys
   containers:
     - name: redis-discord
-      image: redis:5.0.4
+      image: redis:5.0.8
       command:
         - redis-server
         - "/redis-master/redis.conf"
@@ -66,9 +83,25 @@ spec:
         - containerPort: 6379
       resources:
         limits:
-          cpu: "0.1"
+          cpu: "0.2"
+      livenessProbe:
+        tcpSocket:
+          port: 6379
+        initialDelaySeconds: 300
+        timeoutSeconds: 1
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 3
+      readinessProbe:
+        tcpSocket:
+          port: 6379
+        initialDelaySeconds: 5
+        timeoutSeconds: 1
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 3
       volumeMounts:
-        - mountPath: /redis-master-data
+        - mountPath: /data
           name: data
         - mountPath: /redis-master
           name: config
@@ -81,4 +114,7 @@ spec:
         items:
           - key: redis-config
             path: redis.conf
+    - name: sys
+      hostPath:
+        path: /sys
 ---

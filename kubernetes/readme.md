@@ -1,42 +1,52 @@
-# Work in kubernetes - directory with kubectl
+# Deploying in kubernetes
+
+For testing, you can use kubernetes easily. 
+
+Work in kubernetes-directory with kubectl:
 ```
-~/cr-discord-bot # cd kubernetes
+cd kubernetes
 ~/cr-discord-bot/kubernetes #
 ```
+---
+## Step 1: Generate namespace
+```
+kubectl apply -f namespace-cr-discord-bot.yaml
+```
+---
+## Step 2: Edit and set (secret) environment variables
+```
+cp sample-env.list env.list
+nano env.list 
+kubectl create secret generic cr-discord-bot-secrets --from-env-file ./env.list --namespace=cr-discord-bot
+```
+---
+## Step 3: Deploy on kubernetes - cluster
 
-Generate namespace
+### Path 1: Apply everything together
 ```
-~/cr-discord-bot/kubernetes # kubectl apply -f namespace-cr-discord-bot.yaml`
+kubectl apply -f deployment.yaml
 ```
+---
+### Path 2: Apply single deployments step-by-step
 
-Edit and set (secret) environment variables
-```
-~/cr-discord-bot/kubernetes # cp sample-env.list env.list
-~/cr-discord-bot/kubernetes # nano env.list 
-~/cr-discord-bot/kubernetes # kubectl create secret generic cr-discord-bot-secrets --from-env-file ./env.list --namespace=cr-discord-bot
-```
 
-Start Redis
+#### Start Redis
 ```
-~/cr-discord-bot/kubernetes # kubectl apply -f redis.yaml
+kubectl apply -f redis.yaml
 ```
-
-Start RSocket - middleware
+---
+#### Start RabbitMQ - Broker
 ```
-~/cr-discord-bot/kubernetes # kubectl apply -f rsocket-middleware.yaml
+kubectl apply -f rabbitmq-broker.yaml
 ```
-
-Start RabbitMQ - Broker
+---
+#### Start RSocket - middleware
 ```
-~/cr-discord-bot/kubernetes # kubectl apply -f rabbitmq-broker.yaml
+kubectl apply -f rsocket-middleware.yaml
 ```
-
-Start distributed worker and leader
+---
+#### Start distributed worker and leader
 ```
-~/cr-discord-bot/kubernetes # kubectl apply -f rabbitmq-distributed-worker-leader.yaml
+kubectl apply -f rabbitmq-distributed-worker-leader.yaml
 ```
-
-## Alternatively start all together
-```
-~/cr-discord-bot/kubernetes # kubectl apply -f deployment.yaml
-```
+---
