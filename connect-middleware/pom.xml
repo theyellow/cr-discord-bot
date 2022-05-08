@@ -87,6 +87,12 @@
             <groupId>com.discord4j</groupId>
             <artifactId>discord4j-rest</artifactId>
             <version>3.2.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.projectreactor.netty</groupId>
+                    <artifactId>reactor-netty-http</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.projectreactor</groupId>

@@ -21,29 +21,37 @@
 
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <maven-plugin.version>1.0.0</maven-plugin.version>
+        <maven-springboot-plugin.version>2.5.2</maven-springboot-plugin.version>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <discord4j.connect.version>0.7.0-SNAPSHOT</discord4j.connect.version>
         <discord4j.version>3.2.2</discord4j.version>
         <discord4j.stores-redis.version>3.2.1</discord4j.stores-redis.version>
         <discord4j.json.version>1.6.12</discord4j.json.version>
-        <redis.lettuce.version>6.0.9.RELEASE</redis.lettuce.version>
+
+        <netty.version>4.1.75.Final</netty.version>
         <reactor-core.version>3.4.14</reactor-core.version>
-        <gson-fire-version>1.8.5</gson-fire-version>
-        <okhttp-version>2.7.5</okhttp-version>
-        <gson-version>2.8.9</gson-version>
-        <springboot-starter-web-version>2.6.6</springboot-starter-web-version>
-        <slf4j-version>1.7.32</slf4j-version>
-        <logback-version>1.2.10</logback-version>
-        <threetenbp-version>1.5.1</threetenbp-version>
-        <swagger-core-version>2.0.0-rc2</swagger-core-version>
-        <swagger-annotations-version>2.1.13</swagger-annotations-version>
+        <reactor-netty.version>1.0.17</reactor-netty.version>
+        <redis.lettuce.version>6.0.9.RELEASE</redis.lettuce.version>
+
+        <gson.version>2.8.9</gson.version>
+        <gson-fire.version>1.8.5</gson-fire.version>
+        <okhttp.version>2.7.5</okhttp.version>
+        <threetenbp.version>1.5.1</threetenbp.version>
+
+        <openapi-jackson-databind.version>0.2.2</openapi-jackson-databind.version>
+
+        <swagger-core.version>2.0.0-rc2</swagger-core.version>
+        <swagger-annotations.version>2.1.13</swagger-annotations.version>
         <openapi-codegen.version>5.4.0</openapi-codegen.version>
+
         <junit-version>4.13.2</junit-version>
-        <javax-validation-api-version>2.0.1.Final</javax-validation-api-version>
-        <maven-plugin-version>1.0.0</maven-plugin-version>
-        <maven-springboot-plugin.version>2.5.2</maven-springboot-plugin.version>
-        <openapi-jackson-databind-version>0.2.2</openapi-jackson-databind-version>
+        <springboot-starter-web.version>2.6.6</springboot-starter-web.version>
+        <slf4j.version>1.7.36</slf4j.version>
+        <logback.version>1.2.10</logback.version>
+        <javax-validation-api.version>2.0.1.Final</javax-validation-api.version>
         <sonar.organization>theyellow-github</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
@@ -54,6 +62,20 @@
                 <groupId>com.discord4j</groupId>
                 <artifactId>discord4j-core</artifactId>
                 <version>${discord4j.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.projectreactor.netty</groupId>
+                        <artifactId>reactor-netty-http</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.datatype</groupId>
+                        <artifactId>jackson-datatype-jdk8</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-databind</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <!-- https://mvnrepository.com/artifact/com.discord4j/connect-common -->
             <dependency>
@@ -85,72 +107,134 @@
                         <groupId>com.discord4j</groupId>
                         <artifactId>discord-json</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>com.discord4j</groupId>
+                        <artifactId>discord-json-api</artifactId>
+                    </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-handler</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-transport</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-common</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.projectreactor.netty</groupId>
+                <artifactId>reactor-netty-http</artifactId>
+                <version>${reactor-netty.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.lettuce</groupId>
                 <artifactId>lettuce-core</artifactId>
                 <version>${redis.lettuce.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.netty</groupId>
+                        <artifactId>netty-handler</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>io.netty</groupId>
+                        <artifactId>netty-transport</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>io.netty</groupId>
+                        <artifactId>netty-common</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>${logback-version}</version>
+                <version>${logback.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>${slf4j-version}</version>
+                <version>${slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
-                <version>${springboot-starter-web-version}</version>
+                <version>${springboot-starter-web.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.datatype</groupId>
+                        <artifactId>jackson-datatype-jdk8</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-databind</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-annotations</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-annotations</artifactId>
-                <version>${swagger-core-version}</version>
+                <version>${swagger-core.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.swagger.core.v3</groupId>
                 <artifactId>swagger-annotations</artifactId>
-                <version>${swagger-annotations-version}</version>
+                <version>${swagger-annotations.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.validation</groupId>
                 <artifactId>validation-api</artifactId>
-                <version>${javax-validation-api-version}</version>
+                <version>${javax-validation-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.openapitools</groupId>
                 <artifactId>jackson-databind-nullable</artifactId>
-                <version>${openapi-jackson-databind-version}</version>
+                <version>${openapi-jackson-databind.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-databind</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.squareup.okhttp</groupId>
                 <artifactId>okhttp</artifactId>
-                <version>${okhttp-version}</version>
+                <version>${okhttp.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.squareup.okhttp</groupId>
                 <artifactId>logging-interceptor</artifactId>
-                <version>${okhttp-version}</version>
+                <version>${okhttp.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
-                <version>${gson-version}</version>
+                <version>${gson.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.gsonfire</groupId>
                 <artifactId>gson-fire</artifactId>
-                <version>${gson-fire-version}</version>
+                <version>${gson-fire.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.threeten</groupId>
                 <artifactId>threetenbp</artifactId>
-                <version>${threetenbp-version}</version>
+                <version>${threetenbp.version}</version>
             </dependency>
             <!-- test dependencies -->
             <dependency>

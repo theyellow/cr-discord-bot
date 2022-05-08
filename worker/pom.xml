@@ -76,12 +76,6 @@
         <dependency>
             <groupId>com.discord4j</groupId>
             <artifactId>stores-redis</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.discord4j</groupId>
-                    <artifactId>discord-json</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.github.theyellow</groupId>
