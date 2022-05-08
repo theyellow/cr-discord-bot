@@ -24,7 +24,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <discord4j.connect.version>0.7.0-SNAPSHOT</discord4j.connect.version>
-        <discord4j.version>3.2.1</discord4j.version>
+        <discord4j.version>3.2.2</discord4j.version>
         <redis.lettuce.version>6.0.9.RELEASE</redis.lettuce.version>
         <reactor-core.version>3.4.14</reactor-core.version>
         <gson-fire-version>1.8.5</gson-fire-version>
@@ -72,7 +72,8 @@
             <dependency>
                 <groupId>com.discord4j</groupId>
                 <artifactId>stores-redis</artifactId>
-                <version>${discord4j.version}</version>
+                <version>3.2.1</version>
+                <!-- <version>${discord4j.version}</version>-->
             </dependency>
             <dependency>
                 <groupId>io.lettuce</groupId>

@@ -9,7 +9,7 @@
     <parent>
         <groupId>io.micronaut</groupId>
         <artifactId>micronaut-parent</artifactId>
-        <version>3.3.4</version>
+        <version>3.4.3</version>
         <relativePath></relativePath>
     </parent>
 
@@ -20,7 +20,7 @@
         <release.version>8</release.version>
 <!--        <maven.compiler.source>11</maven.compiler.source>-->
 <!--        <maven.compiler.target>8</maven.compiler.target>-->
-        <micronaut.version>3.3.4</micronaut.version>
+        <micronaut.version>3.4.3</micronaut.version>
         <exec.mainClass>crdiscordbot.CrDiscordRSocketMiddleware</exec.mainClass>
         <micronaut.runtime>netty</micronaut.runtime>
     </properties>
@@ -86,7 +86,7 @@
         <dependency>
             <groupId>com.discord4j</groupId>
             <artifactId>discord4j-rest</artifactId>
-            <version>3.2.1</version>
+            <version>3.2.2</version>
         </dependency>
         <dependency>
             <groupId>io.projectreactor</groupId>

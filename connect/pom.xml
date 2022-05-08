@@ -15,12 +15,12 @@
     </modules>
 
     <properties>
-        <discord4j-core.version>3.2.1</discord4j-core.version>
-        <stores-redis.version>3.2.1</stores-redis.version>
+        <discord4j-core.version>3.2.2</discord4j-core.version>
+        <stores-redis.version>3.2.2</stores-redis.version>
         <rsocket-version>1.1.2</rsocket-version>
-        <rabbitmq-version>1.4.5.RELEASE</rabbitmq-version>
+        <rabbitmq-version>1.4.8.RELEASE</rabbitmq-version>
         <reactor-version>3.4.14</reactor-version>
-        <amqp-version>5.14.2</amqp-version>
+        <amqp-version>5.13.1</amqp-version>
         <jsr305.version>3.0.2</jsr305.version>
         <junit.version>4.13</junit.version>
         <logback.version>1.2.10</logback.version>
@@ -56,7 +56,8 @@
             <dependency>
                 <groupId>io.rsocket</groupId>
                 <artifactId>rsocket-transport-netty</artifactId>
-                <version>${rsocket-version}</version>
+                <version>1.1.2</version>
+               <!-- <version>${rsocket-version}</version> -->
             </dependency>
         </dependencies>
 

@@ -195,7 +195,7 @@ spec:
         department: bots
     spec:
       containers:
-        - name: cr-discord-rsocket-global-router-container
+        - name: cr-discord-connect-global-router-container
           image: rabbitmq:3.9-management
           envFrom:
             - secretRef:
