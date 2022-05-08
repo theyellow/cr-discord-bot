@@ -30,12 +30,22 @@
             <artifactId>connect-rabbitmq</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.discord4j</groupId>
-            <artifactId>stores-redis</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.github.theyellow</groupId>
             <artifactId>connect-rsocket</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.discord4j</groupId>
+            <artifactId>discord-json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.discord4j</groupId>
+            <artifactId>stores-redis</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.discord4j</groupId>
+                    <artifactId>discord-json</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
