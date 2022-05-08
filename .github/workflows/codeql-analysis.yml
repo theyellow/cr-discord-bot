@@ -59,11 +59,11 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: mvn -B package install --file connect/pom.xml
-    - name: Build rsocket middleware
+    - name: Build connect-middleware
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn -B package --file rsocket-middleware/pom.xml
+      run: mvn -B package --file connect-middleware/pom.xml
     - name: Build worker and leader
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any

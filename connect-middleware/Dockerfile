@@ -5,8 +5,8 @@ VOLUME /tmp
 ENV TZ Europe/Berlin
 
 RUN apk -U --no-cache upgrade
-COPY target/rsocket-middleware-0.0.1-RC1.jar rsocket-middleware.jar
+COPY target/connect-middleware-0.0.1-RC1.jar connect-middleware.jar
 ENTRYPOINT ["java", \
 "-jar", \
-"/rsocket-middleware.jar"]
+"/connect-middleware.jar"]
 EXPOSE 8080

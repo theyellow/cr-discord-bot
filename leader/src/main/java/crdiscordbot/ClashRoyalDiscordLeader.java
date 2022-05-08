@@ -80,6 +80,9 @@ public class ClashRoyalDiscordLeader {
         /*
          * Define the redis server that will be used as entity cache.
          */
+        // first wait for 3 seconds, if the whole deployment starts together it will crash sometimes ("race condition" between different pods)
+        LOGGER.debug("Waiting 3s for connection to redis...");
+        sleep(3000, "sleeping before initialization of redis got interrupted-exception");
         RedisURI redisURI = RedisURI.builder().withHost(Constants.REDIS_CLIENT_HOST).withPort(Constants.REDIS_CLIENT_PORT).withSsl(true).build();
         RedisClient redisClient = RedisClient.create(redisURI);
 
@@ -111,23 +114,21 @@ public class ClashRoyalDiscordLeader {
         RabbitMQSinkMapper sink = RabbitMQSinkMapper.createBinarySinkToDirect("payload");
         RabbitMQSourceMapper source = RabbitMQSourceMapper.createBinarySource();
 
-        StoreService redisStore = null;
-        while (redisStore == null) {
+        StoreService redisStoreService = null;
+        Store redisStore = null;
+        while (redisStoreService == null) {
             try {
-                redisStore = RedisStoreService.builder()
+                redisStoreService = RedisStoreService.builder()
                         .redisClient(redisClient)
                         .useSharedConnection(false)
                         .build();
+                redisStore = Store.fromLayout(LegacyStoreLayout.of(redisStoreService));
             } catch (RedisConnectionException connectionException) {
-                LOGGER.warn("Connection to redis failed, try again in 10 s");
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                    LOGGER.warn("sleeping got interrupted-exception");
-                    Thread.currentThread().interrupt();
-                }
+                LOGGER.warn("Connection to redis failed, try again in 3s...");
+                sleep(3000, "sleeping while waiting for connection to redis got interrupted-exception");
             }
         }
+
         GatewayDiscordClient client = DiscordClient.builder(System.getenv("BOT_TOKEN"))
                 .setJacksonResources(jackson)
                 .setGlobalRateLimiter(RSocketGlobalRateLimiter.createWithServerAddress(globalRouterServerAddress))
@@ -146,7 +147,7 @@ public class ClashRoyalDiscordLeader {
                 .setEnabledIntents(IntentSet.all())
                 .setDispatchEventMapper(DispatchEventMapper.discardEvents())
                 // Define the entity cache
-                .setStore(Store.fromLayout(LegacyStoreLayout.of(redisStore)))
+                .setStore(redisStore)
                 // Turn this gateway into a RabbitMQ-based one
                 .setExtraOptions(o -> new ConnectGatewayOptions(o,
                         RabbitMQPayloadSink.create(sink, rabbitMQ),
@@ -159,6 +160,15 @@ public class ClashRoyalDiscordLeader {
         LogoutHttpServer.startAsync(client);
         client.onDisconnect().block();
         rabbitMQ.close();
+    }
+
+    private static void sleep(long millisToSleep, String interruptionText) {
+        try {
+            Thread.sleep(millisToSleep);
+        } catch (InterruptedException e) {
+            LOGGER.warn(interruptionText);
+            Thread.currentThread().interrupt();
+        }
     }
 
     @Bean(name = "discordRestClient")

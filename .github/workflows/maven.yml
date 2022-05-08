@@ -26,5 +26,5 @@ jobs:
       run: mvn -B package install --file connect/pom.xml
     - name: Build cr-discord-bot with Maven
       run: mvn -B package --file pom.xml
-    - name: Build rsocket-middleware with Maven
-      run: mvn -B package --file rsocket-middleware/pom.xml
+    - name: Build connect-middleware with Maven
+      run: mvn -B package --file connect-middleware/pom.xml

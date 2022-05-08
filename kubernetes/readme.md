@@ -1,6 +1,9 @@
 # Deploying in kubernetes
 
-For testing, you can use kubernetes easily. 
+For testing, you can use kubernetes easily. Setup of deployment is like this:
+
+![](http://www.plantuml.com/plantuml/proxy?idx=0&src=https://raw.githubusercontent.com/theyellow/cr-discord-bot/main/kubernetes/kubernetes-setup.puml?)
+
 
 Work in kubernetes-directory with kubectl:
 ```
@@ -42,7 +45,7 @@ kubectl apply -f rabbitmq-broker.yaml
 ---
 #### Start RSocket - middleware
 ```
-kubectl apply -f rsocket-middleware.yaml
+kubectl apply -f connect-middleware.yaml
 ```
 ---
 #### Start distributed worker and leader

@@ -9,14 +9,14 @@ package "RabbitMQ-Broker" #aaaaaa {
 '    [RabbitMQBroker] -> MQ_in
 }
 
-package "RSocket-Middleware" as rsocket_middleware #aaaaaa {
+package "connect-middleware" as connect_middleware #aaaaaa {
 '    [RSocketRouter] --- [RabbitMQBroker]
 '    [RabbitMQBroker] -- [RSocketRouter]
     [PayloadServer] - [RSocketRouter]
     [RSocketShardCoordinator] -- [RSocketRouter]
 }
 [leader] #20d030
-[leader] <=> rsocket_middleware
+[leader] <=> connect_middleware
 [leader] ==> MQ_in #7070d0
 [leader] <== MQ_out #7070d0
 [leader] -right-> [Redis] #000000 :write
@@ -33,8 +33,8 @@ MQ_in ==> [worker 1] #7070d0
 MQ_in ==> [worker n] #7070d0
 MQ_out <== [worker 1] #7070d0
 MQ_out <== [worker n] #7070d0
-[worker 1] <=up=> rsocket_middleware
-[worker n] <=up=> rsocket_middleware
+[worker 1] <=up=> connect_middleware
+[worker n] <=up=> connect_middleware
 [worker 1] <- [Redis] #000000 : read
 [worker n] <- [Redis] #000000 : read
 @enduml

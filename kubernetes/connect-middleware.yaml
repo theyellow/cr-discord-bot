@@ -1,4 +1,4 @@
-# RSocket middleware components (deployment with one pod)
+# connect middleware components (deployment with one pod)
 #
 # port-mapping is:
 # for router internal:33331 -> external:30321
@@ -6,7 +6,7 @@
 # for shard-coordinator internal:33332 -> external:30322
 #
 # For deployment use:
-# kubectl apply -f rsocket-middleware.yaml
+# kubectl apply -f connect-middleware.yaml
 #
 ---
 # namespace "cr-discord-bot" for kubernetes components of cr-discord-bot
@@ -25,7 +25,7 @@ metadata:
   namespace: cr-discord-bot
 spec:
   selector:
-    app: cr-discord-rsocket-middleware
+    app: cr-discord-connect-middleware
     department: bots
   type: NodePort
   ports:
@@ -36,11 +36,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cr-discord-rsocket-router
+  name: cr-discord-connect-router
   namespace: cr-discord-bot
 spec:
   selector:
-    app: cr-discord-rsocket-middleware
+    app: cr-discord-connect-middleware
     department: bots
   type: NodePort
   ports:
@@ -51,11 +51,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-    name: cr-discord-rsocket-payload-server
+    name: cr-discord-connect-payload-server
     namespace: cr-discord-bot
 spec:
     selector:
-        app: cr-discord-rsocket-middleware
+        app: cr-discord-connect-middleware
         department: bots
     type: NodePort
     ports:
@@ -66,41 +66,41 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-    name: cr-discord-rsocket-shard-coordinator
+    name: cr-discord-connect-shard-coordinator
     namespace: cr-discord-bot
 spec:
     selector:
-        app: cr-discord-rsocket-middleware
+        app: cr-discord-connect-middleware
         department: bots
     type: NodePort
     ports:
         - port: 33332
           nodePort: 30322
 ---
-# deployment of rsocket-middleware ( micronaut-application in ./rsocket-middleware/ )
+# deployment of connect-middleware ( micronaut-application in ./connect-middleware/ )
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: cr-discord-rsocket-middleware-deployment
+    name: cr-discord-connect-middleware-deployment
     namespace: cr-discord-bot
     labels:
-        app: cr-discord-rsocket-middleware-deployment
+        app: cr-discord-connect-middleware-deployment
 spec:
     replicas: 1
     selector:
         matchLabels:
-            app: cr-discord-rsocket-middleware
+            app: cr-discord-connect-middleware
     template:
         metadata:
-            name: cr-discord-rsocket-middleware
+            name: cr-discord-connect-middleware
             namespace: cr-discord-bot
             labels:
-                app: cr-discord-rsocket-middleware
+                app: cr-discord-connect-middleware
                 department: bots
         spec:
             containers:
-                - name: cr-discord-bot-rsocket-middleware-container
-                  image:  ghcr.io/theyellow/cr-discord-bot-rsocket-middleware:main
+                - name: cr-discord-bot-connect-middleware-container
+                  image:  ghcr.io/theyellow/cr-discord-bot-connect-middleware:main
                   imagePullPolicy: Always
                   envFrom:
                       - secretRef:
@@ -110,5 +110,5 @@ spec:
                     - containerPort: 33331 # router
                     - containerPort: 33332 # shard-coordinator
                     - containerPort: 33333 # payload-server
-                  command: [ "java", "-jar", "/rsocket-middleware.jar"]
+                  command: [ "java", "-jar", "/connect-middleware.jar"]
 ---

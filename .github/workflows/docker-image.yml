@@ -43,7 +43,7 @@ jobs:
         run: docker build leader --tag crbot-leader:$(date +%s)
     -
         name: Build with Maven
-        run: mvn -B package --file rsocket-middleware/pom.xml
+        run: mvn -B package --file connect-middleware/pom.xml
     -
-        name: Build the rsocket-middleware Docker image
-        run: docker build rsocket-middleware --tag crbot-rsocket-middleware:$(date +%s)
+        name: Build the connect-middleware Docker image
+        run: docker build connect-middleware --tag crbot-connect-middleware:$(date +%s)

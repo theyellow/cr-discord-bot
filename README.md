@@ -5,15 +5,15 @@ This bot is a proof-of-concept distributed-bot and work in progress.
 Technology is based on [discord4j](https://github.com/Discord4J/Discord4J) with its special project [connect](https://github.com/Discord4J/connect).
 Springboot and micronaut is used for different parts of this project. Structure of this repository is like:
 
-| directory          | content                                                                                                                    |
-|--------------------|----------------------------------------------------------------------------------------------------------------------------|
-| common             | classes used by leader and worker                                                                                          |
-| connect            | fork of dicord4j-connect, awaiting [pull-request](https://github.com/Discord4J/connect/pull/10) for approval to be deleted |
-| kubernetes         | scripts for kubernetes deployment                                                                                          |
-| leader             | springboot leader application                                                                                              |
-| logs               | for logs, will be created                                                                                                  |
-| rsocket-middleware | micronaut middleware for leader and worker, uses connect                                                                   |
-| worker             | springboot worker application                                                                                              |
+| directory          | content                                                                                                                                             |
+|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| common             | classes used by leader and worker                                                                                                                   |
+| connect            | fork of dicord4j-connect, awaiting release after merging of [pull-request](https://github.com/Discord4J/connect/pull/10) for approval to be deleted |
+| kubernetes         | scripts for kubernetes deployment                                                                                                                   |
+| leader             | springboot leader application                                                                                                                       |
+| logs               | for logs, will be created                                                                                                                           |
+| connect-middleware | micronaut middleware for leader and worker, uses connect                                                                                            |
+| worker             | springboot worker application                                                                                                                       |
 
 
 For having some fun this bot plays with Clash Royal API and is inspired by [clash-royale-discord-bot](https://github.com/HZooly/clash-royale-discord-bot) written in java/typescript also here on GitHub. 

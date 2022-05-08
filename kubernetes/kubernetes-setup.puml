@@ -1,0 +1,32 @@
+@startuml
+!include <kubernetes/k8s-sprites-labeled-25pct>
+
+skinparam component {
+  fontColor MediumBlue
+}
+
+package "Namespace: cr-discord-bot" {
+    component "         <$node>\nDistributed leader" as leader
+    component "         <$node>\nDistributed worker" as worker
+
+    component "<$pod>\n   Redis " as redis {
+    }
+    component "            <$secret>\ncr-discord-bot-secrets" as secrets {
+    }
+
+    queue MQ-queues as broker {
+    component "         <$node>\nRabbitMQ-broker" as internalbroker {
+    }
+}
+    component "            <$node>\nconnect-middleware" as middleware {
+    }
+
+    leader -d-> redis : write
+    worker -u-> redis : read
+    leader <-d-> middleware
+    worker <-u-> middleware
+    leader <-d-> broker
+    worker <-u-> broker
+}
+
+@enduml
