@@ -20,7 +20,7 @@
         <rsocket.version>1.1.2</rsocket.version>
         <rabbitmq.version>1.4.8.RELEASE</rabbitmq.version>
         <reactor.version>3.4.14</reactor.version>
-        <reactor-netty.version>1.0.17</reactor-netty.version>
+        <reactor-netty.version>1.0.24</reactor-netty.version>
         <reactor-extra.version>3.4.6</reactor-extra.version>
         <amqp.version>5.13.1</amqp.version>
         <jsr305.version>3.0.2</jsr305.version>
