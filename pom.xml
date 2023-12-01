@@ -50,7 +50,7 @@
         <junit-version>4.13.2</junit-version>
         <springboot-starter-web.version>2.6.6</springboot-starter-web.version>
         <slf4j.version>1.7.36</slf4j.version>
-        <logback.version>1.2.10</logback.version>
+        <logback.version>1.3.12</logback.version>
         <javax-validation-api.version>2.0.1.Final</javax-validation-api.version>
         <sonar.organization>theyellow-github</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
