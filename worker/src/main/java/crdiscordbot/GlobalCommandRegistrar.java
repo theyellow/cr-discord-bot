@@ -56,7 +56,7 @@ public class GlobalCommandRegistrar implements ApplicationRunner {
 
     private void checkForDeletedOrChangedCommands(ApplicationService applicationService, long applicationId, Map<String, ApplicationCommandData> discordCommands, Map<String, ApplicationCommandRequest> commands) {
         for (ApplicationCommandData discordCommand : discordCommands.values()) {
-            long discordCommandId = Long.parseLong(discordCommand.id());
+            long discordCommandId = Long.parseLong(discordCommand.id().asString());
 
             ApplicationCommandRequest command = commands.get(discordCommand.name());
 

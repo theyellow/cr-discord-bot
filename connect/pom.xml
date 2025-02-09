@@ -15,18 +15,19 @@
     </modules>
 
     <properties>
-        <discord4j-core.version>3.2.2</discord4j-core.version>
-        <stores-redis.version>3.2.2</stores-redis.version>
-        <rsocket.version>1.1.2</rsocket.version>
-        <rabbitmq.version>1.4.8.RELEASE</rabbitmq.version>
-        <reactor.version>3.4.14</reactor.version>
-        <reactor-netty.version>1.0.17</reactor-netty.version>
-        <reactor-extra.version>3.4.6</reactor-extra.version>
-        <amqp.version>5.13.1</amqp.version>
+        <discord4j-core.version>3.2.7</discord4j-core.version>
+        <stores-redis.version>3.2.3</stores-redis.version>
+        <rsocket.version>1.1.5</rsocket.version>
+        <rabbitmq.version>1.5.6</rabbitmq.version>
+        <reactor.version>3.4.41</reactor.version>
+        <reactor-netty.version>1.1.26</reactor-netty.version>
+        <reactor-extra.version>3.4.11</reactor-extra.version>
+        <amqp.version>5.18.0</amqp.version>
         <jsr305.version>3.0.2</jsr305.version>
-        <jackson-datatype-jdk8.version>2.12.4</jackson-datatype-jdk8.version>
+        <jackson-datatype-jdk8.version>2.13.5</jackson-datatype-jdk8.version>
         <junit.version>4.13</junit.version>
-        <logback.version>1.2.10</logback.version>
+        <logback.version>1.4.12</logback.version>
+        <netty.version>4.1.116.final</netty.version>
     </properties>
 
     <dependencyManagement>
@@ -47,6 +48,10 @@
                     <exclusion>
                         <groupId>io.projectreactor.netty</groupId>
                         <artifactId>reactor-netty-http</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.google.protobuf</groupId>
+                        <artifactId>protobuf-java</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -80,6 +85,12 @@
                 <groupId>io.projectreactor.rabbitmq</groupId>
                 <artifactId>reactor-rabbitmq</artifactId>
                 <version>${rabbitmq.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.rabbitmq</groupId>
+                        <artifactId>amqp-clients</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>io.projectreactor.netty</groupId>
@@ -99,8 +110,7 @@
             <dependency>
                 <groupId>io.rsocket</groupId>
                 <artifactId>rsocket-transport-netty</artifactId>
-                <version>1.1.2</version>
-               <!-- <version>${rsocket-version}</version> -->
+                <version>${rsocket.version}</version>
             </dependency>
         </dependencies>
 
