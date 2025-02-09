@@ -7,33 +7,41 @@
     <packaging>${packaging}</packaging>
 
     <parent>
-        <groupId>io.micronaut</groupId>
+        <groupId>io.micronaut.platform</groupId>
         <artifactId>micronaut-parent</artifactId>
-        <version>3.4.3</version>
+        <version>4.7.5</version>
         <relativePath></relativePath>
     </parent>
 
 
     <properties>
+        <connect-rsocket.version>0.7.0-SNAPSHOT</connect-rsocket.version>
+        <io.micronaut.maven-micronaut-maven-plugin.version>4.7.2</io.micronaut.maven-micronaut-maven-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
         <packaging>jar</packaging>
-<!--        <jdk.version>1.8</jdk.version>-->
-        <release.version>8</release.version>
-<!--        <maven.compiler.source>11</maven.compiler.source>-->
-<!--        <maven.compiler.target>8</maven.compiler.target>-->
-        <micronaut.version>3.4.3</micronaut.version>
         <exec.mainClass>crdiscordbot.CrDiscordRSocketMiddleware</exec.mainClass>
         <micronaut.runtime>netty</micronaut.runtime>
+        <discord4j-rest.version>3.2.7</discord4j-rest.version>
+        <reactor-core.version>3.4.14</reactor-core.version>
+        <netty.version>4.1.116.final</netty.version>
+        <protobuf-java.version>4.29.3</protobuf-java.version>
     </properties>
 
 
     <dependencies>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${protobuf-java.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.micronaut</groupId>
             <artifactId>micronaut-inject</artifactId>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>io.micronaut</groupId>
+            <groupId>io.micronaut.validation</groupId>
             <artifactId>micronaut-validation</artifactId>
             <scope>compile</scope>
         </dependency>
@@ -51,6 +59,11 @@
             <groupId>io.micronaut.test</groupId>
             <artifactId>micronaut-test-junit5</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-handler-proxy</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.micronaut</groupId>
@@ -81,12 +94,12 @@
         <dependency>
             <groupId>io.github.theyellow</groupId>
             <artifactId>connect-rsocket</artifactId>
-            <version>0.7.0-SNAPSHOT</version>
+            <version>${connect-rsocket.version}</version>
         </dependency>
         <dependency>
             <groupId>com.discord4j</groupId>
             <artifactId>discord4j-rest</artifactId>
-            <version>3.2.2</version>
+            <version>${discord4j-rest.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>io.projectreactor.netty</groupId>
@@ -97,21 +110,22 @@
         <dependency>
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-core</artifactId>
-            <version>3.4.14</version>
+            <version>${reactor-core.version}</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>io.micronaut.build</groupId>
+                <groupId>io.micronaut.maven</groupId>
                 <artifactId>micronaut-maven-plugin</artifactId>
-                <version>3.0.2</version>
+                <version>${io.micronaut.maven-micronaut-maven-plugin.version}</version>
+                <extensions>true</extensions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <!-- Uncomment to enable incremental compilation -->
                     <!-- <useIncrementalCompilation>false</useIncrementalCompilation> -->
@@ -119,17 +133,17 @@
                         <path>
                             <groupId>io.micronaut</groupId>
                             <artifactId>micronaut-inject-java</artifactId>
-                            <version>${micronaut.version}</version>
+                            <version>${micronaut.core.version}</version>
                         </path>
                         <path>
-                            <groupId>io.micronaut</groupId>
+                            <groupId>io.micronaut.validation</groupId>
                             <artifactId>micronaut-validation</artifactId>
-                            <version>${micronaut.version}</version>
+                            <version>${micronaut.validation.version}</version>
                         </path>
                         <path>
                             <groupId>io.micronaut</groupId>
                             <artifactId>micronaut-http-validation</artifactId>
-                            <version>${micronaut.version}</version>
+                            <version>${micronaut.core.version}</version>
                         </path>
                     </annotationProcessorPaths>
                     <compilerArgs>
