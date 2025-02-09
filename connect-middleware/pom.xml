@@ -24,7 +24,7 @@
         <micronaut.runtime>netty</micronaut.runtime>
         <discord4j-rest.version>3.2.7</discord4j-rest.version>
         <reactor-core.version>3.4.14</reactor-core.version>
-        <netty.version>4.1.116.final</netty.version>
+        <netty.version>4.1.117.Final</netty.version>
         <protobuf-java.version>4.29.3</protobuf-java.version>
     </properties>
 
