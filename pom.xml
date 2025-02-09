@@ -18,42 +18,39 @@
     <!-- Tell Maven we want to use Java 11 -->
     <properties>
         <crdiscordbot.version>0.0.1-SNAPSHOT</crdiscordbot.version>
-
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
         <maven-plugin.version>1.0.0</maven-plugin.version>
-        <maven-springboot-plugin.version>2.5.2</maven-springboot-plugin.version>
-
+        <spring-boot-maven-plugin.version>3.4.2</spring-boot-maven-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <discord4j.connect.version>0.7.0-SNAPSHOT</discord4j.connect.version>
-        <discord4j.version>3.2.2</discord4j.version>
-        <discord4j.stores-redis.version>3.2.1</discord4j.stores-redis.version>
-        <discord4j.json.version>1.6.12</discord4j.json.version>
+        <discord4j.version>3.2.7</discord4j.version>
+        <discord4j.stores-redis.version>3.2.3</discord4j.stores-redis.version>
+        <discord4j.json.version>1.6.22</discord4j.json.version>
 
-        <netty.version>4.1.75.Final</netty.version>
-        <reactor-core.version>3.4.14</reactor-core.version>
-        <reactor-netty.version>1.0.17</reactor-netty.version>
+        <netty.version>4.1.115.Final</netty.version>
+        <reactor-core.version>3.4.41</reactor-core.version>
+        <reactor-netty.version>1.1.26</reactor-netty.version>
         <redis.lettuce.version>6.0.9.RELEASE</redis.lettuce.version>
 
         <gson.version>2.8.9</gson.version>
         <gson-fire.version>1.8.5</gson-fire.version>
-        <okhttp.version>2.7.5</okhttp.version>
+        <okhttp.version>4.12.0</okhttp.version>
         <threetenbp.version>1.5.1</threetenbp.version>
 
         <openapi-jackson-databind.version>0.2.2</openapi-jackson-databind.version>
 
-        <swagger-core.version>2.0.0-rc2</swagger-core.version>
-        <swagger-annotations.version>2.1.13</swagger-annotations.version>
-        <openapi-codegen.version>5.4.0</openapi-codegen.version>
+        <swagger-core.version>2.2.28</swagger-core.version>
+        <swagger-annotations.version>2.2.28</swagger-annotations.version>
+        <openapi-codegen.version>7.10.0</openapi-codegen.version>
 
         <junit-version>4.13.2</junit-version>
-        <springboot-starter-web.version>2.6.6</springboot-starter-web.version>
+        <springboot-starter-web.version>3.4.2</springboot-starter-web.version>
         <slf4j.version>1.7.36</slf4j.version>
-        <logback.version>1.3.12</logback.version>
-        <javax-validation-api.version>2.0.1.Final</javax-validation-api.version>
+        <logback.version>1.4.12</logback.version>
+        <jakarta-validation-api.version>3.1.1</jakarta-validation-api.version>
         <sonar.organization>theyellow-github</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <protobuf-java.version>4.28.2</protobuf-java.version>
     </properties>
 
     <dependencyManagement>
@@ -75,6 +72,10 @@
                         <groupId>com.fasterxml.jackson.core</groupId>
                         <artifactId>jackson-databind</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>com.google.protobuf</groupId>
+                        <artifactId>protobuf-java</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <!-- https://mvnrepository.com/artifact/com.discord4j/connect-common -->
@@ -92,6 +93,12 @@
                 <groupId>io.github.theyellow</groupId>
                 <artifactId>connect-rabbitmq</artifactId>
                 <version>${discord4j.connect.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.rabbitmq</groupId>
+                        <artifactId>amqp-client</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.discord4j</groupId>
@@ -196,9 +203,9 @@
                 <version>${swagger-annotations.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.validation</groupId>
-                <artifactId>validation-api</artifactId>
-                <version>${javax-validation-api.version}</version>
+                <groupId>jakarta.validation</groupId>
+                <artifactId>jakarta.validation-api</artifactId>
+                <version>${jakarta-validation-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.openapitools</groupId>
@@ -212,12 +219,12 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>com.squareup.okhttp</groupId>
+                <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>okhttp</artifactId>
                 <version>${okhttp.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.squareup.okhttp</groupId>
+                <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>logging-interceptor</artifactId>
                 <version>${okhttp.version}</version>
             </dependency>
@@ -262,7 +269,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${maven-springboot-plugin.version}</version>
+                <version>${spring-boot-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
