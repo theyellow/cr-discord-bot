@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17.0.1_12-jre-alpine
+FROM eclipse-temurin:21-alpine
 VOLUME /tmp
 
 # timezone env with default
