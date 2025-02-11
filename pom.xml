@@ -27,7 +27,7 @@
         <discord4j.stores-redis.version>3.2.3</discord4j.stores-redis.version>
         <discord4j.json.version>1.6.22</discord4j.json.version>
 
-        <netty.version>4.1.115.Final</netty.version>
+        <netty.version>4.1.118.Final</netty.version>
         <reactor-core.version>3.4.41</reactor-core.version>
         <reactor-netty.version>1.1.26</reactor-netty.version>
         <redis.lettuce.version>6.0.9.RELEASE</redis.lettuce.version>

@@ -27,7 +27,8 @@
         <jackson-datatype-jdk8.version>2.13.5</jackson-datatype-jdk8.version>
         <junit.version>4.13</junit.version>
         <logback.version>1.4.12</logback.version>
-        <netty.version>4.1.116.final</netty.version>
+        <netty.version>4.1.118.Final</netty.version>
+        <protobuf-java.version>4.29.3</protobuf-java.version>
     </properties>
 
     <dependencyManagement>
@@ -111,6 +112,11 @@
                 <groupId>io.rsocket</groupId>
                 <artifactId>rsocket-transport-netty</artifactId>
                 <version>${rsocket.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf-java.version}</version>
             </dependency>
         </dependencies>
 
