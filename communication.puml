@@ -1,0 +1,50 @@
+@startuml
+allowmixing
+
+package "Clash Royale API" {
+  class ClashRoyaleAPI
+}
+
+package "Connect-Middleware" {
+  class Connect
+  class ConnectMiddleware
+}
+
+package "Leader" {
+  class Leader
+}
+
+package "Worker" {
+  class Worker
+}
+
+package "Discord API" {
+  class DiscordAPI
+}
+
+package "RabbitMQ" {
+  component Queue
+}
+
+package "Redis" {
+  class Redis
+}
+
+ClashRoyaleAPI --> Worker : HTTP/REST
+
+Worker <--> ConnectMiddleware : RSocket
+Worker --> ConnectMiddleware : HTTP/REST
+Worker --> RabbitMQ : Messaging
+Worker --> Redis : read
+
+ConnectMiddleware <--> Leader : RSocket
+ConnectMiddleware --> Leader : HTTP/REST
+ConnectMiddleware --> Connect : uses
+
+Leader --> RabbitMQ : Messaging
+Leader --> Redis : Caching
+
+Connect <--> DiscordAPI : WebSocket
+
+RabbitMQ --> Queue : uses
+@enduml
