@@ -13,35 +13,24 @@ The `kubernetes` directory contains the necessary files for deploying the CR Dis
 Each Maven subproject (`common`, `connect`, `connect-middleware`, `leader`, `worker`) has its own deployment configuration. These deployments specify the Docker images to use, the number of replicas, and other deployment-specific settings.
 
 - **common**: Shared utilities and configurations.
-  - [common-deployment.yaml](common-deployment.yaml)
 - **connect**: Handles the connection to the Discord API.
-  - [connect-deployment.yaml](connect-deployment.yaml)
 - **connect-middleware**: Coordinates communication between `leader` and `worker`.
-  - [connect-middleware-deployment.yaml](connect-middleware-deployment.yaml)
 - **leader**: Manages and coordinates the `worker`.
-  - [leader-deployment.yaml](leader-deployment.yaml)
 - **worker**: Executes tasks delegated by the `leader`.
-  - [worker-deployment.yaml](worker-deployment.yaml)
 
 #### Services
 Services are defined to expose the deployments and enable communication between them. Each service corresponds to a deployment and specifies how to access the pods.
 
 - **connect-service**: Exposes the `connect` deployment.
-  - [connect-service.yaml](connect-service.yaml)
 - **middleware-service**: Exposes the `connect-middleware` deployment.
-  - [middleware-service.yaml](middleware-service.yaml)
 - **leader-service**: Exposes the `leader` deployment.
-  - [leader-service.yaml](leader-service.yaml)
 - **worker-service**: Exposes the `worker` deployment.
-  - [worker-service.yaml](worker-service.yam)
 
 #### ConfigMaps and Secrets
 ConfigMaps and Secrets are used to manage configuration data and sensitive information, such as API keys and environment variables.
 
 - **ConfigMaps**: Store non-sensitive configuration data.
-  - [configmap.yaml](configmap.yaml)
 - **Secrets**: Store sensitive information securely.
-  - [secrets.yaml](secrets.yaml)
 
 ### Deployment Steps
 1. **Build Docker Images**: Use GitHub Actions or another CI/CD pipeline to build Docker images for each subproject and push them to a Docker registry.
