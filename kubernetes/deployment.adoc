@@ -58,40 +58,49 @@ To build the Docker images:
 
 1. **Generate Namespace**
 
-   Create a dedicated namespace for the CR Discord Bot:
+Create a dedicated namespace for the CR Discord Bot:
 
-   ```bash
-   kubectl apply -f namespace-cr-discord-bot.yaml
-   ```
+[source,bash]
+----
+kubectl apply -f namespace-cr-discord-bot.yaml
+----
 
 2.	Set Secret Environment Variables
 Prepare and set the necessary environment variables:
-	-	Copy the sample environment variables file:
-  ```bash
-   cp sample-env.list env.list
-   ```
-  - Edit the env.list file to include your specific configurations:
-   ```bash
-   nano env.list
-   ```
+
+-	Copy the sample environment variables file:
+[source,bash]
+----
+cp sample-env.list env.list
+----
+- Edit the env.list file to include your specific configurations:
+[source,bash]
+----
+nano env.list
+----
 
   - Create a Kubernetes secret from the env.list file:
-   ```bash
-   kubectl create secret generic cr-discord-bot-secrets --from-env-file=./env.list --namespace=cr-discord-bot
-   ```
+[source,bash]
+----
+kubectl create secret generic cr-discord-bot-secrets --from-env-file=./env.list --namespace=cr-discord-bot
+----
 
 3.	Deploy Components to Kubernetes
-
 You have two options for deployment:
-	-	Apply All Components Together
+
+-	Apply All Components Together
+
 Deploy all components using a single command:
-  ```bash
-  kubectl apply -f deployment.yaml
-  ```
-  - Certainly, to deploy each component of the CR Discord Bot individually, you can execute the following kubectl apply commands in sequence:
-  ```bash
-  kubectl apply -f redis.yaml
-  kubectl apply -f rabbitmq-broker.yaml
-  kubectl apply -f connect-middleware.yaml
-  kubectl apply -f rabbitmq-distributed-worker-leader.yaml
-  ```
+[source,bash]
+----
+kubectl apply -f deployment.yaml
+----
+
+- Certainly, to deploy each component of the CR Discord Bot individually, you can execute the following kubectl apply commands in sequence:
+[source,bash]
+----
+kubectl apply -f redis.yaml
+kubectl apply -f rabbitmq-broker.yaml
+kubectl apply -f connect-middleware.yaml
+kubectl apply -f rabbitmq-distributed-worker-leader.yaml
+----
