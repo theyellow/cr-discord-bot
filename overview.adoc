@@ -1,0 +1,49 @@
+= Overall Overview
+
+The bot is an experimental project designed to explore CI/CD, Kubernetes, and various frameworks like Spring Boot and Micronaut. It is highly scalable, with multiple Workers and potentially multiple Leaders, and uses Redis and RabbitMQ for caching and asynchronous communication.
+
+== Main Components
+
+1. **Leader**
+   - Manages high-level orchestration and coordination.
+   - Communicates with Discord using `discord4j.core.GatewayDiscordClient`.
+
+2. **Worker**
+   - Handles tasks such as receiving commands from Discord and fetching data from the Clash Royale API.
+   - Communicates with Discord via the Connect-middleware.
+
+3. **Connect-middleware**
+   - Acts as a bridge between the Worker and Discord.
+   - Uses RSocket for reactive communication.
+
+4. **Redis**
+   - Used for caching and storing temporary data.
+
+5. **RabbitMQ**
+   - Acts as a message broker for asynchronous communication.
+
+== Communication
+
+- **Discord Communication**: Handled by the Leader and Worker via the Connect-middleware.
+- **Clash Royale API**: Accessed by the Worker to fetch data.
+- **RSocket**: Used by the Connect-middleware for reactive communication.
+- **Redis**: Used for caching data.
+- **RabbitMQ**: Used for asynchronous communication between components.
+
+== Deployment
+
+- Deployed using Kubernetes for scalability.
+- Each component is deployed as a Kubernetes pod.
+- Example deployment configuration provided in the deployment documentation.
+
+== CI/CD Workflows
+
+The project uses GitHub workflows for CI/CD. The workflows are located in the `.github/workflows` directory of the repository. Key workflows include:
+
+- **docker-publish.yaml**: Builds and pushes Docker images to the Docker repository.
+- **dependency-review.yaml**: Reviews dependencies for security vulnerabilities.
+- **maven.yml**: Runs Maven build and tests.
+- **codeql-analysis.yml**: Performs CodeQL analysis for code quality and security.
+- **sonarcloud_io.yaml**: Integrates with SonarCloud for code quality analysis.
+- **docker-image.yaml**: Builds Docker images for specific components.
+- **codacy.yaml**: Integrates with Codacy for code quality and coverage analysis.

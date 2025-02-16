@@ -1,0 +1,67 @@
+= Deployment Guide
+
+== Overview
+
+The bot is designed to be highly scalable, with multiple Workers and potentially multiple Leaders. It uses Kubernetes for deployment and scaling.
+
+== Prerequisites
+
+- Kubernetes cluster
+- Docker images for each component
+- kubectl configured to interact with your Kubernetes cluster
+
+== Building Docker Images with GitHub Workflows
+
+The Docker images for each component are built using GitHub workflows. The workflow configuration can be found in the repository under `.github/workflows/docker-publish.yaml`.
+
+To trigger the workflow and build the Docker images, push your changes to the repository. The workflow will automatically build and push the Docker images to your GitHub Docker repository.
+
+== Steps
+
+1. **Build Docker Images**
+
+The Docker images are built using GitHub workflows. Ensure your changes are pushed to the repository to trigger the build process.
+
+2. **Push Docker Images to Repository**
+
+The GitHub workflow will automatically push the Docker images to your GitHub Docker repository.
+
+3. **Deploy Components to Kubernetes**
+
+```bash
+kubectl apply -f kubernetes/redis-deployment.yaml
+kubectl apply -f kubernetes/rabbitmq-deployment.yaml
+kubectl apply -f kubernetes/connect-middleware-deployment.yaml
+kubectl apply -f kubernetes/leader-deployment.yaml
+kubectl apply -f kubernetes/worker-deployment.yaml```
+
+== Example Deployment Configuration
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+      - name: worker
+        image: your-docker-repo/worker:latest
+        ports:
+        - containerPort: 8080```
+
+
+== Monitoring and Scaling
+
+- Scaling: Use kubectl scale to adjust the number of replicas.
+- Monitoring: Use Kubernetes dashboard or Prometheus for monitoring.
+```bash
+kubectl scale deployment worker-deployment --replicas=5```

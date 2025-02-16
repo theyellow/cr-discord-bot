@@ -1,0 +1,43 @@
+= Communication Between Parts
+
+== Leader Component
+
+**Discord Communication**: The Leader uses `discord4j.core.GatewayDiscordClient` to interact with Discord, including receiving events and sending messages.
+
+**Redis**: Used for caching data to improve performance.
+
+**RabbitMQ**: Facilitates asynchronous communication with other components.
+
+== Worker Component
+
+**Discord Communication**: The Worker interacts with Discord through the Connect-middleware.
+
+**Clash Royale API**: The Worker fetches data from the Clash Royale API to respond to user queries.
+
+**Redis**: Used for caching data to improve performance.
+
+**RabbitMQ**: Facilitates asynchronous communication with other components.
+
+== Connect-middleware Component
+
+**RSocket Communication**: The Connect-middleware uses RSocket for reactive communication, enabling efficient and scalable interactions between components.
+
+**Redis**: Used for caching data to improve performance.
+
+**RabbitMQ**: Facilitates asynchronous communication with other components.
+
+== Examples
+
+=== Example 1: Worker Fetching Data from Clash Royale API
+
+1. User sends a command to Discord.
+2. Worker receives the command via Connect-middleware.
+3. Worker fetches data from the Clash Royale API.
+4. Worker sends the response back to Discord via Connect-middleware.
+
+=== Example 2: Asynchronous Communication with RabbitMQ
+
+1. Worker sends a message to RabbitMQ.
+2. Leader receives the message from RabbitMQ.
+3. Leader processes the message and sends a response back to RabbitMQ.
+4. Worker receives the response from RabbitMQ.
