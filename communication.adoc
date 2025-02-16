@@ -1,5 +1,9 @@
 = Communication Between Parts
 
+== Data flow
+
+image::https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/theyellow/cr-discord-bot/main/dataflow.puml["Sequence Diagram"]
+
 == Leader Component
 
 **Discord Communication**: The Leader uses `discord4j.core.GatewayDiscordClient` to interact with Discord, including receiving events and sending messages.
@@ -25,6 +29,34 @@
 **Redis**: Used for caching data to improve performance.
 
 **RabbitMQ**: Facilitates asynchronous communication with other components.
+
+image::https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/theyellow/cr-discord-bot/main/communication.puml["Communication Diagram"]
+
+== RSocket Integration in cr-discord-bot
+
+The `cr-discord-bot` project utilizes RSocket for efficient, reactive communication between its components. This document outlines the role of RSocket within the `connect-middleware`, `leader`, and `worker` subprojects.
+
+==== Connect-Middleware
+
+The `connect-middleware` serves as an intermediary, facilitating communication between `worker` components and Discord. It establishes an RSocket server to manage incoming connections from `worker` instances.
+
+==== Leader
+
+The `leader` component orchestrates high-level operations and coordinates interactions with Discord and other components. While its primary communication with Discord is through `discord4j.core.GatewayDiscordClient`, it also establishes RSocket connections for inter-component communication.
+
+==== Worker
+
+The `worker` components handle tasks such as processing Discord commands and retrieving data from external APIs. They connect to the `connect-middleware` via RSocket to send and receive messages, enabling a reactive communication channel.
+
+=== Communication Flow
+
+1. **Initialization**: The `connect-middleware` starts an RSocket server to listen for connections.
+2. **Connection Establishment**: `Leader` and `worker` components establish RSocket connections to the `connect-middleware`.
+3. **Message Handling**: Depending on the implementation, `leader` and `worker` instances exchange messages through the established RSocket connections.
+
+=== Conclusion
+
+Integrating RSocket within the `cr-discord-bot` project enhances reactive and efficient communication between components, improving the scalability and responsiveness of interactions among the `connect-middleware`, `leader`, and `worker` subprojects.
 
 == Examples
 

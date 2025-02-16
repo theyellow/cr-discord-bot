@@ -39,3 +39,7 @@
 5. **RabbitMQ**
    - **Role**: Acts as a message broker to facilitate asynchronous communication between components.
    - **Communication**: Used by all components to send and receive messages, ensuring reliable and scalable communication.
+
+== Overview
+
+image::https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/theyellow/cr-discord-bot/main/overview.puml["Overview Diagram"]
