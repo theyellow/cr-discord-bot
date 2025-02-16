@@ -56,15 +56,13 @@ To build the Docker images:
 
 == Deployment Steps
 
-1. **Generate Namespace**
-
+=== 1. **Generate Namespace**
 Create a dedicated namespace for the CR Discord Bot:
 [source,bash]
 ----
 kubectl apply -f namespace-cr-discord-bot.yaml
 ----
-2.	Set Secret Environment Variables
-
+=== 2.	Set Secret Environment Variables
 Prepare and set the necessary environment variables:
   -	Copy the sample environment variables file:
 [source,bash]
@@ -81,7 +79,7 @@ nano env.list
 ----
 kubectl create secret generic cr-discord-bot-secrets --from-env-file=./env.list --namespace=cr-discord-bot
 ----
-3.	Deploy Components to Kubernetes
+=== 3.	Deploy Components to Kubernetes
 You have two options for deployment:
   -	Apply All Components Together 
 Deploy all components using a single command:
