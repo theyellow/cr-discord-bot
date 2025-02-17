@@ -16,68 +16,88 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Command to show clans based on a given name.
+ */
 @Component
 public class ShowClansCommand implements SlashCommand {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShowClansCommand.class);
 
-    @Override
-    public String getName() {
-        return "showclans";
-    }
+    /**
+     * Returns the name of the command ("showclans").
+     * @return the name of the command.
+     */
+     @Override
+     public String getName() {
+     return "showclans";
+     }
 
-    @Autowired
-    private ClashRoyalClanAPI royalRestClanAPI;
+     @Autowired
+     private ClashRoyalClanAPI royalRestClanAPI;
 
+     /**
+      * Handles the slash command interaction event.
+      *
+      * @param event the chat input interaction event.
+     * @return a Mono that completes when the reply is sent.
+     */
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent event) {
 
-        /*
-        Since slash command options are optional according to discord, we will wrap it into the following function
-        that gets the value of our option as a String without chaining several .get() on all the optional values
-
-        In this case, there is no fear it will return empty/null as this is marked "required: true" in our json.
-         */
+        // Get the value of the "name" option as a String.
         Optional<ApplicationCommandInteractionOption> clanIdOpt = event.getOption("name");
         String name;
         if (clanIdOpt.isPresent()) {
             name = clanIdOpt
                     .flatMap(ApplicationCommandInteractionOption::getValue)
                     .map(ApplicationCommandInteractionOptionValue::asString)
-                    .orElse("Test"); //This is warning us that we didn't check if its present, we can ignore this on required options
+                    .orElse("Test"); // Default value if not present
         } else {
             name = "Test";
         }
-
 
         String result;
         if (name.isEmpty() || "Test".equals(name)) {
             result = "No name given, either set CLAN_ID system-variable for bot or use a parameter name.";
         } else {
             LOGGER.info("Clan name to search for: {}", name);
-             List<Clan> clans = royalRestClanAPI.getAllClansForName(name);
-            result = clans.
-                    stream().
-                    sorted((clan1, clan2)->
-                            compareNullSafe(clan2.getClanScore(),clan1.getClanScore())).
-                    map(ShowClansCommand::createClanText).
-                    collect(Collectors.joining());
+            List<Clan> clans = royalRestClanAPI.getAllClansForName(name);
+            result = clans
+                    .stream()
+                    .sorted((clan1, clan2) ->
+                            compareNullSafe(clan2.getClanScore(), clan1.getClanScore()))
+                    .map(ShowClansCommand::createClanText)
+                    .collect(Collectors.joining());
         }
 
         if (result.length() > 1999) {
-            result = result.substring(0,1999) + "...";
+            result = result.substring(0, 1999) + "...";
         }
 
-        //Reply to the slash command, with the name the user supplied
-        return  event.reply()
-            .withEphemeral(true)
-            .withContent(result);
+        // Reply to the slash command with the result.
+        return event.reply()
+                .withEphemeral(true)
+                .withContent(result);
     }
 
+    /**
+     * Creates a formatted string for a clan.
+     *
+     * @param clan the clan to format.
+     * @return the formatted clan string.
+     */
     private static String createClanText(Clan clan) {
         return MessageFormat.format("{0}({1}) : {2} /\\  ", clan.getName(), clan.getClanScore(), clan.getTag());
     }
 
+    /**
+     * Compares two Integer values, handling null values safely.
+     *
+     * @param clanScore1 the first clan score.
+     * @param clanScore2 the second clan score.
+     * @return a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
+     */
     private static int compareNullSafe(Integer clanScore1, Integer clanScore2) {
         if (null == clanScore1) {
             if (null == clanScore2) {

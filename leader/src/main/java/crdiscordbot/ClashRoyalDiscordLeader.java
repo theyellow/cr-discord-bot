@@ -41,16 +41,25 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.InetSocketAddress;
 
+/**
+* Main class for the Clash Royal Discord Leader application.
+* This class initializes the Spring Boot application.
+*/
 @SpringBootApplication
 public class ClashRoyalDiscordLeader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClashRoyalDiscordLeader.class);
 
+    /**
+     * Main method to start the Spring Boot application.
+     *
+     * @param args Command line arguments
+     */
     public static void main(String[] args) {
-        //Start spring application
+        // Start spring application
         ApplicationContext springContext = new SpringApplicationBuilder(ClashRoyalDiscordLeader.class)
-            .build()
-            .run(args);
+                .build()
+                .run(args);
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Starting leader, spring context initialized with {} beans", springContext.getBeanDefinitionNames().length);
         }
@@ -60,50 +69,79 @@ public class ClashRoyalDiscordLeader {
         }
     }
 
+    /**
+     * The <code>leaderBuilder</code> method in the <code>ClashRoyalDiscordLeader</code> class is responsible for setting up
+     * and initializing various components required for the Discord bot to function.
+     *
+     * <p>The method performs the following tasks:</p>
+     *
+     * <ol>
+     *   <li><strong>Global Router Server (GRS) and Shard Coordinator Server (SCS) Setup:</strong>
+     *     <ul>
+     *       <li>Defines the addresses for the Global Router Server and Shard Coordinator Server.</li>
+     *     </ul>
+     *   </li>
+     *   <li><strong>Redis Setup:</strong>
+     *     <ul>
+     *       <li>Configures the Redis server used as an entity cache.</li>
+     *       <li>Attempts to connect to the Redis server, retrying if the connection fails.</li>
+     *     </ul>
+     *   </li>
+     *   <li><strong>Jackson Resources:</strong>
+     *     <ul>
+     *       <li>Creates a default factory for working with Jackson for JSON processing.</li>
+     *     </ul>
+     *   </li>
+     *   <li><strong>Sharding Strategy:</strong>
+     *     <ul>
+     *       <li>Defines the sharding strategy for the Discord bot.</li>
+     *     </ul>
+     *   </li>
+     *   <li><strong>RabbitMQ Setup:</strong>
+     *     <ul>
+     *       <li>Configures RabbitMQ settings and initializes RabbitMQ components for message handling.</li>
+     *     </ul>
+     *   </li>
+     *   <li><strong>Redis Store Service:</strong>
+     *     <ul>
+     *       <li>Sets up the Redis store service and retries connection if it fails.</li>
+     *     </ul>
+     *   </li>
+     *   <li><strong>Discord Client Initialization:</strong>
+     *     <ul>
+     *       <li>Builds and configures the <code>GatewayDiscordClient</code> with various options including rate limiting, sharding, intents, and event mapping.</li>
+     *       <li>Logs in the client and starts the <code>LogoutHttpServer</code>.</li>
+     *     </ul>
+     *   </li>
+     *   <li><strong>Utility Method:</strong>
+     *     <ul>
+     *       <li>Contains a utility method <code>sleep</code> to pause execution for a specified duration.</li>
+     *     </ul>
+     *   </li>
+     * </ol>
+     *
+     * <p>This method ensures that all necessary components are properly configured and initialized for the Discord bot to operate smoothly.</p>
+     */
     private static void leaderBuilder() {
-        /*
-         * Define the location of the Global Router Server (GRS). A GRS combines coordinated routing across API
-         * requests while also dealing with the global rate limits.
-         *
-         * We will use RSocket GRS in this example: see ExampleRSocketGlobalRouterServer
-         */
+        // Define the location of the Global Router Server (GRS)
         InetSocketAddress globalRouterServerAddress = new InetSocketAddress(Constants.GLOBAL_ROUTER_SERVER_HOST, Constants.GLOBAL_ROUTER_SERVER_PORT);
 
-        /*
-         * Define the location of the Shard Coordinator Server (SCS). An SCS establishes predictable ordering across
-         * multiple leaders attempting to connect to the Gateway.
-         *
-         * We will use RSocket SCS in this example: see ExampleRSocket
-         */
+        // Define the location of the Shard Coordinator Server (SCS)
         InetSocketAddress coordinatorServerAddress = new InetSocketAddress(Constants.SHARD_COORDINATOR_SERVER_HOST, Constants.SHARD_COORDINATOR_SERVER_PORT);
 
-        /*
-         * Define the redis server that will be used as entity cache.
-         */
-        // first wait for 3 seconds, if the whole deployment starts together it will crash sometimes ("race condition" between different pods)
+        // Define the redis server that will be used as entity cache
         LOGGER.debug("Waiting 3s for connection to redis...");
         sleep(3000, "sleeping before initialization of redis got interrupted-exception");
         RedisURI redisURI = RedisURI.builder().withHost(Constants.REDIS_CLIENT_HOST).withPort(Constants.REDIS_CLIENT_PORT).withSsl(true).build();
         RedisClient redisClient = RedisClient.create(redisURI);
 
-        /*
-         * Create a default factory for working with Jackson, this can be reused across the application.
-         */
+        // Create a default factory for working with Jackson
         JacksonResources jackson = JacksonResources.create();
 
-        /*
-         * Define the sharding strategy. Refer to the class docs for more details or options.
-         */
+        // Define the sharding strategy
         ShardingStrategy shardingStrategy = ShardingStrategy.recommended();
 
-        /*
-         * Define the key resources for working with RabbitMQ.
-         * - ConnectRabbitMQ defines the parameters to a server
-         * - RabbitMQSinkMapper will be used to PRODUCE payloads to other nodes
-         *      - "createBinarySinkToDirect" will create binary messages, sent to the "payload" queue directly.
-         * - RabbitMQSourceMapper will be used to CONSUME payloads from other nodes
-         *      - "createBinarySource" will read binary messages
-         */
+        // Define the key resources for working with RabbitMQ
         ConnectRabbitMQ rabbitMQ;
         if (!Constants.RABBITMQ_HOST.isEmpty()) {
             ConnectRabbitMQSettings settings = ConnectRabbitMQSettings.create().withAddress(Constants.RABBITMQ_HOST, Constants.RABBITMQ_PORT);
@@ -162,6 +200,12 @@ public class ClashRoyalDiscordLeader {
         rabbitMQ.close();
     }
 
+    /**
+     * Utility method to sleep for a specified duration.
+     *
+     * @param millisToSleep Duration in milliseconds to sleep
+     * @param interruptionText Text to log if the sleep is interrupted
+     */
     private static void sleep(long millisToSleep, String interruptionText) {
         try {
             Thread.sleep(millisToSleep);
@@ -169,23 +213,6 @@ public class ClashRoyalDiscordLeader {
             LOGGER.warn(interruptionText);
             Thread.currentThread().interrupt();
         }
-    }
-
-    @Bean(name = "discordRestClient")
-    public RestClient discordRestClient() {
-        return RestClient.create(System.getenv("BOT_TOKEN"));
-    }
-
-    @Bean(name = "royalRestClient")
-    public RestTemplate royalRestClient() {
-        String apiToken = System.getenv("API_TOKEN");
-        RestTemplate restTemplate = new RestTemplateBuilder(rt-> rt.getInterceptors().add((request, body, execution) -> {
-            request.getHeaders().clear();
-            request.getHeaders().add("Authorization", "Bearer " + apiToken);
-            return execution.execute(request, body);
-        })).build();
-        LOGGER.info("REST-Engine for CR started...");
-        return restTemplate;
     }
 
 }

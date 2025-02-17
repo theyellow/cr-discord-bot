@@ -26,6 +26,9 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+* Singleton class responsible for managing the RSocket payload server.
+ */
 @Singleton
 public class PayloadServer {
 
@@ -33,6 +36,11 @@ public class PayloadServer {
     private boolean payloadServerStarted;
     private final ExecutorService pool = Executors.newFixedThreadPool(1);
 
+    /**
+     * Starts the RSocket payload server in a separate thread.
+     * Logs the server address upon successful start.
+     * Throws a RuntimeException if the server fails to start.
+     */
     public void startPayloadServer() {
         pool.execute(() -> {
             final Logger log = Loggers.getLogger(PayloadServer.class);
@@ -48,6 +56,11 @@ public class PayloadServer {
         payloadServerStarted = true;
     }
 
+    /**
+     * Checks if the payload server is currently running.
+     *
+     * @return true if the payload server is running, false otherwise.
+     */
     public boolean isExisting() {
         return payloadServerStarted;
     }

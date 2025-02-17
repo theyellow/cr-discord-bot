@@ -22,7 +22,6 @@ import java.util.concurrent.Executors;
  * An example of an {@link RSocketGlobalRouterServer}, capable of providing permits to coordinate REST requests across
  * multiple nodes and also handle global rate limits.
  */
-
 @Singleton
 public class RouterServer {
 
@@ -36,6 +35,11 @@ public class RouterServer {
     @Inject
     private ShardCoordinatorServer shardCoordinatorServer;
 
+    /**
+     * Starts the RSocketGlobalRouterServer, PayloadServer, and ShardCoordinatorServer when the service is ready.
+     *
+     * @param event the service ready event
+     */
     @EventListener
     public void startServer(ServiceReadyEvent event) {
         pool.execute(() -> {
@@ -55,6 +59,11 @@ public class RouterServer {
         shardCoordinatorServer.startShardCoordinator();
     }
 
+    /**
+     * Checks if the router server has been started.
+     *
+     * @return true if the router server has been started, false otherwise
+     */
     public boolean isExisting() {
         return routerServerStarted;
     }

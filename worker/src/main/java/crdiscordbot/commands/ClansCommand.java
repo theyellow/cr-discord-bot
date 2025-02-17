@@ -13,11 +13,19 @@ import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
+/**
+ * Component that handles the "clans" slash command.
+ */
 @Component
 public class ClansCommand implements SlashCommand {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClansCommand.class);
 
+    /**
+     * Returns the name of the slash command ("clans").
+     *
+     * @return the name of the command
+     */
     @Override
     public String getName() {
         return "clans";
@@ -26,12 +34,18 @@ public class ClansCommand implements SlashCommand {
     @Autowired
     private ClashRoyalClanAPI royalRestClanAPI;
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the chat input interaction event
+     * @return a Mono that completes when the reply is sent
+     */
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent event) {
-        /*
-        Since slash command options are optional according to discord, we will wrap it into the following function
-        that gets the value of our option as a String without chaining several .get() on all the optional values
-         */
+    /*
+    Since slash command options are optional according to discord, we will wrap it into the following function
+    that gets the value of our option as a String without chaining several .get() on all the optional values
+     */
         Optional<ApplicationCommandInteractionOption> clanIdOpt = event.getOption("clanid");
         String clanTag;
         if (clanIdOpt.isPresent()) {
@@ -57,7 +71,7 @@ public class ClansCommand implements SlashCommand {
 
         //Reply to the slash command, with the name the user supplied
         return  event.reply()
-            .withEphemeral(true)
-            .withContent(result);
+                .withEphemeral(true)
+                .withContent(result);
     }
 }

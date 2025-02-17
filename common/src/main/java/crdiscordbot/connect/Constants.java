@@ -20,14 +20,24 @@ package crdiscordbot.connect;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+/**
+ * The Constants class holds various configuration constants for the application.
+ * These constants are primarily loaded from environment variables.
+ */
 public final class Constants {
 
-
-    // rabbitmq variables
+    // RabbitMQ variables
     private static final String RABBITMQ_HOST_INTERNAL = System.getenv("RABBITMQ_HOST");
-    public static final String RABBITMQ_HOST = (null == RABBITMQ_HOST_INTERNAL || RABBITMQ_HOST_INTERNAL.isEmpty()) ? "": RABBITMQ_HOST_INTERNAL;
-    // internal default in rabbitmq : -1
+    /**
+     * The RabbitMQ host address.
+     */
+    public static final String RABBITMQ_HOST = (null == RABBITMQ_HOST_INTERNAL || RABBITMQ_HOST_INTERNAL.isEmpty()) ? "" : RABBITMQ_HOST_INTERNAL;
+
+    // Internal default in RabbitMQ: -1
     public static final String RABBITMQ_PORT_INTERNAL = System.getenv("RABBITMQ_PORT");
+    /**
+     * The RabbitMQ port number.
+     */
     public static int RABBITMQ_PORT;
     static {
         try {
@@ -37,7 +47,7 @@ public final class Constants {
         }
     }
 
-    // rsocket variables
+    // RSocket variables
     private static String LOCALHOST;
     static {
         try {
@@ -50,17 +60,44 @@ public final class Constants {
     private static final String RSOCKET_SHARD_COORDINATOR_HOST = System.getenv("RSOCKET_SHARD_COORDINATOR_HOST");
     private static final String RSOCKET_PAYLOAD_HOST = System.getenv("RSOCKET_PAYLOAD_HOST");
 
+    /**
+     * The global router server host address.
+     */
     public static String GLOBAL_ROUTER_SERVER_HOST = (null == RSOCKET_ROUTER_HOST || RSOCKET_ROUTER_HOST.isEmpty()) ? LOCALHOST : RSOCKET_ROUTER_HOST;
+    /**
+     * The shard coordinator server host address.
+     */
     public static String SHARD_COORDINATOR_SERVER_HOST = (null == RSOCKET_SHARD_COORDINATOR_HOST || RSOCKET_SHARD_COORDINATOR_HOST.isEmpty()) ? LOCALHOST : RSOCKET_SHARD_COORDINATOR_HOST;
+    /**
+     * The payload server host address.
+     */
     public static String PAYLOAD_SERVER_HOST = (null == RSOCKET_PAYLOAD_HOST || RSOCKET_PAYLOAD_HOST.isEmpty()) ? LOCALHOST : RSOCKET_PAYLOAD_HOST;
+    /**
+     * The global router server port number.
+     */
     public static int GLOBAL_ROUTER_SERVER_PORT = 33331;
+    /**
+     * The shard coordinator server port number.
+     */
     public static int SHARD_COORDINATOR_SERVER_PORT = 33332;
+    /**
+     * The payload server port number.
+     */
     public static int PAYLOAD_SERVER_PORT = 33333;
 
-    // redis variables
-    public static final String REDIS_CLIENT_HOST = System.getenv("REDIS_CLIENT_HOST") == null || System.getenv("REDIS_CLIENT_HOST").isEmpty() ? "localhost" : System.getenv("REDIS_CLIENT_HOST") ;
+    // Redis variables
+    /**
+     * The Redis client host address.
+     */
+    public static final String REDIS_CLIENT_HOST = System.getenv("REDIS_CLIENT_HOST") == null || System.getenv("REDIS_CLIENT_HOST").isEmpty() ? "localhost" : System.getenv("REDIS_CLIENT_HOST");
+    /**
+     * The Redis client port number.
+     */
     public static final int REDIS_CLIENT_PORT = System.getenv("REDIS_CLIENT_PORT") == null || System.getenv("REDIS_CLIENT_PORT").isEmpty() ? 6379 : Integer.parseInt(System.getenv("REDIS_CLIENT_PORT"));
 
+    /**
+     * Private constructor to prevent instantiation.
+     */
     private Constants() {
     }
 }

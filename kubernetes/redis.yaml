@@ -1,12 +1,14 @@
-# Redis deployment
+# Redis deployment configuration for Kubernetes
 #
-# port-mapping is internal:6379 -> external:30379
+# This YAML file sets up a Redis instance within a Kubernetes cluster.
+# It includes the namespace, service, configuration, and pod specifications.
+# Port-mapping is internal:6379 -> external:30379
 #
-# For deployment use:
+# To deploy this configuration, use the following command:
 # kubectl apply -f redis.yaml
 #
 ---
-# namespace "cr-discord-bot" for kubernetes components of cr-discord-bot
+# Define the namespace for the Redis components
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -14,9 +16,8 @@ metadata:
   labels:
     name: cr-discord-bot
 ---
-# service for Redis
-# port internal: 6379
-# port external: 30379
+# Define the service for Redis
+# This service exposes Redis on port 6379 internally and port 30379 externally
 apiVersion: v1
 kind: Service
 metadata:
@@ -31,7 +32,7 @@ spec:
     - port: 6379
       nodePort: 30379
 ---
-# configuration for Redis
+# Define the configuration for Redis using a ConfigMap
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -46,16 +47,17 @@ data:
     protected-mode no
     pidfile /data/redis-6379.pid
 ---
-# Pod including Redis 5.0.4
+# Define the Pod that includes Redis
 apiVersion: v1
 kind: Pod
 metadata:
   name: redis-discord
   namespace: cr-discord-bot
   labels:
-      app: cr-discord-redis
-      department: bots
+    app: cr-discord-redis
+    department: bots
 spec:
+  # Initialization container to configure system settings
   initContainers:
     - name: system-init
       image: busybox:1.32
@@ -70,6 +72,7 @@ spec:
       volumeMounts:
         - name: sys
           mountPath: /sys
+  # Main container running Redis
   containers:
     - name: redis-discord
       image: redis:5.0.8
@@ -84,6 +87,7 @@ spec:
       resources:
         limits:
           cpu: "0.2"
+      # Liveness probe to check if Redis is running
       livenessProbe:
         tcpSocket:
           port: 6379
@@ -92,6 +96,7 @@ spec:
         periodSeconds: 10
         successThreshold: 1
         failureThreshold: 3
+      # Readiness probe to check if Redis is ready to serve traffic
       readinessProbe:
         tcpSocket:
           port: 6379

@@ -1,12 +1,13 @@
-apiVersion: v1
-kind: Service
+# This YAML file defines a Kubernetes Service for the cr-discord-bot application.
+apiVersion: v1  # Specifies the API version used to create this object.
+kind: Service  # Defines the type of Kubernetes object, which is a Service in this case.
 metadata:
-  name: cr-discord-bot-service
+  name: cr-discord-bot-service  # The name of the Service.
 spec:
   selector:
-    app: crdiscordbot
-    department: bots
+    app: crdiscordbot  # The label selector to identify the pods that this Service targets.
+    department: bots  # Additional label to further filter the targeted pods.
   ports:
-  - protocol: TCP
-    port: 28081
-    targetPort: 8080
+    - protocol: TCP  # The protocol used by the Service.
+      port: 28081  # The port exposed by the Service.
+      targetPort: 8080  # The port on the pod that the Service forwards traffic to.

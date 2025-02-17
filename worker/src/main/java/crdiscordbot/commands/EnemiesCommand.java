@@ -19,11 +19,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Component that handles the "enemies" slash command.
+ */
 @Component
 public class EnemiesCommand implements SlashCommand {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(EnemiesCommand.class);
 
+    /**
+     * Returns the name of the command ("enemies").
+     *
+     * @return the name of the command
+     */
     @Override
     public String getName() {
         return "enemies";
@@ -32,6 +39,12 @@ public class EnemiesCommand implements SlashCommand {
     @Autowired
     private ClashRoyalClanAPI royalRestClanAPI;
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the chat input interaction event
+     * @return a Mono that completes when the reply is sent
+     */
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent event) {
         Optional<ApplicationCommandInteractionOption> clanIdOpt = event.getOption("clanid");
@@ -53,12 +66,20 @@ public class EnemiesCommand implements SlashCommand {
             CurrentRiverRace currentRiverRace = royalRestClanAPI.getCurrentRiverRace(clanTag);
             result = getResult(clanTag, result, currentRiverRace);
         }
-        //Reply to the slash command, with the name the user supplied
-        return  event.reply()
-            .withEphemeral(true)
-            .withContent(result);
+        // Reply to the slash command, with the name the user supplied
+        return event.reply()
+                .withEphemeral(true)
+                .withContent(result);
     }
 
+    /**
+     * Gets the result string for the given clan tag and current river race.
+     *
+     * @param clanTag the clan tag
+     * @param result the initial result string
+     * @param currentRiverRace the current river race
+     * @return the result string
+     */
     private String getResult(String clanTag, String result, CurrentRiverRace currentRiverRace) {
         if (null != currentRiverRace) {
             LOGGER.info("Found river-race, ends {}", currentRiverRace.getWarEndTime());
@@ -69,6 +90,12 @@ public class EnemiesCommand implements SlashCommand {
         return result;
     }
 
+    /**
+     * Creates the answer string for the given current river race.
+     *
+     * @param currentRiverRace the current river race
+     * @return the answer string
+     */
     private String createAnswer(CurrentRiverRace currentRiverRace) {
         String result;
         List<RiverRaceClan> clans = currentRiverRace.getClans();
@@ -90,6 +117,12 @@ public class EnemiesCommand implements SlashCommand {
         return result;
     }
 
+    /**
+     * Creates a string representation of an enemy clan.
+     *
+     * @param clan the enemy clan
+     * @return the string representation of the enemy clan
+     */
     private static String createEnemyString(RiverRaceClan clan) {
         String name = clan.getName();
         if (!StringUtils.hasLength(name)) {
