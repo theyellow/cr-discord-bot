@@ -9,45 +9,45 @@ For details of architecture see: xref:architecture.adoc[]
 === Components
 
 1. *Leader*
-  - *Role:*  
-    -- Coordinates tasks between Discord users and Workers.
-    -- Assigns tasks to available Workers via the *Connect-Middleware*.
-    -- *Does not* communicate directly with Discord or the Clash Royale API.
-  - *Implementation:*  
-    -- Connects *only to the Connect-Middleware* via RSocket and HTTP/REST.
+  * *Role:*  
+    ** Coordinates tasks between Discord users and Workers.
+    ** Assigns tasks to available Workers via the *Connect-Middleware*.
+    ** *Does not* communicate directly with Discord or the Clash Royale API.
+  * *Implementation:*  
+    ** Connects *only to the Connect-Middleware* via RSocket and HTTP/REST.
 
 2. *Worker*
-  - *Role:*  
-    -- Listens for task assignments from the Leader via the *Connect-Middleware*.
-    -- *Initiates all communication* with *Discord and the Clash Royale API*.
-    -- Fetches data from the Clash Royale API and returns results.
-  - *Implementation:*  
-    -- Connects to the Connect-Middleware for task reception.
-    -- Makes HTTP/REST calls to *Discord* (sending responses) and *Clash Royale API* (fetching data).
+  * *Role:*  
+    ** Listens for task assignments from the Leader via the *Connect-Middleware*.
+    ** *Initiates all communication* with *Discord and the Clash Royale API*.
+    ** Fetches data from the Clash Royale API and returns results.
+  * *Implementation:*  
+    ** Connects to the Connect-Middleware for task reception.
+    ** Makes HTTP/REST calls to *Discord* (sending responses) and *Clash Royale API* (fetching data).
 
 3. *Connect-Middleware*
-  - *Role:*  
-    -- Manages task orchestration between Leaders and Workers.
-    -- Routes user requests from Discord to the appropriate Leader/Worker.
-  - *Implementation:*  
-    -- Uses the *Discord4J `connect` library* to interact with Discord.
-    -- Facilitates Leader-Worker communication via *RSocket and HTTP/REST*.
+  * *Role:*  
+    ** Manages task orchestration between Leaders and Workers.
+    ** Routes user requests from Discord to the appropriate Leader/Worker.
+  * *Implementation:*  
+    ** Uses the *Discord4J `connect` library* to interact with Discord.
+    ** Facilitates Leader-Worker communication via *RSocket and HTTP/REST*.
 
 4. *Redis*
-  - *Role:* 
-    -- Used for caching and storing temporary data.
+  * *Role:* 
+    ** Used for caching and storing temporary data.
 
 5. *RabbitMQ*
-  - *Role:* 
-    -- Used for asynchronous communication between components. Acts as a message broker.
+  * *Role:* 
+    ** Used for asynchronous communication between components. Acts as a message broker.
 
 6. *External APIs*
   6.1. *Clash Royale API*
-    - *Role:* 
-      -- Provide game-related data.
+    * *Role:* 
+      ** Provide game-related data.
   6.2. *Discord*
-    - *Role:* 
-      -- User interface for interacting with this bot
+    * *Role:* 
+      ** User interface for interacting with this bot
 
 === Interaction Flow
 
@@ -152,20 +152,20 @@ env:
 
 === Logging
 
-- *Only local Logback logging* is configured.
-- *No centralized logging* (e.g., Grafana, ELK Stack).
+* *Only local Logback logging* is configured.
+* *No centralized logging* (e.g., Grafana, ELK Stack).
 
 === CI/CD Workflows
 
 The project uses GitHub workflows for CI/CD. The workflows are located in the `.github/workflows` directory of the repository. Key workflows include:
 
-- **docker-publish.yaml**: Builds and pushes Docker images to the Docker repository.
-- **dependency-review.yaml**: Reviews dependencies for security vulnerabilities.
-- **maven.yml**: Runs Maven build and tests.
-- **codeql-analysis.yml**: Performs CodeQL analysis for code quality and security.
-- **sonarcloud_io.yaml**: Integrates with SonarCloud for code quality analysis.
-- **docker-image.yaml**: Builds Docker images for specific components.
-- **codacy.yaml**: Integrates with Codacy for code quality and coverage analysis.
+* **docker-publish.yaml**: Builds and pushes Docker images to the Docker repository.
+* **dependency-review.yaml**: Reviews dependencies for security vulnerabilities.
+* **maven.yml**: Runs Maven build and tests.
+* **codeql-analysis.yml**: Performs CodeQL analysis for code quality and security.
+* **sonarcloud_io.yaml**: Integrates with SonarCloud for code quality analysis.
+* **docker-image.yaml**: Builds Docker images for specific components.
+* **codacy.yaml**: Integrates with Codacy for code quality and coverage analysis.
 
 ---
 
@@ -173,21 +173,21 @@ The project uses GitHub workflows for CI/CD. The workflows are located in the `.
 
 === Communication Details
 
-- *Leader ↔ Connect-Middleware*  
-  - *Protocol:* RSocket (with HTTP/REST as needed).  
-  - *Purpose:* Task delegation and receiving results.
+* *Leader ↔ Connect-Middleware*  
+  ** *Protocol:* RSocket (with HTTP/REST as needed).  
+  ** *Purpose:* Task delegation and receiving results.
 
-- *Worker ↔ Connect-Middleware*  
-  - *Protocols:* RSocket and HTTP/REST.  
-  - *Purpose:* Task reception and result transmission.
+* *Worker ↔ Connect-Middleware*  
+  ** *Protocols:* RSocket and HTTP/REST.  
+  ** *Purpose:* Task reception and result transmission.
 
-- *Worker → External APIs (Clash Royale API)*  
-  - *Protocol:* HTTP/REST.  
-  - *Purpose:* Fetching data.
+* *Worker → External APIs (Clash Royale API)*  
+  ** *Protocol:* HTTP/REST.  
+  ** *Purpose:* Fetching data.
 
-- *Worker → Discord (via Connect-Middleware)*  
-  - *Protocol:* RSocket and HTTP/REST.  
-  - *Purpose:* Sending results back to users.
+* *Worker → Discord (via Connect-Middleware)*  
+  ** *Protocol:* RSocket and HTTP/REST.  
+  ** *Purpose:* Sending results back to users.
 
 === Example Data Payloads
 
@@ -220,7 +220,7 @@ The project uses GitHub workflows for CI/CD. The workflows are located in the `.
 
 === Security Considerations
 
-- *No security measures are currently implemented.*
-- *Future possibilities:* Authentication, encryption, rate limiting.
+* *No security measures are currently implemented.*
+* *Future possibilities:* Authentication, encryption, rate limiting.
 
 ---
