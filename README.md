@@ -18,7 +18,7 @@ Springboot and micronaut is used for different parts of this project. Structure
 | worker             | springboot worker application                                                                                                                       |
 
 
-For having some fun this bot plays with Clash Royal API and is inspired by
+For having some fun this bot plays with Clash Royal REST API and is inspired by
 [clash-royale-discord-bot](https://github.com/HZooly/clash-royale-discord-bot)
 written in java/typescript also here on GitHub.
 
