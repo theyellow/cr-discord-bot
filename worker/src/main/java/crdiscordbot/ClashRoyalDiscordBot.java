@@ -132,12 +132,12 @@ public class ClashRoyalDiscordBot {
 
         @Override
         public void write(CurrentRiverRace.StateEnum stateEnum, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
-            throw HttpMessageNotWritableException("not writable");
+            throw new HttpMessageNotWritableException("not writable");
         }
 
         @Override
         public void write(CurrentRiverRace.StateEnum value, Type type, MediaType mediaType, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
-            throw HttpMessageNotWritableException("not writable");
+            throw new HttpMessageNotWritableException("not writable");
         }
     }
 
@@ -194,12 +194,12 @@ public class ClashRoyalDiscordBot {
 
         @Override
         public void write(CurrentClanWar.StateEnum stateEnum, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
-            throw HttpMessageNotWritableException("not writable");
+            throw new HttpMessageNotWritableException("not writable", null);
         }
 
         @Override
         public void write(CurrentClanWar.StateEnum value, Type type, MediaType mediaType, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
-            throw HttpMessageNotWritableException("not writable");
+            throw new HttpMessageNotWritableException("not writable");
         }
     }
 
@@ -256,12 +256,12 @@ public class ClashRoyalDiscordBot {
 
         @Override
         public void write(Match.StateEnum stateEnum, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
-            throw HttpMessageNotWritableException("not writable");
+            throw new HttpMessageNotWritableException("not writable");
         }
 
         @Override
         public void write(Match.StateEnum value, Type type, MediaType mediaType, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
-            throw HttpMessageNotWritableException("not writable");
+            throw new HttpMessageNotWritableException("not writable");
         }
     }
 
