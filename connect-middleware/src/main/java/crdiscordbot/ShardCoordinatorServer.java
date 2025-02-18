@@ -33,8 +33,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
+/**
+ * ShardCoordinatorServer is responsible for managing the lifecycle of the shard coordinator server.
+ * It starts the server and provides a method to check if the server is running.
+ */
 @Singleton
-//@Controller("/shardcoordinator")
 public class ShardCoordinatorServer {
 
     private static final Logger log = Loggers.getLogger(ShardCoordinatorServer.class);
@@ -44,14 +47,17 @@ public class ShardCoordinatorServer {
     @Inject
     private StateClient stateClient;
 
+    /**
+     * Starts the shard coordinator server in a separate thread.
+     * It initializes the RSocketShardCoordinatorServer and starts it.
+     */
     public void startShardCoordinator() {
         pool.execute(() -> {
             final Logger log = Loggers.getLogger(ShardCoordinatorServer.class);
             log.info("Create shard coordinator...");
             RSocketShardCoordinatorServer coordinatorServer = new RSocketShardCoordinatorServer(new InetSocketAddress(Constants.SHARD_COORDINATOR_SERVER_PORT));
             log.info("Created shard coordinator!");
-            Mono<CloseableChannel> channelMono = coordinatorServer
-                    .start();
+            Mono<CloseableChannel> channelMono = coordinatorServer.start();
             log.info("Starting shard coordinator channel...");
             channelMono
                     .doOnNext(cc -> log.info("Started shard coordinator server at {}", cc.address()))
@@ -64,7 +70,11 @@ public class ShardCoordinatorServer {
         coordinatorServerStarted = true;
     }
 
-
+    /**
+     * Checks if the shard coordinator server is already started.
+     *
+     * @return true if the server is started, false otherwise.
+     */
     public boolean isExisting() {
         return coordinatorServerStarted;
     }

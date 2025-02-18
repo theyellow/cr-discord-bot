@@ -4,7 +4,7 @@
 # kubectl apply -f rabbitmq-distributed-worker-leader.yaml
 #
 ---
-# namespace "cr-discord-bot" for kubernetes components of cr-discord-bot
+# Define the namespace "cr-discord-bot" for Kubernetes components of cr-discord-bot
 kind: Namespace
 apiVersion: v1
 metadata:
@@ -12,6 +12,7 @@ metadata:
   labels:
     name: cr-discord-bot
 ---
+# Define a service for the cr-discord-bot
 apiVersion: v1
 kind: Service
 metadata:
@@ -25,67 +26,69 @@ spec:
       port: 28091
       targetPort: 8080
 ---
+# Define the deployment for the leader
 # There has to be one leader, this leader will handle the connection with discord and is leading the workers
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: cr-discord-rabbitmq-distributed-leader-deployment
-    namespace: cr-discord-bot
-    labels:
-        app: cr-discord-rabbitmq-distributed-leader-deployment
+  name: cr-discord-rabbitmq-distributed-leader-deployment
+  namespace: cr-discord-bot
+  labels:
+    app: cr-discord-rabbitmq-distributed-leader-deployment
 spec:
-    replicas: 1
-    selector:
-      matchLabels:
-         app: cr-discord-rabbitmq-distributed-leader
-    template:
-      metadata:
-         name: cr-discord-rabbitmq-distributed-leader
-         namespace: cr-discord-bot
-         labels:
-            app: cr-discord-rabbitmq-distributed-leader
-            department: bots
-      spec:
-        containers:
-          - name: cr-discord-rabbitmq-distributed-leader-container
-            image: ghcr.io/theyellow/cr-discord-bot-leader:main
-            imagePullPolicy: Always
-            envFrom:
-              - secretRef:
-                  name: cr-discord-bot-secrets
-            ports:
-              - containerPort: 8080
-            command: [ "java", "-jar", "/crdiscordbot-leader.jar"]
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cr-discord-rabbitmq-distributed-leader
+  template:
+    metadata:
+      name: cr-discord-rabbitmq-distributed-leader
+      namespace: cr-discord-bot
+      labels:
+        app: cr-discord-rabbitmq-distributed-leader
+        department: bots
+    spec:
+      containers:
+        - name: cr-discord-rabbitmq-distributed-leader-container
+          image: ghcr.io/theyellow/cr-discord-bot-leader:main
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: cr-discord-bot-secrets
+          ports:
+            - containerPort: 8080
+          command: [ "java", "-jar", "/crdiscordbot-leader.jar"]
 ---
-# Deployment of workers - There can be any number of workers ('1' for developing or small server-setups)
+# Define the deployment for the workers
+# There can be any number of workers ('1' for developing or small server-setups)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: cr-discord-rabbitmq-distributed-worker-deployment
-    namespace: cr-discord-bot
-    labels:
-        app: cr-discord-rabbitmq-distributed-worker-deployment
+  name: cr-discord-rabbitmq-distributed-worker-deployment
+  namespace: cr-discord-bot
+  labels:
+    app: cr-discord-rabbitmq-distributed-worker-deployment
 spec:
-    replicas: 1
-    selector:
-      matchLabels:
-         app: cr-discord-rabbitmq-distributed-worker
-    template:
-      metadata:
-         name: cr-discord-rabbitmq-distributed-worker
-         namespace: cr-discord-bot
-         labels:
-           app: cr-discord-rabbitmq-distributed-worker
-           department: bots
-      spec:
-        containers:
-          - name: cr-discord-rabbitmq-distributed-worker-container
-            image: ghcr.io/theyellow/cr-discord-bot-worker:main
-            imagePullPolicy: Always
-            envFrom:
-             - secretRef:
-                 name: cr-discord-bot-secrets
-            ports:
-              - containerPort: 8080
-            command: [ "java", "-jar", "/crdiscordbot-worker.jar"]
+  replicas: 1  # Number of worker replicas
+  selector:
+    matchLabels:
+      app: cr-discord-rabbitmq-distributed-worker
+  template:
+    metadata:
+      name: cr-discord-rabbitmq-distributed-worker
+      namespace: cr-discord-bot
+      labels:
+        app: cr-discord-rabbitmq-distributed-worker
+        department: bots
+    spec:
+      containers:
+        - name: cr-discord-rabbitmq-distributed-worker-container
+          image: ghcr.io/theyellow/cr-discord-bot-worker:main
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: cr-discord-bot-secrets
+          ports:
+            - containerPort: 8080
+          command: [ "java", "-jar", "/crdiscordbot-worker.jar"]
 ---

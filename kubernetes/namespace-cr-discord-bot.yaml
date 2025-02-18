@@ -1,7 +1,18 @@
-# namespace "cr-discord-bot" for kubernetes components of cr-discord-bot
+# This YAML file defines a Kubernetes Namespace for the cr-discord-bot application.
+# A Namespace in Kubernetes is a way to divide cluster resources between multiple users.
+# Namespaces provide a scope for names and are intended for use in environments with many users spread across multiple teams, or projects.
+
+# The kind field specifies the type of Kubernetes object being created.
 kind: Namespace
+
+# The apiVersion field specifies the version of the Kubernetes API to use for this object.
 apiVersion: v1
+
 metadata:
+  # The name field specifies the name of the Namespace.
   name: cr-discord-bot
+
+  # The labels field allows you to organize and select subsets of objects.
   labels:
+    # The name label is used to identify the Namespace.
     name: cr-discord-bot

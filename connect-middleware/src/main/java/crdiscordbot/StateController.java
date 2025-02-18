@@ -8,11 +8,14 @@ import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller for handling state-related requests.
+ */
 @Controller("/state")
 public class StateController {
 
     @Inject
-    private EmbeddedServer server; //
+    private EmbeddedServer server;
 
     @Inject
     private RouterServer routerServer;
@@ -23,6 +26,11 @@ public class StateController {
     @Inject
     private ShardCoordinatorServer shardCoordinatorServer;
 
+    /**
+     * Endpoint to retrieve the state of various services.
+     *
+     * @return StateResult containing the status of different services.
+     */
     @Get
     public StateResult findAll() {
         List<StateResult.ServiceResult> services = new ArrayList<>();

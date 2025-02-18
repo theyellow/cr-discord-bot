@@ -1,0 +1,226 @@
+= CR Discord Bot Documentation
+
+== Architecture Overview
+
+The CR Discord Bot is designed as a distributed system using the Discord4J `connect` library to facilitate communication between multiple components. The architecture follows a *Leader-Worker pattern*, with all communication managed via the *Connect-Middleware*. 
+For details of architecture see: xref:architecture.adoc[]
+
+
+=== Components
+
+1. *Leader*
+  * *Role:*  
+    ** Coordinates tasks between Discord users and Workers.
+    ** Assigns tasks to available Workers via the *Connect-Middleware*.
+    ** *Does not* communicate directly with Discord or the Clash Royale API.
+  * *Implementation:*  
+    ** Connects *only to the Connect-Middleware* via RSocket and HTTP/REST.
+
+2. *Worker*
+  * *Role:*  
+    ** Listens for task assignments from the Leader via the *Connect-Middleware*.
+    ** *Initiates all communication* with *Discord and the Clash Royale API*.
+    ** Fetches data from the Clash Royale API and returns results.
+  * *Implementation:*  
+    ** Connects to the Connect-Middleware for task reception.
+    ** Makes HTTP/REST calls to *Discord* (sending responses) and *Clash Royale API* (fetching data).
+
+3. *Connect-Middleware*
+  * *Role:*  
+    ** Manages task orchestration between Leaders and Workers.
+    ** Routes user requests from Discord to the appropriate Leader/Worker.
+  * *Implementation:*  
+    ** Uses the *Discord4J `connect` library* to interact with Discord.
+    ** Facilitates Leader-Worker communication via *RSocket and HTTP/REST*.
+
+4. *Redis*
+  * *Role:* 
+    ** Used for caching and storing temporary data.
+
+5. *RabbitMQ*
+  * *Role:* 
+    ** Used for asynchronous communication between components. Acts as a message broker.
+
+6. *External APIs*
+  6.1. *Clash Royale API*
+    * *Role:* 
+      ** Provide game-related data.
+  6.2. *Discord*
+    * *Role:* 
+      ** User interface for interacting with this bot
+
+=== Interaction Flow
+
+1. *Discord Interaction:*  
+   - A Discord user sends a command (`"/command"` or `"@crBot ..."`).
+   - The request *enters the system via the Connect-Middleware*.
+   - The Connect-Middleware sends it to an available Leader.
+
+2. *Task Delegation:*  
+   - The Leader *does not process the request itself*.
+   - Instead, it assigns the task to a Worker via the Connect-Middleware.
+
+3. *Task Execution:*  
+   - The Worker queries the *Clash Royale API* via HTTP/REST.
+   - The Worker prepares a response for Discord.
+
+4. *Result Communication:*  
+   - The Worker *directly communicates with Discord* via the Connect-Middleware, sending the response back to the user.
+
+For details of communication, see xref:communication.adoc[]
+
+=== Scalability Considerations
+
+- Currently, the system supports *one Leader and multiple Workers*.
+- The architecture allows for *multiple Leaders*, but this is *not yet implemented*.
+
+---
+
+== Deployment Guide
+
+=== Prerequisites
+
+- A running Kubernetes cluster.
+- `kubectl` configured for the target cluster.
+- Docker images for Leader, Worker, and Connect-Middleware stored in a container registry.
+
+=== Deployment Steps
+
+Deployment files can be found at:  
+https://github.com/theyellow/cr-discord-bot/tree/main/kubernetes
+
+For more details, see xref:kubernetes/deployment.adoc[] , this is a short version.
+
+1. *Create Namespace:*
++
+[source,bash]
+----
+kubectl create namespace cr-discord-bot
+----
+
+2. *Deploy Connect-Middleware:*
++
+[source,bash]
+----
+kubectl apply -f kubernetes/connect-middleware-deployment.yaml -n cr-discord-bot
+kubectl apply -f kubernetes/connect-middleware-service.yaml -n cr-discord-bot
+----
+
+3. *Deploy Leader:*
++
+[source,bash]
+----
+kubectl apply -f kubernetes/leader-deployment.yaml -n cr-discord-bot
+kubectl apply -f kubernetes/leader-service.yaml -n cr-discord-bot
+----
+
+4. *Deploy Worker:*
++
+[source,bash]
+----
+kubectl apply -f kubernetes/worker-deployment.yaml -n cr-discord-bot
+----
+
+=== Configuration Management
+
+- Secrets (e.g., Discord token, Clash Royale API key) are stored in *Kubernetes Secrets*.
+
+[source,bash]
+----
+kubectl create secret generic cr-discord-bot-secrets \
+  --from-literal=discordToken=YOUR_DISCORD_TOKEN \
+  --from-literal=clashRoyaleApiKey=YOUR_CLASH_ROYALE_API_KEY \
+  -n cr-discord-bot
+----
+
+These secrets are referenced in deployment files:
+
+[source,yaml]
+----
+env:
+  - name: DISCORD_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: cr-discord-bot-secrets
+        key: discordToken
+  - name: CLASH_ROYALE_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: cr-discord-bot-secrets
+        key: clashRoyaleApiKey
+----
+
+=== Logging
+
+* *Only local Logback logging* is configured.
+* *No centralized logging* (e.g., Grafana, ELK Stack).
+
+=== CI/CD Workflows
+
+The project uses GitHub workflows for CI/CD. The workflows are located in the `.github/workflows` directory of the repository. Key workflows include:
+
+* **docker-publish.yaml**: Builds and pushes Docker images to the Docker repository.
+* **dependency-review.yaml**: Reviews dependencies for security vulnerabilities.
+* **maven.yml**: Runs Maven build and tests.
+* **codeql-analysis.yml**: Performs CodeQL analysis for code quality and security.
+* **sonarcloud_io.yaml**: Integrates with SonarCloud for code quality analysis.
+* **docker-image.yaml**: Builds Docker images for specific components.
+* **codacy.yaml**: Integrates with Codacy for code quality and coverage analysis.
+
+---
+
+== Communication Protocols
+
+=== Communication Details
+
+* *Leader ↔ Connect-Middleware*  
+  ** *Protocol:* RSocket (with HTTP/REST as needed).  
+  ** *Purpose:* Task delegation and receiving results.
+
+* *Worker ↔ Connect-Middleware*  
+  ** *Protocols:* RSocket and HTTP/REST.  
+  ** *Purpose:* Task reception and result transmission.
+
+* *Worker → External APIs (Clash Royale API)*  
+  ** *Protocol:* HTTP/REST.  
+  ** *Purpose:* Fetching data.
+
+* *Worker → Discord (via Connect-Middleware)*  
+  ** *Protocol:* RSocket and HTTP/REST.  
+  ** *Purpose:* Sending results back to users.
+
+=== Example Data Payloads
+
+*Task Assignment (Leader to Worker via Connect-Middleware)*
+
+[source,json]
+----
+{
+  "taskId": "12345",
+  "action": "fetchPlayerStats",
+  "parameters": {
+    "playerTag": "#ABC123"
+  }
+}
+----
+
+*Task Result (Worker to Discord via Connect-Middleware)*
+
+[source,json]
+----
+{
+  "taskId": "12345",
+  "status": "completed",
+  "result": {
+    "playerName": "JohnDoe",
+    "trophies": 4500
+  }
+}
+----
+
+=== Security Considerations
+
+* *No security measures are currently implemented.*
+* *Future possibilities:* Authentication, encryption, rate limiting.
+
+---

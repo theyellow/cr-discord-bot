@@ -32,14 +32,28 @@ public class LogoutHttpServer {
 
     private final GatewayDiscordClient client;
 
+    /**
+     * Constructs a new LogoutHttpServer with the specified Discord client.
+     *
+     * @param client the Discord client to use for logging out
+     */
     public LogoutHttpServer(GatewayDiscordClient client) {
         this.client = client;
     }
 
+    /**
+     * Starts the LogoutHttpServer asynchronously.
+     *
+     * @param client the Discord client to use for logging out
+     */
     public static void startAsync(GatewayDiscordClient client) {
         new LogoutHttpServer(client).start();
     }
 
+    /**
+     * Starts the HTTP server and binds it to an ephemeral port.
+     * Exposes a /logout endpoint that logs out the Discord client.
+     */
     public void start() {
         HttpServer.create()
                 .port(0) // use an ephemeral port

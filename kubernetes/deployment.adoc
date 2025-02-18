@@ -1,0 +1,97 @@
+= CR Discord Bot Kubernetes Deployment Guide
+
+== Overview
+
+The CR Discord Bot is designed for scalable deployment on a Kubernetes cluster. This guide provides detailed instructions to deploy each component of the bot using Kubernetes.
+
+== Prerequisites
+
+Before proceeding, ensure you have the following:
+
+- A running Kubernetes cluster.
+- Docker images for each component of the bot.
+- `kubectl` configured to interact with your Kubernetes cluster.
+
+== Setup of deployment
+
+image::https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/theyellow/cr-discord-bot/main/kubernetes-setup.puml["Kubernetes Setup"]
+
+== Directory Structure
+
+The `kubernetes` directory contains the necessary files for deploying the CR Discord Bot. Key components include:
+
+1. *Deployment Files*: YAML files defining deployment configurations for each service.
+2. *Service Files*: YAML files defining services to expose the deployments.
+3. *ConfigMaps and Secrets*: YAML files for configuration data and sensitive information.
+
+== Key Components
+
+=== Deployments
+
+Each Maven subproject (`common`, `connect`, `connect-middleware`, `leader`, `worker`) has its own deployment configuration:
+
+- *common*: Shared utilities and configurations.
+- *connect*: Manages the connection to the Discord API.
+- *connect-middleware*: Coordinates communication between `leader` and `worker`.
+- *leader*: Manages and coordinates the `worker`.
+- *worker*: Executes tasks delegated by the `leader`.
+
+=== Services
+
+Services are defined to expose the deployments and enable inter-component communication:
+
+- *connect-service*: Exposes the `connect` deployment.
+- *middleware-service*: Exposes the `connect-middleware` deployment.
+- *leader-service*: Exposes the `leader` deployment.
+- *worker-service*: Exposes the `worker` deployment.
+
+== Building Docker Images with GitHub Workflows
+
+Docker images for each component are built using GitHub workflows. The workflow configuration is located at `.github/workflows/docker-publish.yaml`.
+
+To build the Docker images:
+
+1. Push your changes to the repository.
+2. The workflow will automatically build and push the Docker images to your GitHub Docker repository.
+
+== Deployment Steps
+
+=== 1. **Generate Namespace**
+Create a dedicated namespace for the CR Discord Bot:
+[source,bash]
+----
+kubectl apply -f namespace-cr-discord-bot.yaml
+----
+=== 2.	Set Secret Environment Variables
+Prepare and set the necessary environment variables:
+  -	Copy the sample environment variables file:
+[source,bash]
+----
+cp sample-env.list env.list
+----
+   - Edit the env.list file to include your specific configurations:
+[source,bash]
+----
+nano env.list
+----
+  - Create a Kubernetes secret from the env.list file:
+[source,bash]
+----
+kubectl create secret generic cr-discord-bot-secrets --from-env-file=./env.list --namespace=cr-discord-bot
+----
+=== 3.	Deploy Components to Kubernetes
+You have two options for deployment:
+  -	Apply All Components Together 
+Deploy all components using a single command:
+[source,bash]
+----
+kubectl apply -f deployment.yaml
+----
+  - Certainly, to deploy each component of the CR Discord Bot individually, you can execute the following kubectl apply commands in sequence:
+[source,bash]
+----
+kubectl apply -f redis.yaml
+kubectl apply -f rabbitmq-broker.yaml
+kubectl apply -f connect-middleware.yaml
+kubectl apply -f rabbitmq-distributed-worker-leader.yaml
+----

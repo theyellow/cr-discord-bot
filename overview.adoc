@@ -1,0 +1,42 @@
+= Overall Overview
+
+The bot is an experimental project designed to explore CI/CD, Kubernetes, and various frameworks like Spring Boot and Micronaut. It is highly scalable, with multiple Workers and potentially multiple Leaders, and uses Redis and RabbitMQ for caching and asynchronous communication.
+For a technical summary with more details, see xref:technical_summary.adoc[] 
+
+== Main Components
+
+1. **Leader**
+   - Manages high-level orchestration and coordination.
+   - Communicates with Discord using `discord4j.core.GatewayDiscordClient`.
+
+2. **Worker**
+   - Handles tasks such as receiving commands from Discord and fetching data from the Clash Royale API.
+   - Communicates with Discord via the Connect-middleware.
+
+3. **Connect-middleware**
+   - Acts as a bridge between the Worker and Discord.
+   - Uses RSocket for reactive communication.
+
+== Communication
+
+- **Discord Communication**: Handled by the Leader and Worker via the Connect-middleware.
+- **Clash Royale API**: Accessed by the Worker to fetch data.
+- **RSocket**: Used by the Connect-middleware for reactive communication.
+
+== Deployment
+
+- Deployed using Kubernetes for scalability.
+- Each component is deployed as a Kubernetes pod.
+- Example deployment configuration provided in the deployment documentation.
+
+== CI/CD (Continuous Integration & Deployment)
+
+The project uses GitHub workflows for CI/CD. 
+
+- Automated workflows:
+  - Java Build
+  - Docker image builds
+  - Docker image registry push 
+  - Dependency review
+  - Static code analysis (SonarCloud, CodeQL, Codacy)
+- *Automated tests are not yet implemented.*

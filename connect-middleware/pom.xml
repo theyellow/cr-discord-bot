@@ -16,16 +16,16 @@
 
     <properties>
         <connect-rsocket.version>0.7.0-SNAPSHOT</connect-rsocket.version>
+        <discord4j-rest.version>3.2.7</discord4j-rest.version>
+        <exec.mainClass>crdiscordbot.CrDiscordRSocketMiddleware</exec.mainClass>
         <io.micronaut.maven-micronaut-maven-plugin.version>4.7.2</io.micronaut.maven-micronaut-maven-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
-        <packaging>jar</packaging>
-        <exec.mainClass>crdiscordbot.CrDiscordRSocketMiddleware</exec.mainClass>
         <micronaut.runtime>netty</micronaut.runtime>
-        <discord4j-rest.version>3.2.7</discord4j-rest.version>
-        <reactor-core.version>3.4.14</reactor-core.version>
         <netty.version>4.1.118.Final</netty.version>
+        <packaging>jar</packaging>
         <protobuf-java.version>4.29.3</protobuf-java.version>
+        <reactor-core.version>3.4.14</reactor-core.version>
     </properties>
 
 

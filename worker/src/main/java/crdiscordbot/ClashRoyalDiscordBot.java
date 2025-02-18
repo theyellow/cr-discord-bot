@@ -56,26 +56,39 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Main class for the Clash Royal Discord Bot application.
+ */
 @SpringBootApplication
 @EnableAsync
 public class ClashRoyalDiscordBot {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClashRoyalDiscordBot.class);
 
+    private static final String NOT_WRITABLE = "not writable";
+
+    /**
+     * Main method to start the Spring application.
+     *
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
-        //Start spring application
+        // Start spring application
         ApplicationContext springContext = new SpringApplicationBuilder(ClashRoyalDiscordBot.class)
-            .build()
-            .run(args);
+                .build()
+                .run(args);
         SlashCommandListener slashCommandListener = new SlashCommandListener(springContext);
         createWorker(slashCommandListener);
     }
 
-
+    /**
+     * Converter class to handle HTTP message conversion for CurrentRiverRace.StateEnum.
+     */
     class RaceStateToEnumConverter implements GenericHttpMessageConverter<CurrentRiverRace.StateEnum> {
 
+        @Override
         public boolean canRead(Class<?> aClass, MediaType mediaType) {
-            return aClass== CurrentRiverRace.StateEnum.class;
+            return aClass == CurrentRiverRace.StateEnum.class;
         }
 
         @Override
@@ -88,10 +101,10 @@ public class ClashRoyalDiscordBot {
             return false;
         }
 
+        @Override
         public boolean canWrite(Type type, Class<?> aClass, MediaType mediaType) {
             return canWrite(aClass, mediaType);
         }
-
 
         @Override
         public List<MediaType> getSupportedMediaTypes() {
@@ -114,26 +127,30 @@ public class ClashRoyalDiscordBot {
             return CurrentRiverRace.StateEnum.valueOf(string);
         }
 
-        public CurrentRiverRace.StateEnum read(Type type, Class<?> aClass,
-                                    HttpInputMessage httpInputMessage)
-                throws IOException, HttpMessageNotReadableException {
+        @Override
+        public CurrentRiverRace.StateEnum read(Type type, Class<?> aClass, HttpInputMessage httpInputMessage) throws IOException, HttpMessageNotReadableException {
             return read(CurrentRiverRace.StateEnum.class, httpInputMessage);
         }
 
         @Override
         public void write(CurrentRiverRace.StateEnum stateEnum, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
+            throw new HttpMessageNotWritableException(NOT_WRITABLE);
         }
 
-        public void write(CurrentRiverRace.StateEnum value, Type type, MediaType mediaType,
-                          HttpOutputMessage httpOutputMessage)
-                throws IOException, HttpMessageNotWritableException {
+        @Override
+        public void write(CurrentRiverRace.StateEnum value, Type type, MediaType mediaType, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
+            throw new HttpMessageNotWritableException(NOT_WRITABLE);
         }
     }
 
+    /**
+     * Converter class to handle HTTP message conversion for CurrentClanWar.StateEnum.
+     */
     class ClanwarStateToEnumConverter implements GenericHttpMessageConverter<CurrentClanWar.StateEnum> {
 
+        @Override
         public boolean canRead(Class<?> aClass, MediaType mediaType) {
-            return aClass== CurrentClanWar.StateEnum.class;
+            return aClass == CurrentClanWar.StateEnum.class;
         }
 
         @Override
@@ -146,10 +163,10 @@ public class ClashRoyalDiscordBot {
             return false;
         }
 
+        @Override
         public boolean canWrite(Type type, Class<?> aClass, MediaType mediaType) {
             return canWrite(aClass, mediaType);
         }
-
 
         @Override
         public List<MediaType> getSupportedMediaTypes() {
@@ -172,26 +189,30 @@ public class ClashRoyalDiscordBot {
             return CurrentClanWar.StateEnum.valueOf(string);
         }
 
-        public CurrentClanWar.StateEnum read(Type type, Class<?> aClass,
-                                             HttpInputMessage httpInputMessage)
-                throws IOException, HttpMessageNotReadableException {
+        @Override
+        public CurrentClanWar.StateEnum read(Type type, Class<?> aClass, HttpInputMessage httpInputMessage) throws IOException, HttpMessageNotReadableException {
             return read(CurrentClanWar.StateEnum.class, httpInputMessage);
         }
 
         @Override
         public void write(CurrentClanWar.StateEnum stateEnum, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
+            throw new HttpMessageNotWritableException(NOT_WRITABLE, null);
         }
 
-        public void write(CurrentClanWar.StateEnum value, Type type, MediaType mediaType,
-                          HttpOutputMessage httpOutputMessage)
-                throws IOException, HttpMessageNotWritableException {
+        @Override
+        public void write(CurrentClanWar.StateEnum value, Type type, MediaType mediaType, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
+            throw new HttpMessageNotWritableException(NOT_WRITABLE);
         }
     }
 
+    /**
+     * Converter class to handle HTTP message conversion for Match.StateEnum.
+     */
     class MatchStateToEnumConverter implements GenericHttpMessageConverter<Match.StateEnum> {
 
+        @Override
         public boolean canRead(Class<?> aClass, MediaType mediaType) {
-            return aClass== Match.StateEnum.class;
+            return aClass == Match.StateEnum.class;
         }
 
         @Override
@@ -204,10 +225,10 @@ public class ClashRoyalDiscordBot {
             return false;
         }
 
+        @Override
         public boolean canWrite(Type type, Class<?> aClass, MediaType mediaType) {
             return canWrite(aClass, mediaType);
         }
-
 
         @Override
         public List<MediaType> getSupportedMediaTypes() {
@@ -230,22 +251,27 @@ public class ClashRoyalDiscordBot {
             return Match.StateEnum.valueOf(string);
         }
 
-        public Match.StateEnum read(Type type, Class<?> aClass,
-                                             HttpInputMessage httpInputMessage)
-                throws IOException, HttpMessageNotReadableException {
+        @Override
+        public Match.StateEnum read(Type type, Class<?> aClass, HttpInputMessage httpInputMessage) throws IOException, HttpMessageNotReadableException {
             return read(Match.StateEnum.class, httpInputMessage);
         }
 
         @Override
         public void write(Match.StateEnum stateEnum, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
+            throw new HttpMessageNotWritableException(NOT_WRITABLE);
         }
 
-        public void write(Match.StateEnum value, Type type, MediaType mediaType,
-                          HttpOutputMessage httpOutputMessage)
-                throws IOException, HttpMessageNotWritableException {
+        @Override
+        public void write(Match.StateEnum value, Type type, MediaType mediaType, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
+            throw new HttpMessageNotWritableException(NOT_WRITABLE);
         }
     }
 
+    /**
+     * Creates and configures the worker for handling Discord interactions.
+     *
+     * @param slashCommandListener the listener for slash commands
+     */
     private static void createWorker(SlashCommandListener slashCommandListener) {
         /*
          * Define the location of the Global Router Server (GRS). A GRS combines coordinated routing across API
@@ -320,15 +346,25 @@ public class ClashRoyalDiscordBot {
         rabbitMQ.close();
     }
 
+    /**
+     * Bean to create a RestClient for Discord.
+     *
+     * @return the RestClient instance
+     */
     @Bean(name = "discordRestClient")
     public RestClient discordRestClient() {
         return RestClient.create(System.getenv("BOT_TOKEN"));
     }
 
+    /**
+     * Bean to create a RestTemplate for Clash Royale API.
+     *
+     * @return the RestTemplate instance
+     */
     @Bean(name = "royalRestClient")
     public RestTemplate royalRestClient() {
         String apiToken = System.getenv("API_TOKEN");
-        RestTemplate restTemplate = new RestTemplateBuilder(rt-> {
+        RestTemplate restTemplate = new RestTemplateBuilder(rt -> {
             rt.getInterceptors().add((request, body, execution) -> {
                 request.getHeaders().clear();
                 request.getHeaders().add("Authorization", "Bearer " + apiToken);

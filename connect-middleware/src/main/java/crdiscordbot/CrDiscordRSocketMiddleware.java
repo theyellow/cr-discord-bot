@@ -1,36 +1,28 @@
-/*
- * This file is part of Discord4J.
- *
- * Discord4J is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Discord4J is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with Discord4J. If not, see <http://www.gnu.org/licenses/>.
- */
-
 package crdiscordbot;
 
 import io.micronaut.runtime.Micronaut;
 import reactor.util.Logger;
 import reactor.util.Loggers;
 
-
+/**
+ * The CrDiscordRSocketMiddleware class serves as the entry point for the Micronaut application.
+ */
 public class CrDiscordRSocketMiddleware {
 
+    // Logger instance for logging events in this class
     private static final Logger log = Loggers.getLogger(CrDiscordRSocketMiddleware.class);
 
+    /**
+     * The main method which serves as the entry point for the application.
+     * It builds and starts the Micronaut application.
+     *
+     * @param args Command line arguments passed to the application
+     */
     public static void main(String[] args) {
         Micronaut.build(args)
-                .eagerInitSingletons(true)
-                .mainClass(CrDiscordRSocketMiddleware.class)
-                .start();
+                .eagerInitSingletons(true) // Eagerly initialize singletons
+                .mainClass(CrDiscordRSocketMiddleware.class) // Set the main class
+                .start(); // Start the Micronaut application
     }
 
 }

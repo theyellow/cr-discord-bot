@@ -4,7 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!--suppress GrazieInspection -->
     <groupId>io.github.theyellow</groupId>
     <artifactId>crdiscordbot</artifactId>
     <packaging>pom</packaging>
@@ -15,42 +14,35 @@
         <module>worker</module>
     </modules>
 
-    <!-- Tell Maven we want to use Java 11 -->
     <properties>
         <crdiscordbot.version>0.0.1-SNAPSHOT</crdiscordbot.version>
-        <maven-plugin.version>1.0.0</maven-plugin.version>
-        <spring-boot-maven-plugin.version>3.4.2</spring-boot-maven-plugin.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
         <discord4j.connect.version>0.7.0-SNAPSHOT</discord4j.connect.version>
         <discord4j.version>3.2.7</discord4j.version>
         <discord4j.stores-redis.version>3.2.3</discord4j.stores-redis.version>
         <discord4j.json.version>1.6.22</discord4j.json.version>
-
+        <gson-fire.version>1.8.5</gson-fire.version>
+        <gson.version>2.8.9</gson.version>
+        <jakarta-validation-api.version>3.1.1</jakarta-validation-api.version>
+        <junit-version>4.13.2</junit-version>
+        <logback.version>1.4.12</logback.version>
+        <maven-plugin.version>1.0.0</maven-plugin.version>
         <netty.version>4.1.118.Final</netty.version>
+        <okhttp.version>4.12.0</okhttp.version>
+        <openapi-codegen.version>7.10.0</openapi-codegen.version>
+        <openapi-jackson-databind.version>0.2.2</openapi-jackson-databind.version>
+        <protobuf-java.version>4.28.2</protobuf-java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <reactor-core.version>3.4.41</reactor-core.version>
         <reactor-netty.version>1.1.26</reactor-netty.version>
         <redis.lettuce.version>6.0.9.RELEASE</redis.lettuce.version>
-
-        <gson.version>2.8.9</gson.version>
-        <gson-fire.version>1.8.5</gson-fire.version>
-        <okhttp.version>4.12.0</okhttp.version>
-        <threetenbp.version>1.5.1</threetenbp.version>
-
-        <openapi-jackson-databind.version>0.2.2</openapi-jackson-databind.version>
-
-        <swagger-core.version>2.2.28</swagger-core.version>
-        <swagger-annotations.version>2.2.28</swagger-annotations.version>
-        <openapi-codegen.version>7.10.0</openapi-codegen.version>
-
-        <junit-version>4.13.2</junit-version>
-        <springboot-starter-web.version>3.4.2</springboot-starter-web.version>
         <slf4j.version>1.7.36</slf4j.version>
-        <logback.version>1.4.12</logback.version>
-        <jakarta-validation-api.version>3.1.1</jakarta-validation-api.version>
-        <sonar.organization>theyellow-github</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <protobuf-java.version>4.28.2</protobuf-java.version>
+        <sonar.organization>theyellow-github</sonar.organization>
+        <spring-boot-maven-plugin.version>3.4.2</spring-boot-maven-plugin.version>
+        <springboot-starter-web.version>3.4.2</springboot-starter-web.version>
+        <swagger-annotations.version>2.2.28</swagger-annotations.version>
+        <swagger-core.version>2.2.28</swagger-core.version>
+        <threetenbp.version>1.5.1</threetenbp.version>
     </properties>
 
     <dependencyManagement>
@@ -78,7 +70,6 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/com.discord4j/connect-common -->
             <dependency>
                 <groupId>io.github.theyellow</groupId>
                 <artifactId>connect-common</artifactId>
@@ -243,7 +234,6 @@
                 <artifactId>threetenbp</artifactId>
                 <version>${threetenbp.version}</version>
             </dependency>
-            <!-- test dependencies -->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -280,5 +270,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

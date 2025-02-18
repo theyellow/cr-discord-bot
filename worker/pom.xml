@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -51,14 +50,11 @@
             <groupId>org.threeten</groupId>
             <artifactId>threetenbp</artifactId>
         </dependency>
-        <!-- test dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <!-- -->
         <dependency>
             <groupId>io.github.theyellow</groupId>
             <artifactId>crdiscordbot-common</artifactId>
@@ -94,9 +90,8 @@
         <plugins>
             <plugin>
                 <groupId>org.openapitools</groupId>
-                <version>${openapi-codegen.version}</version>
-                <!--suppress MavenModelInspection -->
                 <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi-codegen.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -106,7 +101,6 @@
                             <inputSpec>${project.basedir}/src/main/resources/swagger.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <generateApis>false</generateApis>
-                            <!--apiPackage>crdiscordbot.api</apiPackage-->
                             <modelPackage>crdiscordbot.model</modelPackage>
                             <skipValidateSpec>true</skipValidateSpec>
                             <configOptions>
@@ -133,5 +127,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

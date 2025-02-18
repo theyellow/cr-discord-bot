@@ -1,0 +1,24 @@
+@startuml
+' Define participants
+actor User
+participant "<&mobile> Discord" as Discord
+participant "Connect Module" as Connect
+participant "Leader Component" as Leader
+participant "Connect Middleware" as Middleware
+participant "Worker Component" as Worker
+participant "Clash Royale API" as API
+
+' Define interactions
+User -> Discord : Sends command
+Discord -> Connect : Forwards command
+Connect -> Leader : Sends event
+Leader -> Middleware : Delegates task
+Middleware -> Worker : Assigns job
+Worker -> API : Requests data
+API --> Worker : Returns data
+Worker --> Middleware : Sends results
+Middleware --> Leader : Forwards results
+Leader --> Connect : Updates status
+Connect --> Discord : Sends response
+Discord --> User : Delivers response
+@enduml

@@ -8,7 +8,7 @@
 # kubectl apply -f rabbitmq-broker.yaml
 #
 ---
-# namespace "cr-discord-bot" for kubernetes components of cr-discord-bot
+# Define the namespace "cr-discord-bot" for Kubernetes components of cr-discord-bot
 kind: Namespace
 apiVersion: v1
 metadata:
@@ -16,64 +16,64 @@ metadata:
   labels:
     name: cr-discord-bot
 ---
-# RabbitMQ service port internal:5672 -> external:30672
+# Define the RabbitMQ service for the standard port (internal:5672 -> external:30672)
 apiVersion: v1
 kind: Service
 metadata:
-    name: cr-discord-rabbitmq-broker-port
-    namespace: cr-discord-bot
+  name: cr-discord-rabbitmq-broker-port
+  namespace: cr-discord-bot
 spec:
-    selector:
-        app: cr-discord-rabbitmq-broker
-        department: bots
-    type: NodePort
-    ports:
-        - port: 5672
-          nodePort: 30672
+  selector:
+    app: cr-discord-rabbitmq-broker
+    department: bots
+  type: NodePort
+  ports:
+    - port: 5672
+      nodePort: 30672
 ---
-# RabbitMQ service admin-port internal:15672 -> external:30673
+# Define the RabbitMQ service for the admin port (internal:15672 -> external:30673)
 apiVersion: v1
 kind: Service
 metadata:
     name: cr-discord-rabbitmq-broker-admin-port
     namespace: cr-discord-bot
 spec:
-    selector:
-        app: cr-discord-rabbitmq-broker
-        department: bots
-    type: NodePort
-    ports:
-        - port: 15672
-          nodePort: 30673
+  selector:
+    app: cr-discord-rabbitmq-broker
+    department: bots
+  type: NodePort
+  ports:
+    - port: 15672
+      nodePort: 30673
 ---
-# Deployment of RabbitMQ-broker with one instance
+# Deployment of RabbitMQ broker with one instance
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: cr-discord-rabbitmq-broker-deployment
-    namespace: cr-discord-bot
-    labels:
-        app: cr-discord-rabbitmq-broker-deployment
+  name: cr-discord-rabbitmq-broker-deployment
+  namespace: cr-discord-bot
+  labels:
+    app: cr-discord-rabbitmq-broker-deployment
 spec:
-    replicas: 1
-    selector:
-        matchLabels:
-            app: cr-discord-rabbitmq-broker
-    template:
-        metadata:
-            name: cr-discord-rabbitmq-broker
-            namespace: cr-discord-bot
-            labels:
-                app: cr-discord-rabbitmq-broker
-                department: bots
-        spec:
-            containers:
-                - name: cr-discord-rabbitmq-container
-                  image: rabbitmq:3.9-management
-                  envFrom:
-                      - secretRef:
-                            name: cr-discord-bot-secrets
-                  ports:
-                      - containerPort: 5672
-                      - containerPort: 15672
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cr-discord-rabbitmq-broker
+  template:
+    metadata:
+      name: cr-discord-rabbitmq-broker
+      namespace: cr-discord-bot
+      labels:
+        app: cr-discord-rabbitmq-broker
+        department: bots
+    spec:
+      containers:
+        - name: cr-discord-rabbitmq-container
+          image: rabbitmq:3.9-management
+          envFrom:
+            - secretRef:
+                name: cr-discord-bot-secrets
+          ports:
+            - containerPort: 5672
+            - containerPort: 15672
 ---
