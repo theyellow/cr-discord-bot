@@ -65,6 +65,8 @@ public class ClashRoyalDiscordBot {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClashRoyalDiscordBot.class);
 
+    private String NOT_WRITABLE = "not writable";
+
     /**
      * Main method to start the Spring application.
      *
@@ -132,12 +134,12 @@ public class ClashRoyalDiscordBot {
 
         @Override
         public void write(CurrentRiverRace.StateEnum stateEnum, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
-            throw new HttpMessageNotWritableException("not writable");
+            throw new HttpMessageNotWritableException(NOT_WRITABLE);
         }
 
         @Override
         public void write(CurrentRiverRace.StateEnum value, Type type, MediaType mediaType, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
-            throw new HttpMessageNotWritableException("not writable");
+            throw new HttpMessageNotWritableException(NOT_WRITABLE);
         }
     }
 
@@ -194,12 +196,12 @@ public class ClashRoyalDiscordBot {
 
         @Override
         public void write(CurrentClanWar.StateEnum stateEnum, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
-            throw new HttpMessageNotWritableException("not writable", null);
+            throw new HttpMessageNotWritableException(NOT_WRITABLE, null);
         }
 
         @Override
         public void write(CurrentClanWar.StateEnum value, Type type, MediaType mediaType, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
-            throw new HttpMessageNotWritableException("not writable");
+            throw new HttpMessageNotWritableException(NOT_WRITABLE);
         }
     }
 
@@ -256,12 +258,12 @@ public class ClashRoyalDiscordBot {
 
         @Override
         public void write(Match.StateEnum stateEnum, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
-            throw new HttpMessageNotWritableException("not writable");
+            throw new HttpMessageNotWritableException(NOT_WRITABLE);
         }
 
         @Override
         public void write(Match.StateEnum value, Type type, MediaType mediaType, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
-            throw new HttpMessageNotWritableException("not writable");
+            throw new HttpMessageNotWritableException(NOT_WRITABLE);
         }
     }
 
