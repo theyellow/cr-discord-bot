@@ -1,10 +1,12 @@
 # Deploying in kubernetes
 
-For testing, you can use kubernetes easily. Setup of whole deployment is like this:
+For testing, you can use kubernetes easily. Setup of whole deployment is 
+like this:
 
 ![](http://www.plantuml.com/plantuml/proxy?idx=0&src=https://raw.githubusercontent.com/theyellow/cr-discord-bot/main/kubernetes/kubernetes-setup.puml?)
 
-This is the short version for impatient people, for a detailed description, see [deployment details](deployment.adoc)
+This is the short version for impatient people, for a detailed description, 
+see [deployment details](deployment.adoc)
 
 Work in kubernetes-directory with kubectl:
 ```

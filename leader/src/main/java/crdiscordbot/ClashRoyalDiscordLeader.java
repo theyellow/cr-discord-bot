@@ -24,7 +24,6 @@ import discord4j.core.object.presence.ClientPresence;
 import discord4j.core.shard.ShardingStrategy;
 import discord4j.gateway.intent.Intent;
 import discord4j.gateway.intent.IntentSet;
-import discord4j.rest.RestClient;
 import discord4j.store.api.service.StoreService;
 import discord4j.store.redis.RedisStoreService;
 import io.lettuce.core.RedisClient;
@@ -34,10 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.client.RestTemplate;
 
 import java.net.InetSocketAddress;
 
