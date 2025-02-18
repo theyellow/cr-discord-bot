@@ -51,7 +51,6 @@ import reactor.core.publisher.Mono;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.lang.UnsupportedOperationException;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
@@ -133,12 +132,12 @@ public class ClashRoyalDiscordBot {
 
         @Override
         public void write(CurrentRiverRace.StateEnum stateEnum, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
-            throw UnsupportedOperationException();
+            throw HttpMessageNotWritableException();
         }
 
         @Override
         public void write(CurrentRiverRace.StateEnum value, Type type, MediaType mediaType, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
-            throw UnsupportedOperationException();
+            throw HttpMessageNotWritableException();
         }
     }
 
@@ -195,12 +194,12 @@ public class ClashRoyalDiscordBot {
 
         @Override
         public void write(CurrentClanWar.StateEnum stateEnum, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
-            throw UnsupportedOperationException();
+            throw HttpMessageNotWritableException();
         }
 
         @Override
         public void write(CurrentClanWar.StateEnum value, Type type, MediaType mediaType, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
-            throw UnsupportedOperationException();
+            throw HttpMessageNotWritableException();
         }
     }
 
@@ -257,12 +256,12 @@ public class ClashRoyalDiscordBot {
 
         @Override
         public void write(Match.StateEnum stateEnum, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
-            throw UnsupportedOperationException();
+            throw HttpMessageNotWritableException();
         }
 
         @Override
         public void write(Match.StateEnum value, Type type, MediaType mediaType, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
-            throw UnsupportedOperationException();
+            throw HttpMessageNotWritableException();
         }
     }
 
