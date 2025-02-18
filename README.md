@@ -22,6 +22,14 @@ Overview of architecture:
 
 ![](http://www.plantuml.com/plantuml/proxy?idx=0&src=https://raw.githubusercontent.com/theyellow/cr-discord-bot/main/overview.puml?)
 
+For more details have a look at:
+- [Big picture](overview.adoc)
+- [Technical summary](technical_summary.adoc)
+- [Communication](communication.adoc)
+- [Kubernetes deployment overview](kubernetes/readme.md)
+- [Kubernetes deployment details](kubernetes/deployment.adoc)
+
+
 To get it working you need to use
 
 a) GitHub-Actions or other pipelines (GitLab should work as well)
@@ -32,7 +40,7 @@ A 'simple' development-workflow could be:
 
 - push to GitHub
 - automatically GitHub starts pipeline which will build docker images and publish it to github docker registry.
-- use your own kubernetes-cluster to deploy images with scripts (examples in kubernetes-directory)
+- use your own kubernetes-cluster to deploy images with scripts (examples in kubernetes-directory, links to documentation upper in this document)
 
 Credits to discord4j for the libraries and examples and clash-royal-discord-bot for ideas.
 Also credits to developer-teams of official [Clash Royale API](https://developer.clashroyale.com/#/documentation) and [Discord](https://discord.com/developers/).

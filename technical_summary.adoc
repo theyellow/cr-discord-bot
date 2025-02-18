@@ -2,7 +2,9 @@
 
 == Architecture Overview
 
-The CR Discord Bot is designed as a distributed system using the Discord4J `connect` library to facilitate communication between multiple components. The architecture follows a *Leader-Worker pattern*, with all communication managed via the *Connect-Middleware*.
+The CR Discord Bot is designed as a distributed system using the Discord4J `connect` library to facilitate communication between multiple components. The architecture follows a *Leader-Worker pattern*, with all communication managed via the *Connect-Middleware*. 
+For details of architecture see: link:architecture.adoc
+
 
 === Components
 
@@ -31,9 +33,21 @@ The CR Discord Bot is designed as a distributed system using the Discord4J `conn
     - Uses the *Discord4J `connect` library* to interact with Discord.
     - Facilitates Leader-Worker communication via *RSocket and HTTP/REST*.
 
+- *Redis*
+  - *Role:* 
+    - Used for caching and storing temporary data.
+
+- *RabbitMQ*
+  - *Role:* 
+    - Used for asynchronous communication between components. Acts as a message broker.
+
 - *External APIs*
-  - *Role:* Provide game-related data.
-  - *Example:* Clash Royale API.
+  - *Clash Royale API*
+    - *Role:* 
+      - Provide game-related data.
+  - *Discord*
+    - *Role:* 
+      - User interface for interacting with this bot
 
 === Interaction Flow
 
@@ -53,6 +67,8 @@ The CR Discord Bot is designed as a distributed system using the Discord4J `conn
 4. *Result Communication:*  
    - The Worker *directly communicates with Discord* via the Connect-Middleware, sending the response back to the user.
 
+For details of communication, see link:communication.adoc
+
 === Scalability Considerations
 
 - Currently, the system supports *one Leader and multiple Workers*.
@@ -71,7 +87,9 @@ The CR Discord Bot is designed as a distributed system using the Discord4J `conn
 === Deployment Steps
 
 Deployment files can be found at:  
-https://github.com/theyellow/cr-discord-bot/tree/documentation/kubernetes
+https://github.com/theyellow/cr-discord-bot/tree/main/kubernetes
+
+For more details, see link:kubernetes/deployment.adoc , this is a short version.
 
 1. *Create Namespace:*
 +
@@ -137,13 +155,17 @@ env:
 - *Only local Logback logging* is configured.
 - *No centralized logging* (e.g., Grafana, ELK Stack).
 
-=== CI/CD (Continuous Integration & Deployment)
+=== CI/CD Workflows
 
-- Automated workflows:
-  - Docker image builds
-  - Java CI
-  - Static code analysis (SonarCloud, CodeQL, Codacy)
-- *Automated tests are not yet implemented.*
+The project uses GitHub workflows for CI/CD. The workflows are located in the `.github/workflows` directory of the repository. Key workflows include:
+
+- **docker-publish.yaml**: Builds and pushes Docker images to the Docker repository.
+- **dependency-review.yaml**: Reviews dependencies for security vulnerabilities.
+- **maven.yml**: Runs Maven build and tests.
+- **codeql-analysis.yml**: Performs CodeQL analysis for code quality and security.
+- **sonarcloud_io.yaml**: Integrates with SonarCloud for code quality analysis.
+- **docker-image.yaml**: Builds Docker images for specific components.
+- **codacy.yaml**: Integrates with Codacy for code quality and coverage analysis.
 
 ---
 
@@ -202,14 +224,3 @@ env:
 - *Future possibilities:* Authentication, encryption, rate limiting.
 
 ---
-
-== Final Review and Next Steps
-
-✓ *Workers initiate all communication with external systems (Discord & Clash Royale API).*  
-✓ *Leaders only coordinate and communicate via the Connect-Middleware.*  
-✓ *All technical descriptions now match the actual code.*
-
-=== Next Steps
-- *Please verify this version.*
-- If anything still *does not match the implementation*, let me know.
-- If you need *further clarifications or improvements*, I will adjust accordingly.

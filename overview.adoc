@@ -1,6 +1,7 @@
 = Overall Overview
 
 The bot is an experimental project designed to explore CI/CD, Kubernetes, and various frameworks like Spring Boot and Micronaut. It is highly scalable, with multiple Workers and potentially multiple Leaders, and uses Redis and RabbitMQ for caching and asynchronous communication.
+For a technical summary with more details, see link:technical_summary.adoc 
 
 == Main Components
 
@@ -16,19 +17,11 @@ The bot is an experimental project designed to explore CI/CD, Kubernetes, and va
    - Acts as a bridge between the Worker and Discord.
    - Uses RSocket for reactive communication.
 
-4. **Redis**
-   - Used for caching and storing temporary data.
-
-5. **RabbitMQ**
-   - Acts as a message broker for asynchronous communication.
-
 == Communication
 
 - **Discord Communication**: Handled by the Leader and Worker via the Connect-middleware.
 - **Clash Royale API**: Accessed by the Worker to fetch data.
 - **RSocket**: Used by the Connect-middleware for reactive communication.
-- **Redis**: Used for caching data.
-- **RabbitMQ**: Used for asynchronous communication between components.
 
 == Deployment
 
@@ -36,14 +29,14 @@ The bot is an experimental project designed to explore CI/CD, Kubernetes, and va
 - Each component is deployed as a Kubernetes pod.
 - Example deployment configuration provided in the deployment documentation.
 
-== CI/CD Workflows
+== CI/CD (Continuous Integration & Deployment)
 
-The project uses GitHub workflows for CI/CD. The workflows are located in the `.github/workflows` directory of the repository. Key workflows include:
+The project uses GitHub workflows for CI/CD. 
 
-- **docker-publish.yaml**: Builds and pushes Docker images to the Docker repository.
-- **dependency-review.yaml**: Reviews dependencies for security vulnerabilities.
-- **maven.yml**: Runs Maven build and tests.
-- **codeql-analysis.yml**: Performs CodeQL analysis for code quality and security.
-- **sonarcloud_io.yaml**: Integrates with SonarCloud for code quality analysis.
-- **docker-image.yaml**: Builds Docker images for specific components.
-- **codacy.yaml**: Integrates with Codacy for code quality and coverage analysis.
+- Automated workflows:
+  - Java Build
+  - Docker image builds
+  - Docker image registry push 
+  - Dependency review
+  - Static code analysis (SonarCloud, CodeQL, Codacy)
+- *Automated tests are not yet implemented.*
