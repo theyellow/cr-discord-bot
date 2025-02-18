@@ -5,32 +5,32 @@
 1. **Leader**
    - **Role**: Manages high-level orchestration and coordination.
    - **Key Classes**:
-     - `ClashRoyalDiscordLeader.java`: Initializes the `GatewayDiscordClient` and manages communication with Discord.
+     -- `ClashRoyalDiscordLeader.java`: Initializes the `GatewayDiscordClient` and manages communication with Discord.
    - **Communication**:
-     - **Discord**: Uses `discord4j.core.GatewayDiscordClient` to interact with Discord.
-     - **Redis**: Caches data to improve performance.
-     - **RabbitMQ**: Facilitates asynchronous communication with other components.
+     -- **Discord**: Uses `discord4j.core.GatewayDiscordClient` to interact with Discord.
+     -- **Redis**: Caches data to improve performance.
+     -- **RabbitMQ**: Facilitates asynchronous communication with other components.
 
 2. **Worker**
    - **Role**: Handles tasks such as receiving slash commands and @-mentions from Discord, fetching information from the Clash Royale API, and responding to users.
    - **Key Classes**:
-     - `WorkerMain.java`: Handles initialization and main logic for processing tasks.
-     - `TaskHandler.java`: Manages specific tasks received from Discord.
-     - `ClashRoyaleApiClient.java`: Fetches information from the Clash Royale API.
+     -- `WorkerMain.java`: Handles initialization and main logic for processing tasks.
+     -- `TaskHandler.java`: Manages specific tasks received from Discord.
+     -- `ClashRoyaleApiClient.java`: Fetches information from the Clash Royale API.
    - **Communication**:
-     - **Discord**: Interacts with Discord through the Connect-middleware.
-     - **Clash Royale API**: Fetches data to respond to user queries.
-     - **Redis**: Caches data to improve performance.
-     - **RabbitMQ**: Facilitates asynchronous communication with other components.
+     -- **Discord**: Interacts with Discord through the Connect-middleware.
+     -- **Clash Royale API**: Fetches data to respond to user queries.
+     -- **Redis**: Caches data to improve performance.
+     -- **RabbitMQ**: Facilitates asynchronous communication with other components.
 
 3. **Connect-middleware**
    - **Role**: Acts as a bridge between the Worker and Discord, facilitating communication.
    - **Key Classes**:
-     - `ConnectMiddleware.java`: Handles initialization and main logic for facilitating communication.
+     -- `ConnectMiddleware.java`: Handles initialization and main logic for facilitating communication.
    - **Communication**:
-     - **RSocket**: Uses RSocket for reactive communication.
-     - **Redis**: Caches data to improve performance.
-     - **RabbitMQ**: Facilitates asynchronous communication with other components.
+     -- **RSocket**: Uses RSocket for reactive communication.
+     -- **Redis**: Caches data to improve performance.
+     -- **RabbitMQ**: Facilitates asynchronous communication with other components.
 
 4. **Redis**
    - **Role**: Used for caching and storing temporary data to improve performance and handle rate limits.

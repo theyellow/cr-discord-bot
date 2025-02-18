@@ -8,46 +8,46 @@ For details of architecture see: xref:architecture.adoc[]
 
 === Components
 
-- *Leader*
+1. *Leader*
   - *Role:*  
-    - Coordinates tasks between Discord users and Workers.
-    - Assigns tasks to available Workers via the *Connect-Middleware*.
-    - *Does not* communicate directly with Discord or the Clash Royale API.
+    -- Coordinates tasks between Discord users and Workers.
+    -- Assigns tasks to available Workers via the *Connect-Middleware*.
+    -- *Does not* communicate directly with Discord or the Clash Royale API.
   - *Implementation:*  
-    - Connects *only to the Connect-Middleware* via RSocket and HTTP/REST.
+    -- Connects *only to the Connect-Middleware* via RSocket and HTTP/REST.
 
-- *Worker*
+2. *Worker*
   - *Role:*  
-    - Listens for task assignments from the Leader via the *Connect-Middleware*.
-    - *Initiates all communication* with *Discord and the Clash Royale API*.
-    - Fetches data from the Clash Royale API and returns results.
+    -- Listens for task assignments from the Leader via the *Connect-Middleware*.
+    -- *Initiates all communication* with *Discord and the Clash Royale API*.
+    -- Fetches data from the Clash Royale API and returns results.
   - *Implementation:*  
-    - Connects to the Connect-Middleware for task reception.
-    - Makes HTTP/REST calls to *Discord* (sending responses) and *Clash Royale API* (fetching data).
+    -- Connects to the Connect-Middleware for task reception.
+    -- Makes HTTP/REST calls to *Discord* (sending responses) and *Clash Royale API* (fetching data).
 
-- *Connect-Middleware*
+3. *Connect-Middleware*
   - *Role:*  
-    - Manages task orchestration between Leaders and Workers.
-    - Routes user requests from Discord to the appropriate Leader/Worker.
+    -- Manages task orchestration between Leaders and Workers.
+    -- Routes user requests from Discord to the appropriate Leader/Worker.
   - *Implementation:*  
-    - Uses the *Discord4J `connect` library* to interact with Discord.
-    - Facilitates Leader-Worker communication via *RSocket and HTTP/REST*.
+    -- Uses the *Discord4J `connect` library* to interact with Discord.
+    -- Facilitates Leader-Worker communication via *RSocket and HTTP/REST*.
 
-- *Redis*
+4. *Redis*
   - *Role:* 
-    - Used for caching and storing temporary data.
+    -- Used for caching and storing temporary data.
 
-- *RabbitMQ*
+5. *RabbitMQ*
   - *Role:* 
-    - Used for asynchronous communication between components. Acts as a message broker.
+    -- Used for asynchronous communication between components. Acts as a message broker.
 
-- *External APIs*
-  - *Clash Royale API*
+6. *External APIs*
+  6.1. *Clash Royale API*
     - *Role:* 
-      - Provide game-related data.
-  - *Discord*
+      -- Provide game-related data.
+  6.2. *Discord*
     - *Role:* 
-      - User interface for interacting with this bot
+      -- User interface for interacting with this bot
 
 === Interaction Flow
 
