@@ -65,7 +65,7 @@ public class ClashRoyalDiscordBot {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClashRoyalDiscordBot.class);
 
-    private static String NOT_WRITABLE = "not writable";
+    private static final String NOT_WRITABLE = "not writable";
 
     /**
      * Main method to start the Spring application.
