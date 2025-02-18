@@ -3,7 +3,7 @@
 == Architecture Overview
 
 The CR Discord Bot is designed as a distributed system using the Discord4J `connect` library to facilitate communication between multiple components. The architecture follows a *Leader-Worker pattern*, with all communication managed via the *Connect-Middleware*. 
-For details of architecture see: xref:architecture.adoc
+For details of architecture see: xref:architecture.adoc[]
 
 
 === Components
@@ -67,7 +67,7 @@ For details of architecture see: xref:architecture.adoc
 4. *Result Communication:*  
    - The Worker *directly communicates with Discord* via the Connect-Middleware, sending the response back to the user.
 
-For details of communication, see xref:communication.adoc
+For details of communication, see xref:communication.adoc[]
 
 === Scalability Considerations
 
@@ -89,7 +89,7 @@ For details of communication, see xref:communication.adoc
 Deployment files can be found at:  
 https://github.com/theyellow/cr-discord-bot/tree/main/kubernetes
 
-For more details, see xref:kubernetes/deployment.adoc , this is a short version.
+For more details, see xref:kubernetes/deployment.adoc[] , this is a short version.
 
 1. *Create Namespace:*
 +

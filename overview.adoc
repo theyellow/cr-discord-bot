@@ -1,7 +1,7 @@
 = Overall Overview
 
 The bot is an experimental project designed to explore CI/CD, Kubernetes, and various frameworks like Spring Boot and Micronaut. It is highly scalable, with multiple Workers and potentially multiple Leaders, and uses Redis and RabbitMQ for caching and asynchronous communication.
-For a technical summary with more details, see xref:technical_summary.adoc 
+For a technical summary with more details, see xref:technical_summary.adoc[] 
 
 == Main Components
 
