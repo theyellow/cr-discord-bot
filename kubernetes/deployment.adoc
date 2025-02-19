@@ -14,7 +14,7 @@ Before proceeding, ensure you have the following:
 
 == Setup of deployment
 
-image::https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/theyellow/cr-discord-bot/main/kubernetes-setup.puml["Kubernetes Setup"]
+image::https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/theyellow/cr-discord-bot/refs/heads/main/kubernetes/kubernetes-setup.puml["Kubernetes Setup"]
 
 == Directory Structure
 
