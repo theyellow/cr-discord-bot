@@ -26,7 +26,7 @@
         <junit-version>4.13.2</junit-version>
         <logback.version>1.4.12</logback.version>
         <maven-plugin.version>1.0.0</maven-plugin.version>
-        <netty.version>4.1.118.Final</netty.version>
+        <netty.version>4.1.135.Final</netty.version>
         <okhttp.version>4.12.0</okhttp.version>
         <openapi-codegen.version>7.10.0</openapi-codegen.version>
         <openapi-jackson-databind.version>0.2.2</openapi-jackson-databind.version>
